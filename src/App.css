@@ -3,3 +3,10 @@
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+.form__input-placeholder::placeholder {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+  padding-left: 0.5rem;
+}
