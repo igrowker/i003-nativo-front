@@ -20,8 +20,10 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      - name: Clean node_modules
-        run: rm -rf node_modules
+      - name: Clean node_modules and package-lock.json
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund --omit=optional
