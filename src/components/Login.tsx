@@ -61,7 +61,7 @@ const Login: React.FC = () => {
           <input
             type="email"
             placeholder="Email"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
             {...register("email")}
           />
           {errors.email && <span>{errors.email.message}</span>}
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
           <input
             type="password"
             placeholder="Contraseña"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
             {...register("password")}
           />
           {errors.password && <span>{errors.password.message}</span>}
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="h-[42px] w-full bg-[#D9D9D9] text-[20px] font-bold text-[#000000]"
+          className="h-[42px] w-full rounded-[20px] bg-[#D9D9D9] text-[20px] font-bold text-[#000000]"
           disabled={isLoading}
         >
           {isLoading ? "Cargando..." : "Iniciar sesión"}
@@ -100,7 +100,7 @@ const Login: React.FC = () => {
       <p className="flex h-auto w-auto flex-col text-center text-[15px] font-bold text-[#545353]">
         Aún no tienes una cuenta?
         <span>
-          <a href="/register" className="text-[#000000]">
+          <a href="/register" className="text-[#000000] underline">
             Regístrate
           </a>
         </span>

@@ -14,6 +14,9 @@ const registerSchema = z
     repeatPassword: z
       .string()
       .min(5, "La contraseña debe tener al menos 8 caracteres"),
+
+    birthdate: z.string().min(8, "La fecha de nacimiento es inválida"),
+    dni: z.string().min(8, "El DNI debe tener al menos 8 caracteres"),
   })
   .refine((data) => data.password === data.repeatPassword, {
     message: "Las contraseñas no coinciden",
@@ -36,6 +39,8 @@ const Register: React.FC = () => {
       email: "",
       password: "",
       repeatPassword: "",
+      birthdate: "",
+      dni: "",
     },
   });
 
@@ -58,9 +63,48 @@ const Register: React.FC = () => {
       >
         <div className="flex w-full flex-col gap-[12px]">
           <input
+            type="email"
+            placeholder="E-mail"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
+            {...register("email")}
+          />
+          {errors.email && <span>{errors.email.message}</span>}
+          <input
+            type="password"
+            placeholder="Contraseña"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
+            {...register("password")}
+          />
+          {errors.password && <span>{errors.password.message}</span>}
+
+          <input
+            type="date"
+            placeholder="Fecha de Nacimiento"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9] pl-3 pr-3"
+            {...register("birthdate")}
+          />
+          {errors.birthdate && <span>{errors.birthdate.message}</span>}
+          <input
+            type="text"
+            placeholder="DNI"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
+            {...register("dni")}
+          />
+          {errors.dni && <span>{errors.dni.message}</span>}
+          <input
+            type="password"
+            placeholder="Repetir Contraseña"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
+            {...register("repeatPassword")}
+          />
+          {errors.repeatPassword && (
+            <span>{errors.repeatPassword.message}</span>
+          )}
+
+          <input
             type="text"
             placeholder="Nombre"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
             {...register("name")}
           />
           {errors.name && <span>{errors.name?.message}</span>}
@@ -68,55 +112,25 @@ const Register: React.FC = () => {
           <input
             type="text"
             placeholder="Apellido"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
             {...register("lastname")}
           />
           {errors.lastname && <span>{errors.lastname?.message}</span>}
 
           <input
             type="text"
-            placeholder="Teléfono"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
+            placeholder="Número de teléfono"
+            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
             {...register("phone")}
           />
           {errors.phone && <span>{errors.phone.message}</span>}
-
-          <input
-            type="email"
-            placeholder="Correo Electrónico"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
-            {...register("email")}
-          />
-          {errors.email && <span>{errors.email.message}</span>}
-
-          <input
-            type="password"
-            placeholder="Contraseña"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
-            {...register("password")}
-          />
-          {errors.password && <span>{errors.password.message}</span>}
-
-          <input
-            type="password"
-            placeholder="Repetir Contraseña"
-            className="form__input-placeholder h-[42px] w-full bg-[#D9D9D9]"
-            {...register("repeatPassword")}
-          />
-
-          {errors.repeatPassword && (
-            <span>{errors.repeatPassword.message}</span>
-          )}
         </div>
-        <p className="h-auto w-[216px] text-center text-[16px] font-bold">
-          A continuación, sacaremos unas fotos de tu DNI y una de tu rostro.
-          Asegúrate de tener buena luz y un fondo claro para ambas
-        </p>
+
         <button
           type="submit"
-          className="h-[42px] w-full bg-[#D9D9D9] text-[20px] font-bold text-[#000000]"
+          className="h-[42px] w-full rounded-[20px] bg-[#D9D9D9] text-[20px] font-bold text-[#000000]"
         >
-          SIGUIENTE
+          Continuar
         </button>
       </form>
     </div>
