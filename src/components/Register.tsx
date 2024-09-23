@@ -1,22 +1,58 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import logonativo from "/logonativo.png";
 import z from "zod";
+
+// Función para validar si el usuario es mayor de 18 años
+const isAdult = (birthday: string): boolean => {
+  const birthDate = new Date(birthday);
+  const today = new Date();
+  const age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  const dayDiff = today.getDate() - birthDate.getDate();
+
+  if (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)) {
+    return age >= 18;
+  } else {
+    return age - 1 >= 18;
+  }
+};
 
 const registerSchema = z
   .object({
     name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-    lastname: z.string().min(2, "El apellido debe tener al menos 2 caracteres"),
-    phone: z.string().min(10, "El teléfono debe tener al menos 10 caracteres"),
+    surname: z.string().min(2, "El apellido debe tener al menos 2 caracteres"),
+    phone: z.string().min(8, "El teléfono debe tener al menos 8 caracteres"),
     email: z.string().email("Email inválido"),
     password: z
       .string()
-      .min(5, "La contraseña debe tener al menos 8 caracteres"),
+      .min(8, "La contraseña debe tener al menos 8 caracteres")
+      .regex(
+        /[A-Z]/,
+        "La contraseña debe contener al menos una letra mayúscula",
+      )
+      .regex(
+        /[a-z]/,
+        "La contraseña debe contener al menos una letra minúscula",
+      )
+      .regex(/\d/, "La contraseña debe contener al menos un número")
+      .regex(
+        /[\W_]/,
+        "La contraseña debe contener al menos un carácter especial",
+      ),
     repeatPassword: z
       .string()
-      .min(5, "La contraseña debe tener al menos 8 caracteres"),
-
-    birthdate: z.string().min(8, "La fecha de nacimiento es inválida"),
-    dni: z.string().min(8, "El DNI debe tener al menos 8 caracteres"),
+      .min(8, "La contraseña debe tener al menos 8 caracteres"),
+    birthday: z
+      .string()
+      .refine((date) => isAdult(date), "Debes tener al menos 18 años"),
+    dni: z
+      .string()
+      .min(7, "El DNI debe tener al menos 7 caracteres")
+      .refine(
+        (value) => /^\d+$/.test(value),
+        "El DNI debe contener solo números",
+      ),
   })
   .refine((data) => data.password === data.repeatPassword, {
     message: "Las contraseñas no coinciden",
@@ -34,103 +70,149 @@ const Register: React.FC = () => {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
-      lastname: "",
+      surname: "",
       phone: "",
       email: "",
       password: "",
       repeatPassword: "",
-      birthdate: "",
+      birthday: "",
       dni: "",
     },
   });
 
   const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
     console.log(data);
+    // Solicitud POST a la API
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/autenticacion/registro",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+            dni: parseInt(data.dni, 10), // Aseguramos que el dni sea un número
+            name: data.name,
+            surname: data.surname,
+            phone: data.phone,
+            birthday: data.birthday,
+          }),
+        },
+      );
+
+      if (response.status === 201) {
+        const result = await response.json();
+        console.log("Usuario creado con éxito:", result);
+      } else {
+        console.error("Error en la creación del usuario");
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+    }
   };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-5 p-[1rem]">
-      <div className="flex h-[164px] w-[208px] flex-col items-center justify-center bg-[#D9D9D9]">
-        <h3 className="text-center text-[28px] font-bold text-[#000000]">
-          NATIVO
-        </h3>
-        <p className="text-[10px] font-bold">Banco Rural</p>
-      </div>
+      <img
+        src={logonativo}
+        alt="logo"
+        className="flex h-[197px] w-[197px] items-center justify-center"
+      />
       <h1 className="text-[28px] font-bold text-[#000000]">Registrate</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex h-auto w-[296px] flex-col items-center justify-center gap-[20px]"
+        className="flex h-auto w-[312px] flex-col items-center justify-center gap-[20px]"
       >
-        <div className="flex w-full flex-col gap-[12px]">
-          <input
-            type="email"
-            placeholder="E-mail"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
-            {...register("email")}
-          />
-          {errors.email && <span>{errors.email.message}</span>}
-          <input
-            type="password"
-            placeholder="Contraseña"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
-            {...register("password")}
-          />
-          {errors.password && <span>{errors.password.message}</span>}
-
-          <input
-            type="date"
-            placeholder="Fecha de Nacimiento"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9] pl-3 pr-3"
-            {...register("birthdate")}
-          />
-          {errors.birthdate && <span>{errors.birthdate.message}</span>}
+        <div className="w-ful flex flex-col justify-center gap-[12px]">
           <input
             type="text"
-            placeholder="DNI"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
-            {...register("dni")}
+            placeholder="Nombre"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
+            {...register("name")}
           />
-          {errors.dni && <span>{errors.dni.message}</span>}
-          <input
-            type="password"
-            placeholder="Repetir Contraseña"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
-            {...register("repeatPassword")}
-          />
-          {errors.repeatPassword && (
-            <span>{errors.repeatPassword.message}</span>
+          {errors.name && (
+            <span className="text-red-500">{errors.name?.message}</span>
           )}
 
           <input
             type="text"
-            placeholder="Nombre"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
-            {...register("name")}
+            placeholder="Apellido"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
+            {...register("surname")}
           />
-          {errors.name && <span>{errors.name?.message}</span>}
+          {errors.surname && (
+            <span className="text-red-500">{errors.surname?.message}</span>
+          )}
+          <input
+            type="email"
+            placeholder="Email"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
+            {...register("email")}
+          />
+          {errors.email && (
+            <span className="text-red-500">{errors.email.message}</span>
+          )}
+          <input
+            type="password"
+            placeholder="Contraseña"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
+            {...register("password")}
+          />
+          {errors.password && (
+            <span className="text-red-500">{errors.password.message}</span>
+          )}
+
+          <input
+            type="password"
+            placeholder="Repetir Contraseña"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
+            {...register("repeatPassword")}
+          />
+          {errors.repeatPassword && (
+            <span className="text-red-500">
+              {errors.repeatPassword.message}
+            </span>
+          )}
 
           <input
             type="text"
-            placeholder="Apellido"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
-            {...register("lastname")}
+            placeholder="DNI/Cédula"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
+            {...register("dni")}
           />
-          {errors.lastname && <span>{errors.lastname?.message}</span>}
+          {errors.dni && (
+            <span className="text-red-500">{errors.dni.message}</span>
+          )}
+
+          <input
+            type="date"
+            placeholder="Fecha de Nacimiento"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
+            {...register("birthday")}
+          />
+          {errors.birthday && (
+            <span className="text-red-500">{errors.birthday.message}</span>
+          )}
 
           <input
             type="text"
             placeholder="Número de teléfono"
-            className="form__input-placeholder h-[42px] w-full rounded-[20px] bg-[#D9D9D9]"
+            className="form__input-placeholder h-[39.44px] w-[296px] rounded-[6px] border-[1px] border-[#D9D9D9] p-2"
             {...register("phone")}
           />
-          {errors.phone && <span>{errors.phone.message}</span>}
+          {errors.phone && (
+            <span className="text-red-500">{errors.phone.message}</span>
+          )}
         </div>
 
         <button
           type="submit"
-          className="h-[42px] w-full rounded-[20px] bg-[#D9D9D9] text-[20px] font-bold text-[#000000]"
+          className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-[16px] font-bold text-[#000000]"
         >
-          Continuar
+          Siguiente
         </button>
       </form>
     </div>

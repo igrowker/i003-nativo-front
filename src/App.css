@@ -7,6 +7,26 @@
 .form__input-placeholder::placeholder {
   font-size: 14px;
   font-weight: normal;
-  color: #000000;
-  padding-left: 1rem;
+  color: #d9d9d9;
+}
+
+input[type="date"] {
+  color: #d9d9d9;
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(50%);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 2s linear infinite;
 }

@@ -5,6 +5,7 @@ import App from "./App";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import { Navbar } from "./components/Navbar";
+import VerificationCode from "./components/VerificationCode";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<App />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verification" element={<VerificationCode />} />
       </Routes>
     </Router>
   </React.StrictMode>,
