@@ -1,5 +1,3 @@
-import React from "react";
-
 const WaitingScreen = () => {
   return (
     <div className="flex flex-col items-center justify-between">

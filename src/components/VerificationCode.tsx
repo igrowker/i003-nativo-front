@@ -7,7 +7,7 @@ const VerificationCode = () => {
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
   const [timer, setTimer] = useState<number>(60); // Temporizador de 60 segundos para reenviar el código
   const [message, setMessage] = useState<string>(""); // Mensaje de éxito o error
-  const [userVerified, setUserVerified] = useState<boolean>(true);
+  const [userVerified, setUserVerified] = useState<boolean>(false); // aca pueden ver si el usuario esta verificado o no para mostrar el mensaje de exito
   const [next, setNext] = useState<boolean>(false);
   const userEmail = "usuarionativo@gmail.com"; // Este es el correo que se utilizará en la API (luego se cambiará por el correo del usuario registrado)
 
@@ -22,7 +22,7 @@ const VerificationCode = () => {
     }
   }, [timer]);
 
-  // Función que reinicia el temporizador a 60 segundos y hace la solicitud GET
+  // Solicitud GET
   const handleResend = async () => {
     try {
       setMessage("");
