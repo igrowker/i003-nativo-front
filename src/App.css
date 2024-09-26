@@ -1,7 +1,6 @@
 #root {
   max-width: 1440px;
   margin: 0 auto;
-  /* padding: 0 1rem; */
 }
 
 .form__input-placeholder::placeholder {
@@ -33,4 +32,5 @@ input[type="date"] {
 
 .aside__link--shadow {
   box-shadow: 2px 2px 2px 0px #00000026;
+  padding: 0;
 }
