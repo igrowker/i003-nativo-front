@@ -1,5 +1,36 @@
 #root {
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
+}
+
+.form__input-placeholder::placeholder {
+  font-size: 14px;
+  font-weight: normal;
+  color: #d9d9d9;
+}
+
+input[type="date"] {
+  color: #d9d9d9;
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(50%);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 2s linear infinite;
+}
+
+.aside__link--shadow {
+  box-shadow: 2px 2px 2px 0px #00000026;
   padding: 0;
 }
