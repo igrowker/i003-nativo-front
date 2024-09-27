@@ -1,5 +1,6 @@
 import { FaRegCopyright } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { links, linksLogged, linksNotLogged } from "../utils/footerRoutes";
 
 interface Link {
   name: string;
@@ -7,73 +8,21 @@ interface Link {
   subpages?: Link[];
 }
 
-const links: Link[] = [
-  {
-    name: "Contacto",
-    path: "/contact",
-  },
-  {
-    name: "Política de privacidad",
-    path: "/",
-  },
-  {
-    name: "Aviso legal",
-    path: "/",
-  },
-  { name: "Ayuda", path: "/help" },
-];
-
-const linksNotLogged: Link[] = [
-  {
-    name: "Inicio",
-    path: "/",
-  },
-  {
-    name: "Sobre nosotros",
-    path: "/about",
-  },
-  {
-    name: "Iniciar sesión",
-    path: "/login",
-  },
-  {
-    name: "Registro",
-    path: "/register",
-  },
-];
-
-const linksLogged: Link[] = [
-  {
-    name: "Inicio",
-    path: "/",
-  },
-  {
-    name: "Sobre nosotros",
-    path: "/about",
-  },
-  {
-    name: "Mi Perfil",
-    path: "/profile",
-  },
-  {
-    name: "Mi historial",
-    path: "/historial",
-  },
-];
-
-const userActive = true; //for testing purposes
+const userActive = false; //for testing purposes
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-primary-green py-1 font-lato">
+    <footer className="bg-primary-green py-2 font-lato">
       <div className="mx-auto w-[340px]">
-        <img
-          src="./nativo-footer.png"
-          alt="logo"
-          width={285}
-          height={65}
-          className="pb-5"
-        />
+        <Link to={"/"} key="home">
+          <img
+            src="./nativo-footer.png"
+            alt="logo"
+            width={285}
+            height={65}
+            className="pb-5"
+          />
+        </Link>
         {userActive && (
           <div className="flex justify-between">
             <div className="flex flex-col gap-1">
