@@ -2,12 +2,6 @@ import { FaRegCopyright } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { links, linksLogged, linksNotLogged } from "../utils/footerRoutes";
 
-interface Link {
-  name: string;
-  path?: string;
-  subpages?: Link[];
-}
-
 const userActive = false; //for testing purposes
 
 export const Footer: React.FC = () => {

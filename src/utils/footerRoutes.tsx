@@ -1,3 +1,9 @@
+interface Link {
+  name: string;
+  path?: string;
+  subpages?: Link[];
+}
+
 export const links: Link[] = [
   {
     name: "Contacto",
