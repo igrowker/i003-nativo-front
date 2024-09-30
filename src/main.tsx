@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import { Navbar } from "./components/Navbar";
 import VerificationCode from "./components/VerificationCode";
 import "./index.css";
+import { Footer } from "./components/Footer";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/login" element={<Login />} />
         <Route path="/verification" element={<VerificationCode />} />
       </Routes>
+      <Footer />
     </Router>
   </React.StrictMode>,
 );
