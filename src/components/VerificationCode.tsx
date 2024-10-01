@@ -1,16 +1,22 @@
 import { useState, useRef, useEffect } from "react";
 import WaitingScreen from "./WaitingScreen";
 import logonativo from "/logonativo.png";
+import useUserStore from "../store/useUserStore";
 
 const VerificationCode = () => {
   const [values, setValues] = useState<string[]>(["", "", "", "", "", ""]);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
   const [timer, setTimer] = useState<number>(60); // Temporizador de 60 segundos para reenviar el código
   const [message, setMessage] = useState<string>(""); // Mensaje de éxito o error
-  const [userVerified] = useState<boolean>(false); // aca pueden ver si el usuario esta verificado o no para mostrar el mensaje de exito
+  const [userVerified, setUserVerified] = useState<boolean>(false); // aca pueden ver si el usuario esta verificado o no para mostrar el mensaje de exito
   const [next, setNext] = useState<boolean>(false);
   const userEmail = "usuarionativo@gmail.com"; // Este es el correo que se utilizará en la API (luego se cambiará por el correo del usuario registrado)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messageButton, setMessageButton] = useState<string>("Verificar");
+  const { verifyCode } = useUserStore();
 
+  const verificationCode = useUserStore((state) => state.verificationCode);
+  const user = useUserStore((state) => state.user);
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -27,14 +33,17 @@ const VerificationCode = () => {
     try {
       setMessage("");
       setTimer(60);
-
+      console.log(user?.email);
       const response = await fetch(
-        `http://localhost:8080/api/autenticacion/reenvio-codigo?email=${userEmail}`,
+        `https://i003-nativo-back-production.up.railway.app/api/autenticacion/reenvio-codigo?email=${user?.email}`,
         {
           method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
-
+      console.log(response);
       if (response.ok) {
         const result = await response.text();
         setMessage(result); // Mostrar mensaje de éxito
@@ -75,6 +84,29 @@ const VerificationCode = () => {
     }
   };
 
+  /**
+   *  @returns {Promise<void>} Verifica el código ingresado por el usuario
+   */
+  const handleVerify = async () => {
+    const inputCode = values.join("");
+    setMessage("Enviando...");
+    if (inputCode.length < 6) {
+      setMessage("Debes ingresar el código completo.");
+      return;
+    }
+
+    const verified = await verifyCode(inputCode);
+    if (verified) {
+      setMessage("Código verificado con éxito.");
+      setUserVerified(true);
+    } else {
+      setMessage("Código incorrecto.");
+    }
+    setIsLoading(false);
+  };
+
+  // console.log("verificationCode", verificationCode);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-5 p-[1rem] text-center">
       <img
@@ -82,13 +114,17 @@ const VerificationCode = () => {
         alt="logo"
         className="flex h-[197px] w-[197px] items-center justify-center"
       />
-
+      {userVerified && (
+        <h1 className="text-[28px] font-bold text-[#000000]">
+          Cuenta verificada con éxito
+        </h1>
+      )}
       {!userVerified && (
         <>
           <h1 className="w-[232px] text-[22px] font-bold text-[#000000]">
-            Ingresá el código que te enviamos al email
+            Ingrese el código de verificación: {verificationCode}
           </h1>
-          <p className="text-[16px]">{userEmail}</p>
+          <p className="text-[16px]">{user?.email}</p>
           <div style={{ display: "flex", gap: "10px" }}>
             {values.map((value, index) => (
               <input
@@ -111,6 +147,13 @@ const VerificationCode = () => {
               />
             ))}
           </div>
+          <button
+            className={`h-[42px] w-[312px] rounded-[20px] ${values.some((value) => !value) ? "cursor-not-allowed bg-slate-400 text-[#faf8f8]" : "bg-[#8EC63F]"} text-[16px] font-bold text-[#000000]`}
+            onClick={handleVerify}
+            disabled={values.some((value) => !value)}
+          >
+            {messageButton}
+          </button>
           <p className={`text-[#ADADAD] ${timer === 0 ? "hidden" : ""}`}>
             Reenviar código (00:{timer.toString().padStart(2, "0")})
           </p>

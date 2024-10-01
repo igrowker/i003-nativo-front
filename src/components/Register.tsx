@@ -1,6 +1,10 @@
+import React, { useState } from "react";
+
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import logonativo from "/logonativo.png";
+import useUserStore from "../store/useUserStore";
+import { useNavigate } from "react-router-dom";
 import z from "zod";
 
 // Función para validar si el usuario es mayor de 18 años
@@ -80,12 +84,26 @@ const Register: React.FC = () => {
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [messageButton, setMessageButton] = useState("Siguiente");
+
+  const setUser = useUserStore((state) => state.setUser);
+  const setVerificationCode = useUserStore(
+    (state) => state.setVerificationCode,
+  );
+
+  const navigate = useNavigate();
+
+  /**
+   * @param data Datos del formulario
+   */
+
   const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
-    console.log(data);
-    // Solicitud POST a la API
     try {
+      setIsLoading(true);
+      setMessageButton("Cargando...");
       const response = await fetch(
-        "http://localhost:8080/api/autenticacion/registro",
+        "https://i003-nativo-back-production.up.railway.app/api/autenticacion/registro",
         {
           method: "POST",
           headers: {
@@ -94,7 +112,7 @@ const Register: React.FC = () => {
           body: JSON.stringify({
             email: data.email,
             password: data.password,
-            dni: parseInt(data.dni, 10), // Aseguramos que el dni sea un número
+            dni: parseInt(data.dni, 10),
             name: data.name,
             surname: data.surname,
             phone: data.phone,
@@ -105,12 +123,27 @@ const Register: React.FC = () => {
 
       if (response.status === 201) {
         const result = await response.json();
-        console.log("Usuario creado con éxito:", result);
+        setUser({
+          id: result.id,
+          email: result.email,
+          name: result.name,
+          surname: result.surname,
+          dni: result.dni.toString(),
+          phone: result.phone,
+          birthday: result.birthday,
+        });
+        console.log(result);
+        setVerificationCode(result.verificationCode);
+
+        navigate("/verification");
       } else {
         console.error("Error en la creación del usuario");
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
+    } finally {
+      setIsLoading(false);
+      setMessageButton("Enviar");
     }
   };
 
@@ -211,8 +244,9 @@ const Register: React.FC = () => {
         <button
           type="submit"
           className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-[16px] font-bold text-[#000000]"
+          disabled={isLoading}
         >
-          Siguiente
+          {messageButton}
         </button>
       </form>
     </div>
