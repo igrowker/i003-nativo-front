@@ -26,6 +26,7 @@ interface UserActions {
   setVerificationCode: (code: string) => void;
   clearVerificationCode: () => void;
   verifyCode: (inputCode: string) => Promise<boolean>; // Nueva acción para verificar el código
+  loginUser: (email: string, password: string) => Promise<boolean>;
 }
 
 type UserStore = UserState & UserActions;
@@ -52,9 +53,11 @@ const useUserStore = create<UserStore>()(
       clearVerificationCode: () => set({ verificationCode: null }),
       verifyCode: async (inputCode) => {
         const state = get();
+        console.log("soy el email", state.user?.email);
+        console.log("soy el codigo", inputCode);
         try {
           const response = await fetch(
-            "https://i003-nativo-back-production.up.railway.app/api/autenticacion/inicio-sesion",
+            "https://i003-nativo-back-production.up.railway.app/api/autenticacion/verificacion-codigo",
             {
               method: "POST",
               headers: {
@@ -66,16 +69,43 @@ const useUserStore = create<UserStore>()(
               }),
             },
           );
-          console.log(response);
+
+          const result = await response.json();
+          console.log(result);
           if (response.status === 200) {
-            // Verificación exitosa
             return true;
           } else {
-            // Error en la verificación
             return false;
           }
         } catch (error) {
           console.error("Error en la verificación del código:", error);
+          return false;
+        }
+      },
+      loginUser: async (email, password) => {
+        try {
+          const response = await fetch(
+            "https://i003-nativo-back-production.up.railway.app/api/autenticacion/inicio-sesion",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            },
+          );
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log("soy el resultado", result);
+            set({ token: result.token });
+            set({ tokenExpiration: new Date().getTime() + result.expiresIn });
+            return true;
+          } else {
+            return false;
+          }
+        } catch (error) {
+          console.error("Error en el inicio de sesión:", error);
           return false;
         }
       },

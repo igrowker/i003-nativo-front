@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -87,6 +87,7 @@ const Register: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [messageButton, setMessageButton] = useState("Siguiente");
 
+  const token = useUserStore((state) => state.token);
   const setUser = useUserStore((state) => state.setUser);
   const setVerificationCode = useUserStore(
     (state) => state.setVerificationCode,
@@ -146,6 +147,12 @@ const Register: React.FC = () => {
       setMessageButton("Enviar");
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token, navigate]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-5 p-[1rem]">
