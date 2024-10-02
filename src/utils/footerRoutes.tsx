@@ -30,6 +30,10 @@ export const linksNotLogged: Link[] = [
     path: "/about",
   },
   {
+    name: "Nuestro equipo",
+    path: "/team",
+  },
+  {
     name: "Iniciar sesión",
     path: "/login",
   },
