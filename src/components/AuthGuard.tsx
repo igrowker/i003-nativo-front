@@ -11,6 +11,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const clearUser = useUserStore((state) => state.clearUser);
   const navigate = useNavigate();
 
+  // Verificar si el token sigue siendo válido y redirigir al login si no lo es
   const checkTokenValidity = useCallback(() => {
     if (!isTokenValid()) {
       clearUser();
@@ -21,7 +22,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   useEffect(() => {
     checkTokenValidity();
 
-    // Verificar cada minuto
+    // Verificar cada minuto si el token sigue siendo válido
     const intervalId = setInterval(checkTokenValidity, 60000);
 
     // Verificar cuando la app vuelve a primer plano

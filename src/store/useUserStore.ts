@@ -9,6 +9,7 @@ interface User {
   phone: string;
   birthday: string;
   dni: string;
+  accountId?: string;
 }
 
 interface UserState {
@@ -97,7 +98,7 @@ const useUserStore = create<UserStore>()(
 
           if (response.ok) {
             const result = await response.json();
-            console.log("soy el resultado", result);
+            set({ user: result.user });
             set({ token: result.token });
             set({ tokenExpiration: new Date().getTime() + result.expiresIn });
             return true;

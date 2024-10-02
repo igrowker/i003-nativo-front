@@ -41,7 +41,6 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     setIsLoading(true);
     setError(null);
-    // le sacamos los espacios al email para evitar errores
     data.email = data.email.trim();
     data.password = data.password.trim();
     try {

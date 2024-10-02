@@ -6,9 +6,9 @@ import Toast from "./ui/Toast";
 
 const VerificationCode = () => {
   const [values, setValues] = useState<string[]>(Array(6).fill(""));
-  const [timer, setTimer] = useState<number>(1); // Temporizador de 60 segundos para reenviar el código
-  const [message, setMessage] = useState<string>(""); // Mensaje de éxito o error
-  const [userVerified, setUserVerified] = useState<boolean>(false); // aca pueden ver si el usuario esta verificado o no para mostrar el mensaje de exito
+  const [timer, setTimer] = useState<number>(5);
+  const [message, setMessage] = useState<string>("");
+  const [userVerified, setUserVerified] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messageButton, setMessageButton] =
     useState<string>("Verificar código");
@@ -46,7 +46,7 @@ const VerificationCode = () => {
   const handleResend = async () => {
     try {
       setMessage("");
-      setTimer(1);
+      setTimer(5);
       const response = await fetch(
         `https://i003-nativo-back-production.up.railway.app/api/autenticacion/reenvio-codigo?email=${user?.email}`,
         {
@@ -63,7 +63,6 @@ const VerificationCode = () => {
         const parsedResult = JSON.parse(result);
         setVerificationCode(parsedResult.verificationCode); // Actualizar el código de verificación
         setShowToast(true);
-        setMessage(result); // Mostrar mensaje de éxito
       } else if (response.status === 400) {
         setMessage("La cuenta ya se encuentra verificada.");
       } else {
@@ -130,6 +129,9 @@ const VerificationCode = () => {
         alt="logo"
         className="flex h-[197px] w-[197px] items-center justify-center"
       />
+      {message && (
+        <div className="rounded-md bg-red-500 p-2 text-white">{message}</div>
+      )}
       {userVerified && (
         <h1 className="text-[28px] font-bold text-[#000000]">
           Cuenta verificada con éxito
@@ -147,6 +149,7 @@ const VerificationCode = () => {
             <h1 className="w-[232px] text-[22px] font-bold text-[#000000]">
               Ingresá el código que te enviamos al email
             </h1>
+
             <p className="text-[16px]">{user?.email}</p>
             <div style={{ display: "flex", gap: "10px" }}>
               {values.map((value, index) => (
