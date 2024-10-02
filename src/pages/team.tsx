@@ -1,5 +1,5 @@
 import TeamPng from "../assets/Images/team.png";
-import IconPng from "../assets/Images/icon.png";
+import IconPng from "../assets/Images/icono.png";
 import { teamData } from "../data/teamData";
 import TeamMemberCard from "../components/about/TeamMemberCard";
 
