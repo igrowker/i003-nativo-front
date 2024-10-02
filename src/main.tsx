@@ -8,6 +8,7 @@ import { Navbar } from "./components/Navbar";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import VerificationCode from "./components/VerificationCode";
+import ProtectedLayout from "./layout/ProtectedLayout";
 import "./index.css";
 import AboutUs from "./pages/aboutUs";
 import Team from "./pages/team";
@@ -21,6 +22,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verification" element={<VerificationCode />} />
+        <Route element={<ProtectedLayout />}>
+          <Route path="/dashboard" element={"hola todo bien"} />
+          {/* Otras rutas protegidas */}
+        </Route>
         <Route path="/about" element={<AboutUs />} />
         <Route path="/team" element={<Team />} />
       </Routes>

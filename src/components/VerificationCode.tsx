@@ -1,16 +1,27 @@
 import { useState, useRef, useEffect } from "react";
-import WaitingScreen from "./WaitingScreen";
 import logonativo from "/logonativo.png";
+import useUserStore from "../store/useUserStore";
+import { useNavigate } from "react-router-dom";
+import Toast from "./ui/Toast";
 
 const VerificationCode = () => {
-  const [values, setValues] = useState<string[]>(["", "", "", "", "", ""]);
+  const [values, setValues] = useState<string[]>(Array(6).fill(""));
+  const [timer, setTimer] = useState<number>(5);
+  const [message, setMessage] = useState<string>("");
+  const [userVerified, setUserVerified] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messageButton, setMessageButton] =
+    useState<string>("Verificar código");
+  const [showToast, setShowToast] = useState<boolean>(true);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
-  const [timer, setTimer] = useState<number>(60); // Temporizador de 60 segundos para reenviar el código
-  const [message, setMessage] = useState<string>(""); // Mensaje de éxito o error
-  const [userVerified] = useState<boolean>(false); // aca pueden ver si el usuario esta verificado o no para mostrar el mensaje de exito
-  const [next, setNext] = useState<boolean>(false);
-  const userEmail = "usuarionativo@gmail.com"; // Este es el correo que se utilizará en la API (luego se cambiará por el correo del usuario registrado)
+  const navigate = useNavigate();
 
+  const setVerificationCode = useUserStore(
+    (state) => state.setVerificationCode,
+  );
+  const verifyCode = useUserStore((state) => state.verifyCode);
+  const verificationCode = useUserStore((state) => state.verificationCode);
+  const user = useUserStore((state) => state.user);
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -22,22 +33,36 @@ const VerificationCode = () => {
     }
   }, [timer]);
 
+  if (!user || !verificationCode) {
+    navigate("/register");
+    return;
+  }
+
+  const handleCloseToast = () => {
+    setShowToast(false);
+  };
+
   // Solicitud GET
   const handleResend = async () => {
     try {
       setMessage("");
-      setTimer(60);
-
+      setTimer(5);
       const response = await fetch(
-        `http://localhost:8080/api/autenticacion/reenvio-codigo?email=${userEmail}`,
+        `https://i003-nativo-back-production.up.railway.app/api/autenticacion/reenvio-codigo?email=${user?.email}`,
         {
           method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
+      768767;
 
       if (response.ok) {
         const result = await response.text();
-        setMessage(result); // Mostrar mensaje de éxito
+        const parsedResult = JSON.parse(result);
+        setVerificationCode(parsedResult.verificationCode); // Actualizar el código de verificación
+        setShowToast(true);
       } else if (response.status === 400) {
         setMessage("La cuenta ya se encuentra verificada.");
       } else {
@@ -75,55 +100,103 @@ const VerificationCode = () => {
     }
   };
 
+  const handleVerify = async (): Promise<void> => {
+    const inputCode = values.join("");
+    setIsLoading(true);
+    setMessageButton("Enviando...");
+    if (inputCode.length < 6) {
+      setMessage("Debes ingresar el código completo.");
+      setIsLoading(false);
+      setMessageButton("Verificar código");
+      return;
+    }
+
+    const verified = await verifyCode(inputCode);
+    if (verified) {
+      setMessage("Código verificado con éxito.");
+      setUserVerified(true);
+    } else {
+      setMessage("Código incorrecto.");
+    }
+    setIsLoading(false);
+    setMessageButton("Verificar código");
+  };
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-5 p-[1rem] text-center">
+    <div className="relative flex min-h-screen flex-col items-center justify-center gap-5 p-[1rem] text-center">
       <img
         src={logonativo}
         alt="logo"
         className="flex h-[197px] w-[197px] items-center justify-center"
       />
-
+      {message && (
+        <div className="rounded-md bg-red-500 p-2 text-white">{message}</div>
+      )}
+      {userVerified && (
+        <h1 className="text-[28px] font-bold text-[#000000]">
+          Cuenta verificada con éxito
+        </h1>
+      )}
       {!userVerified && (
         <>
-          <h1 className="w-[232px] text-[22px] font-bold text-[#000000]">
-            Ingresá el código que te enviamos al email
-          </h1>
-          <p className="text-[16px]">{userEmail}</p>
-          <div style={{ display: "flex", gap: "10px" }}>
-            {values.map((value, index) => (
-              <input
-                key={index}
-                ref={(el) => (inputsRef.current[index] = el)}
-                type="text"
-                maxLength={1} // Limitar a un solo caracter por input
-                value={value}
-                onChange={(e) => handleChange(index, e)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  textAlign: "center",
-                  fontSize: "24px",
-                  borderRadius: "6px",
-                  border: "1px solid #D9D9D9",
-                  backgroundColor: "#E8F5E9", // Color de fondo similar a la imagen
-                }}
-              />
-            ))}
-          </div>
-          <p className={`text-[#ADADAD] ${timer === 0 ? "hidden" : ""}`}>
-            Reenviar código (00:{timer.toString().padStart(2, "0")})
-          </p>
-          {timer === 0 && (
-            <button onClick={handleResend} className="text-[#0000EE] underline">
-              Reenviar código
-            </button>
+          {showToast && (
+            <Toast
+              verificationCode={verificationCode}
+              onClose={handleCloseToast}
+            />
           )}
-          {message && <p className="mt-3 text-red-500">{message}</p>}
+          <div className="flex flex-col items-center justify-center gap-10">
+            <h1 className="w-[232px] text-[22px] font-bold text-[#000000]">
+              Ingresá el código que te enviamos al email
+            </h1>
+
+            <p className="text-[16px]">{user?.email}</p>
+            <div style={{ display: "flex", gap: "10px" }}>
+              {values.map((value, index) => (
+                <input
+                  key={index}
+                  ref={(el) => (inputsRef.current[index] = el)}
+                  type="text"
+                  maxLength={1}
+                  value={value}
+                  onChange={(e) => handleChange(index, e)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    textAlign: "center",
+                    fontSize: "24px",
+                    borderRadius: "6px",
+                    border: "1px solid #D9D9D9",
+                    backgroundColor: "#E8F5E9",
+                  }}
+                />
+              ))}
+            </div>
+
+            <p className={`text-[#ADADAD] ${timer === 0 ? "hidden" : ""}`}>
+              Reenviar código (00:{timer.toString().padStart(2, "0")})
+            </p>
+            {timer === 0 && (
+              <button
+                onClick={handleResend}
+                className="text-[#0000EE] underline"
+              >
+                Reenviar código
+              </button>
+            )}
+          </div>
+          <button
+            className={`h-[42px] w-[312px] rounded-[20px] ${values.some((value) => !value) ? "cursor-not-allowed bg-slate-400 text-[#faf8f8]" : "bg-[#8EC63F]"} mt-10 text-[16px] font-bold text-[#000000]`}
+            onClick={handleVerify}
+            disabled={values.some((value) => !value)}
+          >
+            {isLoading ? "Enviando..." : messageButton}
+          </button>
         </>
       )}
 
-      {userVerified && !next && (
+      {userVerified && (
         <div className="flex h-[400px] flex-col items-center justify-between">
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="flex h-[144px] w-[144px] items-center justify-center rounded-full bg-[#E1F0D7]">
@@ -135,14 +208,12 @@ const VerificationCode = () => {
           </div>
           <button
             className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-[16px] font-bold text-[#000000]"
-            onClick={() => setNext(true)}
+            onClick={() => navigate("/dashboard")}
           >
             Siguiente
           </button>
         </div>
       )}
-
-      {next && <WaitingScreen />}
     </div>
   );
 };

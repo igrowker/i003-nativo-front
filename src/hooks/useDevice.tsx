@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 type DeviceType = "Desktop" | "Tablet" | "Mobile" | null;
 
+// Hook para detectar el tipo de dispositivo
 const useDevice = (): DeviceType => {
   const [device, setDevice] = useState<DeviceType>(null);
 

@@ -1,4 +1,7 @@
 const WaitingScreen = () => {
+  /**
+   * @todo: De momento queda sin usar hasta que ux/ui decida si se va a usar o no
+   */
   return (
     <div className="flex flex-col items-center justify-between">
       <img src="./spinner.png" alt="spinner" className="spinner transform" />

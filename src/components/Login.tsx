@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import logonativo from "/logonativo.png";
 import z from "zod";
+import useUserStore from "../store/useUserStore";
+import { useNavigate } from "react-router-dom";
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -14,7 +16,7 @@ type LoginInputs = z.infer<typeof loginSchema>;
 const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -27,33 +29,25 @@ const Login: React.FC = () => {
     },
   });
 
+  const token = useUserStore((state) => state.token);
+  const loginUser = useUserStore((state) => state.loginUser);
+
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token, navigate]);
+
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     setIsLoading(true);
     setError(null);
-
+    data.email = data.email.trim();
+    data.password = data.password.trim();
     try {
-      // Solicitud POST a la API
-      const response = await fetch(
-        "http://localhost:8080/api/autenticacion/inicio-sesion",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        },
-      );
-
-      if (response.status === 200) {
-        const responseData = await response.json();
-        console.log("Inicio de sesión exitoso:", responseData);
-        // Token de acceso + redirección (futura implementación)
-      } else if (response.status === 404) {
-        setError("Usuario no encontrado.");
-      } else if (response.status === 401) {
-        setError("Contraseña incorrecta o cuenta no verificada.");
-      } else {
-        setError("Ocurrió un error inesperado.");
+      const success = await loginUser(data.email, data.password);
+      success && navigate("/dashboard");
+      if (!success) {
+        setError("Credenciales incorrectas.");
       }
     } catch (err) {
       setError("Ocurrió un error durante el inicio de sesión.");
@@ -68,6 +62,12 @@ const Login: React.FC = () => {
         alt="logo"
         className="flex items-center justify-center"
       />
+
+      {token && (
+        <div className="rounded-md bg-green-500 p-2 text-white">
+          Sesión iniciada con éxito
+        </div>
+      )}
 
       {error && (
         <div className="rounded-md bg-red-500 p-2 text-white">{error}</div>

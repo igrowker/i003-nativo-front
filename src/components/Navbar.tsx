@@ -10,6 +10,7 @@ import { IoMdHelpCircleOutline } from "react-icons/io";
 import { GoHome } from "react-icons/go";
 import { MdOutlineSyncAlt } from "react-icons/md";
 import { Link } from "react-router-dom";
+import useUserStore from "../store/useUserStore";
 
 interface Link {
   icon?: JSX.Element;
@@ -52,30 +53,43 @@ const linksNotLogged: Link[] = [
   { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
 ];
 
-const userActive = false; // Cambiar a true para simular un usuario activo
+const MobileNav: React.FC<{ onToggle: () => void }> = ({ onToggle }) => {
+  const token = useUserStore((state) => state.token);
+  const userActive = token !== null;
 
-const MobileNav: React.FC<{ onToggle: () => void }> = ({ onToggle }) => (
-  <nav className="relative z-20 flex h-[50px] w-full items-center justify-between bg-[#8EC63F] px-4">
-    <GiHamburgerMenu size={28} onClick={onToggle} />
+  return (
+    <nav className="relative z-20 flex h-[50px] w-full items-center justify-between bg-[#8EC63F] px-4">
+      <GiHamburgerMenu size={28} onClick={onToggle} />
 
-    <Link to={"/"} className="flex flex-grow justify-center">
-      <img src="./logonav.png" alt="logo" className="h-auto w-auto" />
-    </Link>
-
-    {!userActive ? (
-      <Link to={"/login"}>
-        <FaRegUser size={28} />
+      <Link to={"/"} className="flex flex-grow justify-center">
+        <img src="./logonav.png" alt="logo" className="h-auto w-auto" />
       </Link>
-    ) : (
-      <div className="w-[28px]" />
-    )}
-  </nav>
-);
+
+      {!userActive ? (
+        <Link to={"/login"}>
+          <FaRegUser size={28} />
+        </Link>
+      ) : (
+        <div className="w-[28px]" />
+      )}
+    </nav>
+  );
+};
 
 const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
   open,
   onClose,
 }) => {
+  const token = useUserStore((state) => state.token);
+  const clearUser = useUserStore((state) => state.clearUser);
+  const userActive = token !== null;
+
+  const handleLogout = () => {
+    clearUser();
+    onClose();
+    window.location.reload();
+  };
+
   React.useEffect(() => {
     if (open) {
       document.body.classList.add("overflow-hidden");
@@ -129,6 +143,15 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
                   </p>
                 </Link>
               ))}
+              <button
+                onClick={handleLogout}
+                className="aside__link--shadow flex h-[36px] w-[247px] items-center justify-start gap-2 rounded-[20px] bg-[#F6FAFD] pl-4 text-center"
+              >
+                <FaRegUser size={22} />
+                <p className="size-[14px] h-auto w-auto text-center font-[700px] leading-[16.8px] text-black">
+                  Cerrar sesión
+                </p>
+              </button>
             </div>
           </div>
         </aside>
