@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import ApplyMicrocreditForm from "../components/ApplyMicrocreditForm";
+import ApplyMicrocreditForm from "../../components/microcredits/ApplyMicrocreditForm";
 
 const ApplyMicrocreditsPage: React.FC = () => {
   const navigate = useNavigate();

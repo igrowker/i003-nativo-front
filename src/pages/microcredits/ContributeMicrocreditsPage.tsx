@@ -1,4 +1,4 @@
-import CreditsApliedContribute from "../components/CreditsApliedContribute";
+import CreditsApliedContribute from "../../components/microcredits/CreditsApliedContribute";
 
 const ContributeMicrocreditsPage: React.FC = () => {
   return (
