@@ -10,7 +10,7 @@ const Team: React.FC = () => {
         <h1 className="text-center text-xl font-bold">El equipo de Nativo</h1>
         <img src={TeamPng} alt="Logo" className="pt-2" />
       </section>
-      <section className="mx-4 rounded-[20px] border-2 border-[#C9FFB4] bg-white px-6 py-8 drop-shadow-box">
+      <section className="mx-4 rounded-[20px] border-2 border-secondary-green bg-white px-6 py-8 drop-shadow-box">
         <h2 className="w-4/5 pb-6 text-xl font-bold leading-6">
           Nuestro equipo detrás de Nativo Banco Rural
         </h2>

@@ -1,9 +1,5 @@
 const App: React.FC = () => {
- 
-
-  return (
-    <></>
-  );
+  return <></>;
 };
 
 export default App;
