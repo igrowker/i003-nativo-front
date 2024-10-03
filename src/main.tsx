@@ -8,6 +8,11 @@ import { Navbar } from "./components/Navbar";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import VerificationCode from "./components/VerificationCode";
+import MicrocreditsPage from "./pages/MicrocreditsPage";
+import "./index.css";
+import ApplyMicrocreditsPage from "./pages/ApplyMicrocreditsPage";
+import ContributeMicrocreditsPage from "./pages/ContributeMicrocreditsPage";
+import HistoryMicrocreditsPage from "./pages/HistoryMicrocreditsPage";
 import ProtectedLayout from "./layout/ProtectedLayout";
 import "./index.css";
 import AboutUs from "./pages/aboutUs";
@@ -22,6 +27,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verification" element={<VerificationCode />} />
+        <Route path="/microcredits" element={<MicrocreditsPage />} />
+        <Route path="/apply-microcredit" element={<ApplyMicrocreditsPage />} />
+        <Route path="/contribute-microcredit" element={<ContributeMicrocreditsPage />} />
+        <Route path="/history-microcredits" element={<HistoryMicrocreditsPage />} />
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={"hola todo bien"} />
           {/* Otras rutas protegidas */}

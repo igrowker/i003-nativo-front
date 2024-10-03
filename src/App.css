@@ -34,3 +34,24 @@ input[type="date"] {
   box-shadow: 2px 2px 2px 0px #00000026;
   padding: 0;
 }
+
+.bullet-text {
+    padding-left: 20px;  
+    position: relative;
+}
+
+.bullet-text::before {
+    content: "•";  
+    position: absolute;
+    left: 0;  
+    top: 0;
+    font-size: 20px;  
+    line-height: 1.5;  
+    color: black; 
+}
+
+.form__input-placeholder::placeholder {
+  font-size: 15px;
+  font-weight: normal;
+  padding-left: 1rem;
+}
