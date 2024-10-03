@@ -1,0 +1,346 @@
+.app-container {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Alinea verticalmente el contenido */
+  padding: 10px 100px; /* Ajusta el padding para reducir la altura del header */
+  background-color: #c4e980;
+  color: white;
+  width: 100%;;
+height: 50px;
+top: 48px;
+gap: 0px;
+opacity: 0px;
+
+}
+
+.menu-icon {
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: black; /* Color del menú de hamburguesa */
+  cursor: pointer;
+  position: absolute; /* Asegura que esté a la izquierda */
+  left: 20px; /* Alinea a la izquierda del header */
+}
+
+
+/* Ajustar el tamaño del logo */
+.logo {
+  width: 180px; /* Cambié a un tamaño fijo para evitar que el logo sea demasiado grande */
+  height: auto; /* Mantiene la relación de aspecto */
+  margin: 0 auto;
+}
+
+.profile-icon {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  width: 30px;
+  right: 20px; /* Alinea a la derecha */
+  top: 10px;
+}
+
+
+
+.tagline {
+  font-size: 1.2rem;
+  margin: 20px 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  height: 100vh;           /* Asegura que el contenedor ocupe toda la altura de la ventana */
+}
+
+
+/* Carrusel (scroll lateral) */
+.carousel-container {
+  position: relative; /* Necesario para que los puntitos estén en relación a este contenedor */
+  width: 100%;
+  overflow: hidden; /* Oculta contenido que no esté visible */
+}
+
+.card-container {
+  display: flex;
+  overflow-x: auto; /* Habilita el scroll horizontal */
+  scroll-behavior: smooth; /* Desplazamiento suave */
+  padding: 30px 0; /* Espacio para el contenedor del carrusel */
+}
+
+.card-container::-webkit-scrollbar {
+  display: none; /* Oculta la barra de desplazamiento en navegadores como Chrome */
+}
+
+.main-card {
+  background-color: rgba(219, 237, 186, 0.9);
+  border-radius: 3px;
+  padding: 15px;
+  width: 330px; /* Ancho fijo para las tarjetas */
+  height: auto; /* Ajusta la altura automáticamente según el contenido */
+  max-height: 500px; /* Limita la altura máxima */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-right: 10px; /* Espaciado entre las tarjetas en el carrusel */
+  flex-shrink: 0; /* Evita que las tarjetas se encogen */
+  text-align: center;
+  opacity: 0.9;
+}
+
+.card-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+/* Puntitos de navegación superpuestos en el carrusel */
+.dots {
+  position: absolute;
+  bottom: 50px; /* Ubica los puntitos en la parte inferior del carrusel */
+  left: 50%;
+  transform: translateX(-50%); /* Centra los puntitos horizontalmente */
+  display: flex;
+  justify-content: center;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: white; /* Color por defecto (blanco) */
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #277e0f; /* Puntito activo en verde */
+  border: 2px solid #277e0f; /* Borde blanco alrededor del puntito activo */
+}
+
+/* Estilos para el banner debajo del carrusel */
+/* Estilos comunes para ambos banners */
+.banner-common {
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #b4ec86; /* Borde verde claro */
+  border-radius: 20px;
+  padding: 40px;
+  margin: 20px auto;
+  text-align: center;
+  max-width: 300px; /* Ajusta el ancho según sea necesario */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle efecto elevado */
+}
+
+.banner-common h2 {
+  font-size: 20px;
+  color: #000; /* Color negro */
+  margin-bottom: 30px; /* Ajuste personalizado */
+}
+
+.banner-common p {
+  font-size: 14px;
+  color: #000; /* Color negro */
+  margin-bottom: 20px;
+}
+
+.banner-common a {
+  display: inline-block;
+  color: #007bff; /* Color del enlace */
+  font-size: 12px;
+  text-decoration: none;
+  position: relative;
+  padding-left: 130px; /* Desplaza el enlace hacia la derecha */
+}
+
+.banner-common a::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -3px; /* Ajusta la posición de la línea */
+  width: 40px; /* Ancho de la línea */
+  height: 1px; /* Grosor de la línea */
+  background-color: #007bff; /* Color azul del enlace */
+}
+
+/* Estilos específicos para el nativo-banner */
+.nativo-banner {
+  margin-bottom: 30px; /* Ajuste personalizado */
+}
+
+/* Estilos específicos para el new-banner */
+.new-banner .banner-content {
+  display: flex;
+  flex-direction: column; /* Coloca los elementos en columna */
+  align-items: center;
+  margin-bottom: 20px; /* Espaciado entre bloques */
+}
+
+.new-banner .banner-content img {
+  width: 60px; /* Tamaño del icono */
+  margin-right: 10px; /* Espacio entre el icono y el texto */
+}
+
+.new-banner .banner-content p {
+  margin-bottom: 20px;
+}
+
+.new-banner a {
+  margin-top: 20px; /* Separación superior */
+}
+
+/* Nuevos estilos para la sección debajo del banner */
+
+.info-section {
+  background-color:rgba(219, 237, 186, 0.9); /* Fondo verde suave */
+  padding: 30px;
+  margin: 20px auto;
+  max-width: 600px; /* Ajusta el ancho para que no sea demasiado amplio */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade sombra */
+  text-align: left; /* Alineación del texto a la izquierda */
+}
+
+.info-section h2 {
+  font-size: 20px;
+  color: #000;
+  margin-bottom: 15px;
+  text-align: center; /* Centrar el título */
+  font-weight: bold;
+}
+
+.info-section p {
+  font-size: 13px;
+  color: #000;
+  margin-bottom: 35px;
+}
+
+.info-section ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+.info-section ul li {
+  font-size: 13px;
+  margin-bottom: 30px;
+}
+
+.info-section a {
+  display: inline-block;
+  color: #007bff; /* Color del enlace */
+  font-size: 12px;
+  text-decoration: none; /* Sin subrayado */
+  position: relative;
+  float: right; /* Mueve el enlace completamente hacia la derecha */
+  padding-right: 10px; /* Ajusta un poco de espacio entre el texto y el borde derecho */
+}
+
+.info-section a::after {
+  content: '';
+  position: absolute;
+  right: 0; /* Fija la línea al final del texto */
+  bottom: -3px; /* Ajusta la posición de la línea debajo del texto */
+  width: 100px; /* Ancho fijo de la línea */
+  height: 1px; /* Grosor de la línea */
+  background-color: #007bff; /* Color azul del enlace */
+}
+
+footer {
+  background-color: #8EC63F; /* Color verde del fondo */
+  padding: 5px 10px; /* Reducir el padding */
+  color: #000; /* Color negro para el texto */
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1000px; /* Reducir el ancho máximo */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+
+.footer-logo {
+  width: 250px; /* Reducir el tamaño del logo */
+  margin-bottom: 5px; /* Reducir el margen inferior del logo */
+  position: relative;
+  left: -10px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 500px; /* Reducir el ancho máximo */
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column h4 {
+  margin-bottom: 2px; /* Reducir el margen inferior */
+  font-size: 12px; /* Reducir el tamaño de la fuente */
+  font-weight: bold;
+}
+
+.footer-column ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  padding-right: 10px;
+}
+
+.footer-column ul li {
+  margin-bottom: 1px; /* Reducir el espacio entre los elementos */
+  font-size: 12px; /* Reducir el tamaño de la fuente */
+  margin-right: 10px;
+}
+
+.footer-column ul li:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.footer-column ul li:last-child {
+  margin-bottom: 0;
+}
+
+/* Espaciado entre las columnas */
+.footer-links .footer-column {
+  flex: 2;
+  margin: 0; /* Eliminar márgenes innecesarios */
+}
+
+.footer-column:first-child {
+  margin-left: 30px; /* Reducir el margen entre las columnas */
+}
+
+.footer-column:last-child {
+  margin-left: 20px; /* Reducir el margen entre las columnas */
+  margin-top: 20px; /* Reducir el margen superior */
+}
+
+.footer-column:last-child ul li {
+  font-weight: bold;
+}
+
+footer p {
+  font-size: 10px; /* Reducir el tamaño de la fuente */
+  margin-top: 8px; /* Reducir el margen superior */
+  padding: 0;
+}
