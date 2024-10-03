@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { BiChevronDown } from "react-icons/bi";
 import { ContainerWhite } from "../components/dashboard/ContainerWhite";
 import MoneyJar from "../assets/Images/dashboard/money-jar.png";
 import ButtonsBox from "../components/dashboard/ButtonsBox";
+import accountService from "../services/accountService";
+import useUserStore from "../store/useUserStore";
+import { User } from "../interfaces/User";
+import { Account } from "../interfaces/Account";
 
 const Dashboard: React.FC = () => {
   const [showMoney, setShowMoney] = useState(true);
+  const [account, setAccount] = useState<Account | null>(null);
+  const user: User | null = useUserStore((store) => store.user);
+  const accountId: string | undefined = user?.accountId;
 
   const switchShowMoney = () => {
     if (showMoney) {
@@ -17,9 +24,25 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const fetchAccount = async () => {
+    try {
+      const accountData = await accountService.getAccountInformation(accountId);
+      setAccount(accountData)
+      console.log()
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  useEffect(() => {
+    if (accountId) {
+      fetchAccount();
+    }
+  }, [accountId]);
+
   return (
     <main className="mx-auto flex max-w-[480px] flex-col gap-6 bg-light-green px-6 py-4 font-lato">
-      <h1 className="text-[13px] font-bold leading-4">¡Hola, Nombre!</h1>
+      <h1 className="text-[13px] font-bold leading-4">¡Hola, {user?.name || "Nombre"}!</h1>
       <ContainerWhite className="flex justify-evenly p-2">
         <div className="">
           <div className="mt-7 flex gap-2">
@@ -29,7 +52,7 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
           <h2 className="mr-6 text-center text-[26px]">
-            {showMoney ? "$15.000" : "$XXXXX"}
+            {showMoney ? `$${account?.amount ?? '0.00'}` : "$***"}
           </h2>
         </div>
         <img src={MoneyJar} alt="dinero" />
