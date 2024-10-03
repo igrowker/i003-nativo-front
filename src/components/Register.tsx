@@ -24,9 +24,24 @@ const isAdult = (birthday: string): boolean => {
 
 const registerSchema = z
   .object({
-    name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-    surname: z.string().min(2, "El apellido debe tener al menos 2 caracteres"),
-    phone: z.string().min(8, "El teléfono debe tener al menos 8 caracteres"),
+    name: z
+      .string()
+      .min(2, "El nombre debe tener al menos 2 caracteres")
+      .regex(
+        /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+        "El nombre solo puede contener letras y espacios",
+      ),
+    surname: z
+      .string()
+      .min(2, "El apellido debe tener al menos 2 caracteres")
+      .regex(
+        /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+        "El apellido solo puede contener letras y espacios",
+      ),
+    phone: z
+      .string()
+      .min(8, "El teléfono debe tener al menos 8 caracteres")
+      .regex(/^\d+$/, "El teléfono solo puede contener números"),
     email: z.string().email("Email inválido"),
     password: z
       .string()
