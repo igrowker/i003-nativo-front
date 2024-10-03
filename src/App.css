@@ -36,18 +36,18 @@ input[type="date"] {
 }
 
 .bullet-text {
-    padding-left: 20px;  
-    position: relative;
+  padding-left: 20px;
+  position: relative;
 }
 
 .bullet-text::before {
-    content: "•";  
-    position: absolute;
-    left: 0;  
-    top: 0;
-    font-size: 20px;  
-    line-height: 1.5;  
-    color: black; 
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 20px;
+  line-height: 1.5;
+  color: black;
 }
 
 .form__input-placeholder::placeholder {

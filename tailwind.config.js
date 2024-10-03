@@ -15,6 +15,7 @@ export default {
       colors: {
         "light-grey": "#F6FAFD",
         "primary-green": "#8EC63F",
+        "secondary-green": "#C9FFB4",
         "light-green": "#E1F0D7",
         "secondary-yellow": "#FFC905",
       },

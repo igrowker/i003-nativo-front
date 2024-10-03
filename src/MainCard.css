@@ -1,6 +1,6 @@
 .app-container {
   text-align: center;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   padding: 0;
   margin: 0;
 }
@@ -12,12 +12,11 @@
   padding: 10px 100px; /* Ajusta el padding para reducir la altura del header */
   background-color: #c4e980;
   color: white;
-  width: 100%;;
-height: 50px;
-top: 48px;
-gap: 0px;
-opacity: 0px;
-
+  width: 100%;
+  height: 50px;
+  top: 48px;
+  gap: 0px;
+  opacity: 0px;
 }
 
 .menu-icon {
@@ -29,7 +28,6 @@ opacity: 0px;
   position: absolute; /* Asegura que esté a la izquierda */
   left: 20px; /* Alinea a la izquierda del header */
 }
-
 
 /* Ajustar el tamaño del logo */
 .logo {
@@ -49,8 +47,6 @@ opacity: 0px;
   top: 10px;
 }
 
-
-
 .tagline {
   font-size: 1.2rem;
   margin: 20px 0;
@@ -59,10 +55,9 @@ opacity: 0px;
 .container {
   display: flex;
   justify-content: center; /* Centra horizontalmente */
-  align-items: center;     /* Centra verticalmente */
-  height: 100vh;           /* Asegura que el contenedor ocupe toda la altura de la ventana */
+  align-items: center; /* Centra verticalmente */
+  height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
 }
-
 
 /* Carrusel (scroll lateral) */
 .carousel-container {
@@ -163,7 +158,7 @@ opacity: 0px;
 }
 
 .banner-common a::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   bottom: -3px; /* Ajusta la posición de la línea */
@@ -201,7 +196,7 @@ opacity: 0px;
 /* Nuevos estilos para la sección debajo del banner */
 
 .info-section {
-  background-color:rgba(219, 237, 186, 0.9); /* Fondo verde suave */
+  background-color: rgba(219, 237, 186, 0.9); /* Fondo verde suave */
   padding: 30px;
   margin: 20px auto;
   max-width: 600px; /* Ajusta el ancho para que no sea demasiado amplio */
@@ -245,7 +240,7 @@ opacity: 0px;
 }
 
 .info-section a::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0; /* Fija la línea al final del texto */
   bottom: -3px; /* Ajusta la posición de la línea debajo del texto */
@@ -255,7 +250,7 @@ opacity: 0px;
 }
 
 footer {
-  background-color: #8EC63F; /* Color verde del fondo */
+  background-color: #8ec63f; /* Color verde del fondo */
   padding: 5px 10px; /* Reducir el padding */
   color: #000; /* Color negro para el texto */
   text-align: center;

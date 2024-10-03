@@ -1,5 +1,5 @@
-import React from 'react';
-import '../MainCard.css';
+import React from "react";
+import "../MainCard.css";
 
 interface MainCardProps {
   title: string;
