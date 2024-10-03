@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
   const [showMoney, setShowMoney] = useState(true);
   const [account, setAccount] = useState<Account | null>(null);
   const user: User | null = useUserStore((store) => store.user);
-  const accountId: string | undefined = user?.accountId;
+  const accountId: string | null = user?.accountId;
 
   const switchShowMoney = () => {
     if (showMoney) {
