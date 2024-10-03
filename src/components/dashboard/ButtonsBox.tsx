@@ -1,3 +1,4 @@
+import { To, useNavigate } from "react-router-dom";
 import { ContainerWhite } from "./ContainerWhite";
 import IconTransferir from "../../assets/Images/dashboard/IconTransferir.png";
 import IconSolicitarMicrocredito from "../../assets/Images/dashboard/IconSolicitarMicrocredito.png";
@@ -7,8 +8,18 @@ import IconQRPagar from "../../assets/Images/dashboard/IconQRPagar.png";
 import IconQRCobrar from "../../assets/Images/dashboard/IconQRCobrar.png";
 
 const ButtonsBox = () => {
+  const navigate = useNavigate();
+
+  const navigateTo = (route: To) => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    navigate(route);
+  };
+
   return (
-    <section className="grid grid-cols-2 gap-4 text-center text-[15px] font-bold leading-[18px]">
+    <section className="grid grid-cols-2 gap-4 pb-4 text-center text-[15px] font-bold leading-[18px]">
       <ContainerWhite
         className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
         onClick={() => console.log("click transferir")}
@@ -18,7 +29,7 @@ const ButtonsBox = () => {
       </ContainerWhite>
       <ContainerWhite
         className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
-        onClick={() => console.log("click Solicitar Microcrédito")}
+        onClick={() => navigateTo("/apply-microcredit")}
       >
         <img src={IconSolicitarMicrocredito} alt="icono" className="pb-1" />
         <span className="w-2/3">Solicitar Microcrédito</span>
