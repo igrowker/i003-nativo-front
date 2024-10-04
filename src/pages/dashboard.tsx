@@ -9,10 +9,12 @@ import accountService from "../services/accountService";
 import useUserStore from "../store/useUserStore";
 import { User } from "../interfaces/User";
 import { Account } from "../interfaces/Account";
+import { Transaction } from "../interfaces/Transaction";
 
 const Dashboard: React.FC = () => {
   const [showMoney, setShowMoney] = useState(true);
   const [account, setAccount] = useState<Account | null>(null);
+  const [latestMovements, setLatestMovements] = useState([]);
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
 
@@ -26,11 +28,14 @@ const Dashboard: React.FC = () => {
 
   const fetchAccount = async () => {
     if (!accountId) return;
-    
+
     try {
-      const accountData = await accountService.getAccountInformation(accountId);
+      const [accountData, latestMovementsData] = await Promise.all([
+        accountService.getAccountInformation(accountId),
+        accountService.getLatestHistoryByAccount()
+      ]);
       setAccount(accountData)
-      console.log()
+      setLatestMovements(latestMovementsData)
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -73,34 +78,29 @@ const Dashboard: React.FC = () => {
       <ContainerWhite className="px-6 py-4 text-[15px] font-bold leading-[18px]">
         <h3>Últimos movimientos</h3>
         <ul className="flex flex-col gap-5 pl-2 pr-6 pt-6">
-          <li className="flex justify-between">
-            <div>
-              <p>XX/XX</p>
-              <p>Xxxxxxx</p>
-            </div>
-            <p>$X.XXX</p>
-          </li>
-          <li className="flex justify-between">
-            <div>
-              <p>XX/XX</p>
-              <p>Xxxxxxx</p>
-            </div>
-            <p>$X.XXX</p>
-          </li>
-          <li className="flex justify-between">
-            <div>
-              <p>XX/XX</p>
-              <p>Xxxxxxx</p>
-            </div>
-            <p>$X.XXX</p>
-          </li>
-          <li className="flex justify-between">
-            <div>
-              <p>XX/XX</p>
-              <p>Xxxxxxx</p>
-            </div>
-            <p>$X.XXX</p>
-          </li>
+          {
+            latestMovements ? (
+              latestMovements.map((transaction: Transaction) => (
+                <li key={transaction.id} className="flex justify-between">
+                  <div>
+                    <p>{transaction.creationDate}</p>
+                    <p>{transaction.transaction}</p>
+                    <p className="font-medium text-sm">{
+                      accountId == transaction.senderAccount ?
+                        "Microcrédito de " + transaction.receiverFullName
+                        : transaction.senderFullName
+                    }</p>
+                  </div>
+                  <p>
+                    {accountId == transaction.senderAccount && '-'}
+                    ${transaction.amount.toLocaleString()}
+                  </p>
+                </li>
+              ))
+            ) : (
+              <p>Sin movimientos</p>
+            )
+          }
         </ul>
         {/* CAMBIAR A RUTA DE HISTORIAL COMPLETO */}
         <div className="mt-3 w-full text-end font-medium text-blue-400">
