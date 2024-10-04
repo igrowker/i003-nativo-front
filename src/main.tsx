@@ -17,17 +17,13 @@ import Team from "./pages/team";
 import Home from "./pages/home";
 import "./index.css";
 import Dashboard from "./pages/dashboard";
- 
-
- 
-
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />  
+        <Route path="/" element={<Home />} />
         <Route path="/" element={<App />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

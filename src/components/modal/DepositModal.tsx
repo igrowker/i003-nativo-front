@@ -64,7 +64,7 @@ export const DepositModal: React.FC<{ onClose: () => void }> = ({
           title="¡Ingreso realizado!"
           sender="Mi cuenta externa"
           receiver="Mi cuenta nativo"
-          amount={amount}
+          amount={amount.toString()}
         />
         <div className="mt-4 flex gap-4">
           <Link
@@ -88,7 +88,7 @@ export const DepositModal: React.FC<{ onClose: () => void }> = ({
         error="¡Ingreso realizado!"
         sender="Mi cuenta externa"
         receiver="Mi cuenta nativo"
-        amount={amount}
+        amount={amount.toString()}
       />
     );
   } else {
