@@ -17,6 +17,7 @@ import IconDonar from "../assets/Images/dashboard/IconDonar.png";
 import IconSolicitarDonacion from "../assets/Images/dashboard/IconSolicitarAyuda.png";
 import IconQRPagar from "../assets/Images/dashboard/IconQRPagar.png";
 import IconQRCobrar from "../assets/Images/dashboard/IconQRCobrar.png";
+import { DepositModal } from "../components/dashboard/DepositModal";
 
 const Dashboard: React.FC = () => {
   const smoothNavigate = useSmoothNavigate();
@@ -35,7 +36,7 @@ const Dashboard: React.FC = () => {
     {
       icon: IconTransferir,
       label: "Ingresar dinero",
-      onClick: () => openModal(<div>Formulario para ingresar dinero</div>),
+      onClick: () => openModal(<DepositModal onClose={closeModal} />),
     },
     {
       icon: IconDonar,
@@ -118,16 +119,9 @@ const Dashboard: React.FC = () => {
         </div>
       </section>
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-light-green bg-opacity-50 z-50">
-          <div className="bg-primary-green p-6 rounded-[40px] shadow-lg w-11/12 max-w-md">
-            <h2 className="text-xl font-bold">Titulo</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
+          <div className="flex w-11/12 max-w-md flex-col gap-4 rounded-[40px] bg-primary-green p-6 shadow-lg">
             {modalContent}
-            <button
-              onClick={closeModal}
-              className="mt-6 bg-white py-2 px-4 rounded hover:bg-blue-600"
-            >
-              Cerrar
-            </button>
           </div>
         </div>
       )}

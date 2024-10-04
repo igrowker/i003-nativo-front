@@ -121,8 +121,36 @@ export async function getLatestHistoryByAccount() {
   }
 }
 
+export async function addMoneyToAccount(id: string, amount: number) {
+  try {
+    const token = useUserStore.getState().token;
+
+    const response = await fetch(`${api}/api/cuenta/agregar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id,
+        amount,
+      }),
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error al cargar dinero en la cuenta:", error);
+    return null;
+  }
+}
+
 export default {
   getAccountInformation,
   getHistoryByAccount,
   getLatestHistoryByAccount,
+  addMoneyToAccount,
 };
