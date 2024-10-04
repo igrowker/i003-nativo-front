@@ -26,7 +26,6 @@ export const DepositModal: React.FC<{ onClose: () => void }> = ({
 
     setIsLoading(true);
     setErrorMessage(null);
-    setIsSuccess(null);
 
     try {
       const accountData = await accountService.addMoneyToAccount(
