@@ -7,16 +7,13 @@ export async function getAccountInformation(id: string) {
   try {
     const token = useUserStore.getState().token;
 
-    const response = await fetch(
-      `${api}/api/cuenta/consultar-saldo/${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
+    const response = await fetch(`${api}/api/cuenta/consultar-saldo/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
 
     if (response.ok) {
       return await response.json();
@@ -33,16 +30,13 @@ export async function getHistoryByAccount() {
   try {
     const token = useUserStore.getState().token;
 
-    const response = await fetch(
-      `${api}/api/cuenta/historial/todo`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
+    const response = await fetch(`${api}/api/cuenta/historial/todo`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
 
     if (response.ok) {
       return await response.json();
@@ -64,7 +58,7 @@ export async function getLatestHistoryByAccount() {
     const fromDate = new Date();
     fromDate.setDate(today.getDate() - 15);
 
-    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+    const formatDate = (date: Date) => date.toISOString().split("T")[0];
     const fromDateFormatted = formatDate(fromDate);
     const toDateFormatted = formatDate(today);
 
@@ -74,38 +68,49 @@ export async function getLatestHistoryByAccount() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       },
     );
 
     if (response.ok) {
       const transactions = await response.json();
 
-      const modifiedTransactions = transactions.map((transaction: Transaction) => {
+      const modifiedTransactions = transactions.map(
+        (transaction: Transaction) => {
+          const formattedDate = new Date(
+            transaction.creationDate,
+          ).toLocaleDateString("es-ES", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit",
+          });
 
-        const formattedDate = new Date(transaction.creationDate).toLocaleDateString('es-ES', {
-          day: '2-digit',
-          month: '2-digit',
-          year: '2-digit'
-        });
+          const newTransactionType =
+            transaction.transaction === "Microcrédito" &&
+            transaction.senderAccount === accountId
+              ? "Colaboración enviada "
+              : "Colaboración recibida";
 
-        const newTransactionType = transaction.transaction === "Microcrédito" && transaction.senderAccount === accountId
-          ? "Colaboración enviada "
-          : "Colaboración recibida";
+          const receiverFullName = transaction.receiverName.concat(
+            " ",
+            transaction.receiverSurname,
+          );
+          const senderFullName = transaction.senderName.concat(
+            " ",
+            transaction.senderSurname,
+          );
 
-        const receiverFullName = transaction.receiverName.concat(" ", transaction.receiverSurname);
-        const senderFullName = transaction.senderName.concat(" ", transaction.senderSurname);
+          return {
+            ...transaction,
+            transaction: newTransactionType,
+            creationDate: formattedDate,
+            receiverFullName: receiverFullName,
+            senderFullName: senderFullName,
+          };
+        },
+      );
 
-        return {
-          ...transaction,
-          transaction: newTransactionType,
-          creationDate: formattedDate,
-          receiverFullName: receiverFullName,
-          senderFullName: senderFullName,
-        };
-      });
-      console.log(modifiedTransactions)
       return modifiedTransactions;
     } else {
       return null;
@@ -119,5 +124,5 @@ export async function getLatestHistoryByAccount() {
 export default {
   getAccountInformation,
   getHistoryByAccount,
-  getLatestHistoryByAccount
+  getLatestHistoryByAccount,
 };
