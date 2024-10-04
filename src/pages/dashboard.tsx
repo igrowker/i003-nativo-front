@@ -17,7 +17,7 @@ import IconDonar from "../assets/Images/dashboard/IconDonar.png";
 import IconSolicitarDonacion from "../assets/Images/dashboard/IconSolicitarAyuda.png";
 import IconQRPagar from "../assets/Images/dashboard/IconQRPagar.png";
 import IconQRCobrar from "../assets/Images/dashboard/IconQRCobrar.png";
-import { DepositModal } from "../components/dashboard/DepositModal";
+import { DepositModal } from "../components/modal/DepositModal";
 
 const Dashboard: React.FC = () => {
   const smoothNavigate = useSmoothNavigate();
@@ -32,11 +32,24 @@ const Dashboard: React.FC = () => {
     latestMovements: [],
   });
 
+  const handleRefresh = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    fetchAccount();
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
+    handleRefresh();
+  };
+
   const buttons = [
     {
       icon: IconTransferir,
       label: "Ingresar dinero",
-      onClick: () => openModal(<DepositModal onClose={closeModal} />),
+      onClick: () => openModal(<DepositModal onClose={handleCloseModal} />),
     },
     {
       icon: IconDonar,
