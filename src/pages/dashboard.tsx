@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { To, useNavigate } from "react-router-dom";
+import useSmoothNavigate from "../hooks/useSmoothNavigate";
+import useModal from "../hooks/useModal";
 import useUserStore from "../store/useUserStore";
 import { User } from "../interfaces/User";
 import { Account } from "../interfaces/Account";
@@ -18,7 +19,8 @@ import IconQRPagar from "../assets/Images/dashboard/IconQRPagar.png";
 import IconQRCobrar from "../assets/Images/dashboard/IconQRCobrar.png";
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
+  const smoothNavigate = useSmoothNavigate();
+  const { isModalOpen, modalContent, openModal, closeModal } = useModal();
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
   const [accountData, setAccountData] = useState<{
@@ -29,19 +31,11 @@ const Dashboard: React.FC = () => {
     latestMovements: [],
   });
 
-  const navigateTo = (route: To) => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    navigate(route);
-  };
-
   const buttons = [
     {
       icon: IconTransferir,
       label: "Ingresar dinero",
-      onClick: () => console.log("click ingreso de dinero"),
+      onClick: () => openModal(<div>Formulario para ingresar dinero</div>),
     },
     {
       icon: IconDonar,
@@ -51,7 +45,7 @@ const Dashboard: React.FC = () => {
     {
       icon: IconSolicitarMicrocredito,
       label: "Solicitar Microcrédito",
-      onClick: () => navigateTo("/apply-microcredit"),
+      onClick: () => smoothNavigate("/apply-microcredit"),
     },
     {
       icon: IconSolicitarDonacion,
@@ -123,6 +117,20 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </section>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-light-green bg-opacity-50 z-50">
+          <div className="bg-primary-green p-6 rounded-[40px] shadow-lg w-11/12 max-w-md">
+            <h2 className="text-xl font-bold">Titulo</h2>
+            {modalContent}
+            <button
+              onClick={closeModal}
+              className="mt-6 bg-white py-2 px-4 rounded hover:bg-blue-600"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
