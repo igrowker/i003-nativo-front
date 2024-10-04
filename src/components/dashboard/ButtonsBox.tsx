@@ -22,17 +22,10 @@ const ButtonsBox = () => {
     <section className="grid grid-cols-2 gap-4 pb-4 text-center text-[15px] font-bold leading-[18px]">
       <ContainerWhite
         className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
-        onClick={() => console.log("click transferir")}
+        onClick={() => console.log("click ingreso de dinero")}
       >
         <img src={IconTransferir} alt="icono" className="pb-1" />
-        <span className="w-2/3">Transferir</span>
-      </ContainerWhite>
-      <ContainerWhite
-        className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
-        onClick={() => navigateTo("/apply-microcredit")}
-      >
-        <img src={IconSolicitarMicrocredito} alt="icono" className="pb-1" />
-        <span className="w-2/3">Solicitar Microcrédito</span>
+        <span className="w-2/3">Ingresar dinero</span>
       </ContainerWhite>
       <ContainerWhite
         className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
@@ -43,10 +36,18 @@ const ButtonsBox = () => {
       </ContainerWhite>
       <ContainerWhite
         className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
-        onClick={() => console.log("click Solicitar ayuda o donación")}
+        onClick={() => navigateTo("/apply-microcredit")}
+      >
+        <img src={IconSolicitarMicrocredito} alt="icono" className="pb-1" />
+        <span className="w-2/3">Solicitar Microcrédito</span>
+      </ContainerWhite>
+
+      <ContainerWhite
+        className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
+        onClick={() => console.log("click Contribuir a un Microcrédito")}
       >
         <img src={IconSolicitarDonacion} alt="icono" className="pb-1" />
-        Solicitar ayuda o donación
+        Contribuir a un Microcrédito
       </ContainerWhite>
       <ContainerWhite
         className="flex h-[130px] cursor-pointer flex-col items-center justify-center p-4"
