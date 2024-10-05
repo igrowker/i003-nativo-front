@@ -66,7 +66,7 @@ const CreditsApliedContribute = () => {
             id="cuotas"
             className="h-10 w-full appearance-none rounded-lg border-none bg-transparent px-4 py-2 pr-10 text-sm leading-tight text-[#8C8C8C] focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
-            <option value="" disabled selected>
+            <option value="" disabled>
               Ordenar por
             </option>
             <option value="semanal">Más recientes</option>

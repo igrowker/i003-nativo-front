@@ -1,20 +1,18 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useUserStore from "../../store/useUserStore";
+
 import z from "zod";
+import { requestMicrocreditService } from "../../services/reqMicrocreditService";
 
 const microcreditSchema = z.object({
+  titleRequest: 
+      z.string()
+     .min(1, { message: "El motivo de la solicitud es obligatorio" }),
   amountToRequest: z
     .number()
     .min(1, "La cantidad solicitada debe ser mayor a 0")
     .max(500000, "Excede la cantidad máxima a solicitar, son 500,000"),
-  installmentsNumber: z
-    .number()
-    .refine((val) => [10, 12, 24, 36, 48, 60].includes(val), {
-      message: "Seleccione una cantidad válida de cuotas",
-    }),
-  installmentsFrecuency: z.enum(["semanal", "quincenal", "mensual"], {
-    errorMap: () => ({ message: "Seleccione la frecuencia de pago" }),
-  }),
   privacyPolicy: z.boolean().refine((val) => val === true, {
     message: "Debe aceptar la política de privacidad",
   }),
@@ -27,6 +25,9 @@ const microcreditSchema = z.object({
 type MicrocreditsInputs = z.infer<typeof microcreditSchema>;
 
 const ApplyMicrocreditForm: React.FC = () => {
+
+  const token = useUserStore((state) => state.token);
+
   const {
     register,
     handleSubmit,
@@ -34,13 +35,28 @@ const ApplyMicrocreditForm: React.FC = () => {
   } = useForm<MicrocreditsInputs>({
     resolver: zodResolver(microcreditSchema),
     defaultValues: {
-      amountToRequest: 1,
-      installmentsNumber: 0,
+      amountToRequest: 1000,
     },
   });
 
   const onSubmit: SubmitHandler<MicrocreditsInputs> = async (data) => {
-    console.log(data);
+    console.log(token)
+    if (!token) {
+      console.error("Token o ID de usuario no disponibles");
+      return;
+    }
+
+    try {
+      const result = await requestMicrocreditService(
+        token,
+        data.amountToRequest,
+        data.titleRequest,
+        data.description || ""
+      );
+      console.log("Microcrédito solicitado con éxito:", result);
+    } catch (error) {
+      console.error("Error al solicitar el microcrédito:", error);
+    }
   };
 
   return (
@@ -52,85 +68,49 @@ const ApplyMicrocreditForm: React.FC = () => {
         <div className="max-w-auto flex h-auto w-full flex-col gap-8 rounded-3xl border-2 border-[#C9FFB4] bg-white p-4 shadow-md">
           <h2 className="text-left text-base font-semibold">Solicitar</h2>
           <div className="flex w-full flex-col gap-8">
-            <input
-              type="number"
-              placeholder="Monto a solicitar"
-              className="h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md"
-              {...register("amountToRequest", { valueAsNumber: true })}
-            />
-            {errors.amountToRequest && (
-              <span className="mt-0 text-red-700">
-                {errors.amountToRequest.message}
-              </span>
-            )}
-
-            <div className="relative w-full">
-              <select
-                {...register("installmentsNumber", { valueAsNumber: true })}
-                className="h-10 w-full appearance-none rounded-lg border border-[#C7C7C7] bg-transparent px-4 py-2 pr-10 leading-tight text-[#C7C7C7] shadow-md focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value={0} disabled>
-                  Cantidad de cuotas
-                </option>
-                <option value={10}>10</option>
-                <option value={12}>12</option>
-                <option value={24}>24</option>
-                <option value={36}>36</option>
-                <option value={48}>48</option>
-                <option value={60}>60</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center px-2 text-[#C7C7C7]">
-                <svg
-                  className="h-6 w-6 fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                </svg>
-              </div>
-            </div>
-            {errors.installmentsNumber && (
-              <span className="-mt-4 block text-red-700">
-                {errors.installmentsNumber.message}
-              </span>
-            )}
-
-            <div className="relative w-full">
-              <select
-                {...register("installmentsFrecuency")}
-                className="h-10 w-full appearance-none rounded-lg border border-[#C7C7C7] bg-transparent px-4 py-2 pr-10 leading-tight text-[#C7C7C7] shadow-md focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                defaultValue={""}
-              >
-                <option value="" disabled>
-                  Frecuencia de pagos
-                </option>
-                <option value="semanal">Semanal</option>
-                <option value="quincenal">Quincenal</option>
-                <option value="mensual">Mensual</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center px-2 text-[#C7C7C7]">
-                <svg
-                  className="h-6 w-6 fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                </svg>
-              </div>
-            </div>
-            {errors.installmentsFrecuency && (
-              <span className="-mt-4 text-red-700">
-                {errors.installmentsFrecuency.message}
-              </span>
-            )}
-            <textarea
-              placeholder="Motivo o justificación"
-              className="h-[134px] w-full rounded-lg border border-[#C7C7C7] bg-transparent p-4 placeholder-[#C7C7C7] shadow-md placeholder:p-0 placeholder:pt-0"
-              {...register("description")}
-            />
+            <fieldset>
+              <label>Motivo principal</label>
+              <input
+                type="text"
+                maxLength={50}
+                placeholder="Ingrese la razón de su solicitud"
+                className="h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md mt-2"
+                {...register("titleRequest", { valueAsNumber: false })}
+              />
+              {errors.titleRequest && (
+                <span className="-mt-2 text-red-700">
+                  {errors.titleRequest.message}
+                </span>
+              )}
+            </fieldset>
+            <fieldset>
+              <label> Monto a solicitar</label>
+              <input
+                type="number"
+                min={1}
+                max={500000}
+                placeholder="Monto a solicitar"
+                className="h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md mt-2"
+                {...register("amountToRequest", { valueAsNumber: true })}
+              />
+              {errors.amountToRequest && (
+                <span className="-mt-2 text-red-700">
+                  {errors.amountToRequest.message}
+                </span>
+              )}
+            </fieldset>
+            <fieldset>
+              <label>Descripción</label>
+              <textarea
+                maxLength={256}
+                placeholder="Describa los detalles de su solicitud"
+                className="h-[134px] w-full rounded-lg border border-[#C7C7C7] bg-transparent p-4 placeholder-[#C7C7C7] shadow-md placeholder:p-0 placeholder:pt-0 mt-2"
+                {...register("description")}
+              />
+            </fieldset>
           </div>
         </div>
-        <div className="mt-6">
+        <fieldset className="mt-6">
           <div className="flex items-start">
             <input
               type="checkbox"
@@ -150,7 +130,7 @@ const ApplyMicrocreditForm: React.FC = () => {
             </span>
           )}
 
-          <div className="mt-4 flex items-start">
+          <fieldset className="mt-4 flex items-start">
             <input
               type="checkbox"
               {...register("termsConditions")}
@@ -162,13 +142,13 @@ const ApplyMicrocreditForm: React.FC = () => {
                 términos y condiciones.
               </a>
             </label>
-          </div>
+          </fieldset>
           {errors.termsConditions && (
             <span className="mt-2 block text-red-700">
               {errors.termsConditions.message}
             </span>
           )}
-        </div>
+        </fieldset>
         <button
           type="submit"
           className="mt-6 h-[42px] w-full rounded-full bg-[#8EC63F] text-[20px] font-semibold text-black"

@@ -19,9 +19,7 @@ const ApplyMicrocreditsPage: React.FC = () => {
         </h2>
       </article>
       <div className="bg-[#8EC63F] px-8 py-6">
-        Te ofrecemos una tasa de interés solidaria y la opción de elegir la
-        cantidad de cuotas: una solución adaptada a las necesidades de los
-        usuarios rurales.
+        “El monto posible es hasta $500.000, a abonar en una cuota fija en 30 días.”
       </div>
       <section>
         <ApplyMicrocreditForm />
