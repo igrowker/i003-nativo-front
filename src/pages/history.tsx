@@ -78,7 +78,6 @@ const History: React.FC = () => {
             )
           }
         >
-          {/* CAMBIAR POR PREGUNTAR SI HAY UN FILTRO ELEGIDO */}
           {selectedStatus == null && selectedDateRange == null ? (
             <TbFilter />
           ) : (

@@ -7,7 +7,7 @@ interface DateRangeSelectProps {
   onChange: (value: string) => void;
 }
 
-export const DateRangeSelect: React.FC<DateRangeSelectProps> = ({
+const DateRangeSelect: React.FC<DateRangeSelectProps> = ({
   value,
   options,
   onChange,
@@ -38,3 +38,5 @@ export const DateRangeSelect: React.FC<DateRangeSelectProps> = ({
     </div>
   );
 };
+
+export default DateRangeSelect;

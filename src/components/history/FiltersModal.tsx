@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SelectDropdown from "./SelectDropdown";
-import { DateRangeSelect } from "./DateRangeSelect";
+import DateRangeSelect from "./DateRangeSelect";
 
 export const FiltersModal: React.FC<{
   onClose: () => void;

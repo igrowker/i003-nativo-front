@@ -39,7 +39,7 @@ const AccountLatestMovements: React.FC<AccountLatestMovementsProps> = ({
       </ul>
       {/* CAMBIAR A RUTA DE HISTORIAL COMPLETO */}
       <div className="mt-3 w-full text-end font-medium text-blue-400">
-        <Link to={"/"} className="text-xs leading-3">
+        <Link to={"/history"} className="text-xs leading-3">
           Ver más <BiChevronDown className="inline text-2xl" />
         </Link>
       </div>
