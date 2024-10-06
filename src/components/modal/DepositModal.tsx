@@ -124,7 +124,8 @@ export const DepositModal: React.FC<{ onClose: () => void }> = ({
           </button>
           <button
             onClick={handleContinue}
-            className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px]"
+            className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px] disabled:opacity-65"
+            disabled={amount === "" || parseFloat(amount.toString()) <= 0}
           >
             Continuar
           </button>
