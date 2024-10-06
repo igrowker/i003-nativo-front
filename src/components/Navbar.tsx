@@ -5,7 +5,11 @@ import { IoClose } from "react-icons/io5";
 import useDevice from "../hooks/useDevice";
 import { FiLogIn } from "react-icons/fi";
 import { IoIosInformationCircleOutline } from "react-icons/io";
-import { MdFavoriteBorder } from "react-icons/md";
+import {
+  MdFavoriteBorder,
+  MdOutlineHistory,
+  MdOutlinePayment,
+} from "react-icons/md";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { GoHome } from "react-icons/go";
 import { MdOutlineSyncAlt } from "react-icons/md";
@@ -27,9 +31,19 @@ const linksLogged: Link[] = [
     path: "/transactions",
   },
   {
+    icon: <MdOutlineHistory size={22} />,
+    name: "Mis movimientos",
+    path: "/history",
+  },
+  {
+    icon: <MdOutlinePayment size={22} />,
+    name: "Mis microcréditos",
+    path: "/history-microcredits",
+  },
+  {
     icon: <MdFavoriteBorder size={22} />,
-    name: "Colaboraciones",
-    path: "/colaborate",
+    name: "Mis colaboraciones",
+    path: "/colaborations",
   },
   { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
 ];

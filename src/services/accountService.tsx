@@ -26,9 +26,37 @@ export async function getAccountInformation(id: string) {
   }
 }
 
-export async function getHistoryByAccount() {
+export async function addMoneyToAccount(id: string, amount: number) {
   try {
     const token = useUserStore.getState().token;
+
+    const response = await fetch(`${api}/api/cuenta/agregar`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id,
+        amount,
+      }),
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error al cargar dinero en la cuenta:", error);
+    return null;
+  }
+}
+
+export async function getAccountHistory() {
+  try {
+    const token = useUserStore.getState().token;
+    const accountId = useUserStore.getState().user?.accountId;
 
     const response = await fetch(`${api}/api/cuenta/historial/todo`, {
       method: "GET",
@@ -38,8 +66,12 @@ export async function getHistoryByAccount() {
       },
     });
 
-    if (response.ok) {
-      return await response.json();
+    if (response.ok && accountId != null) {
+      const transactions = await response.json();
+
+      return transactions.map((transaction: Transaction) =>
+        normalizeTransaction(transaction, accountId),
+      );
     } else {
       return null;
     }
@@ -73,45 +105,12 @@ export async function getLatestHistoryByAccount() {
       },
     );
 
-    if (response.ok) {
+    if (response.ok && accountId != null) {
       const transactions = await response.json();
 
-      const modifiedTransactions = transactions.map(
-        (transaction: Transaction) => {
-          const formattedDate = new Date(
-            transaction.creationDate,
-          ).toLocaleDateString("es-ES", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "2-digit",
-          });
-
-          const newTransactionType =
-            transaction.transaction === "Microcrédito" &&
-            transaction.senderAccount === accountId
-              ? "Colaboración enviada "
-              : "Colaboración recibida";
-
-          const receiverFullName = transaction.receiverName.concat(
-            " ",
-            transaction.receiverSurname,
-          );
-          const senderFullName = transaction.senderName.concat(
-            " ",
-            transaction.senderSurname,
-          );
-
-          return {
-            ...transaction,
-            transaction: newTransactionType,
-            creationDate: formattedDate,
-            receiverFullName: receiverFullName,
-            senderFullName: senderFullName,
-          };
-        },
+      return transactions.map((transaction: Transaction) =>
+        normalizeTransaction(transaction, accountId),
       );
-
-      return modifiedTransactions;
     } else {
       return null;
     }
@@ -121,36 +120,103 @@ export async function getLatestHistoryByAccount() {
   }
 }
 
-export async function addMoneyToAccount(id: string, amount: number) {
+export async function getAccountHistoryByStatus(status: string) {
   try {
     const token = useUserStore.getState().token;
+    const accountId = useUserStore.getState().user?.accountId;
 
-    const response = await fetch(`${api}/api/cuenta/agregar`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${api}/api/cuenta/historial/estado/${status}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-      body: JSON.stringify({
-        id,
-        amount,
-      }),
-    });
+    );
+    if (response.ok && accountId != null) {
+      const transactions = await response.json();
 
-    if (response.ok) {
-      return await response.json();
+      return transactions.map((transaction: Transaction) =>
+        normalizeTransaction(transaction, accountId),
+      );
     } else {
       return null;
     }
   } catch (error) {
-    console.error("Error al cargar dinero en la cuenta:", error);
+    console.error("Error al buscar historial de la cuenta:", error);
     return null;
   }
 }
 
+export async function getAccountHistoryByDates(
+  fromDate: string,
+  toDate: string,
+) {
+  try {
+    const token = useUserStore.getState().token;
+    const accountId = useUserStore.getState().user?.accountId;
+
+    const response = await fetch(
+      `${api}/api/cuenta/historial/fechas/${fromDate}/${toDate}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (response.ok && accountId != null) {
+      const transactions = await response.json();
+
+      return transactions.map((transaction: Transaction) =>
+        normalizeTransaction(transaction, accountId),
+      );
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error al buscar historial de la cuenta:", error);
+    return null;
+  }
+}
+
+function normalizeTransaction(transaction: Transaction, accountId: string) {
+  const formattedDate = new Date(transaction.creationDate).toLocaleDateString(
+    "es-ES",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+    },
+  );
+
+  const newTransactionType =
+    transaction.transaction === "Microcrédito" &&
+    transaction.senderAccount === accountId
+      ? "Colaboración enviada"
+      : "Colaboración recibida";
+
+  const receiverFullName = `${transaction.receiverName} ${transaction.receiverSurname}`;
+  const senderFullName = `${transaction.senderName} ${transaction.senderSurname}`;
+
+  return {
+    ...transaction,
+    transaction: newTransactionType,
+    creationDate: formattedDate,
+    receiverFullName,
+    senderFullName,
+  };
+}
+
 export default {
   getAccountInformation,
-  getHistoryByAccount,
-  getLatestHistoryByAccount,
   addMoneyToAccount,
+  getAccountHistory,
+  getLatestHistoryByAccount,
+  getAccountHistoryByStatus,
+  getAccountHistoryByDates,
 };
