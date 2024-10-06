@@ -1,9 +1,11 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useUserStore from "../../store/useUserStore";
-
-import z from "zod";
 import { requestMicrocreditService } from "../../services/reqMicrocreditService";
+import SuccessMessage from "../modal/SuccessMessage";
+import ErrorMessage from "../modal/ErrorMessage";
+import { useState } from "react";
+import z from "zod";
 
 const microcreditSchema = z.object({
   titleRequest: 
@@ -26,6 +28,8 @@ type MicrocreditsInputs = z.infer<typeof microcreditSchema>;
 
 const ApplyMicrocreditForm: React.FC = () => {
 
+  const [isRequestSuccessful, setIsRequestSuccessful] = useState<boolean | null>(null);
+
   const token = useUserStore((state) => state.token);
 
   const {
@@ -39,13 +43,15 @@ const ApplyMicrocreditForm: React.FC = () => {
     },
   });
 
+  const closeModal = () => {
+    setIsRequestSuccessful(null)
+  }
+
+
   const onSubmit: SubmitHandler<MicrocreditsInputs> = async (data) => {
-    console.log(token)
     if (!token) {
-      console.error("Token o ID de usuario no disponibles");
       return;
     }
-
     try {
       const result = await requestMicrocreditService(
         token,
@@ -54,13 +60,15 @@ const ApplyMicrocreditForm: React.FC = () => {
         data.description || ""
       );
       console.log("Microcrédito solicitado con éxito:", result);
+      setIsRequestSuccessful(true);
     } catch (error) {
       console.error("Error al solicitar el microcrédito:", error);
+      setIsRequestSuccessful(false);
     }
   };
 
   return (
-    <div className="mt-9 flex w-full flex-col items-center justify-center gap-5 px-4">
+    <div className="mt-9 flex w-full flex-col items-center justify-center gap-5 px-4 relative">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex h-auto w-full flex-col gap-8 p-4"
@@ -73,7 +81,7 @@ const ApplyMicrocreditForm: React.FC = () => {
               <input
                 type="text"
                 maxLength={50}
-                placeholder="Ingrese la razón de su solicitud"
+                placeholder="Escriba el motivo"
                 className="h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md mt-2"
                 {...register("titleRequest", { valueAsNumber: false })}
               />
@@ -84,7 +92,7 @@ const ApplyMicrocreditForm: React.FC = () => {
               )}
             </fieldset>
             <fieldset>
-              <label> Monto a solicitar</label>
+              <label>Monto a solicitar</label>
               <input
                 type="number"
                 min={1}
@@ -115,7 +123,7 @@ const ApplyMicrocreditForm: React.FC = () => {
             <input
               type="checkbox"
               {...register("privacyPolicy")}
-              className="h-5 w-5 appearance-none border border-[#71717A] bg-transparent font-bold checked:border-transparent checked:bg-[#5f9f00] checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none"
+              className="h-5 w-5 appearance-none border-1 border-[#8C8C8C]  font-bold checked:border-transparent  checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none checked:bg-[#5f9f00]"
             />
             <label htmlFor="privacy" className="ml-2 text-sm text-[#8C8C8C]">
               He leído y acepto la{" "}
@@ -134,7 +142,7 @@ const ApplyMicrocreditForm: React.FC = () => {
             <input
               type="checkbox"
               {...register("termsConditions")}
-              className="h-5 w-5 appearance-none border border-[#71717A] bg-transparent font-bold checked:border-transparent checked:bg-[#5f9f00] checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none"
+              className="h-5 w-5 appearance-none border-1 border-[#8C8C8C] font-bold checked:border-transparent checked:bg-[#5f9f00] checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none"
             />
             <label htmlFor="conditions" className="ml-2 text-sm text-[#8C8C8C]">
               Acepto{" "}
@@ -156,6 +164,26 @@ const ApplyMicrocreditForm: React.FC = () => {
           Solicitar
         </button>
       </form>
+      { isRequestSuccessful && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
+        <SuccessMessage 
+          title="¡Felicitaciones! Tu solicitud de crédito ha sido aprobada!" 
+          message="Pronto podrás verlo reflejado en tu saldo." 
+          closeModal = { closeModal }
+        />
+        </div>
+      )}
+      { isRequestSuccessful === false && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
+
+        <ErrorMessage 
+          title="¡Lamentamos que tu solicitud no fue aprobada!" 
+          message="Contactá a un asesor financiero para resolver tus dudas." 
+          closeModal = { closeModal }
+        />
+        </div>
+
+      )}
     </div>
   );
 };

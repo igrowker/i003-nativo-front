@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import useSmoothNavigate from "../../hooks/useSmoothNavigate";
 
 const MicrocreditsPage: React.FC = () => {
-  const navigate = useNavigate();
+
+const smoothNavigate = useSmoothNavigate()
 
   return (
     <section className="flex flex-col items-center bg-[#F6FAFD] pb-8 font-lato">
@@ -13,19 +14,19 @@ const MicrocreditsPage: React.FC = () => {
       </article>
       <div className="mt-14 flex flex-col items-center justify-center gap-4">
         <button
-          onClick={() => navigate("/apply-microcredit")}
+          onClick={() => smoothNavigate("/apply-microcredit")}
           className="w-[266px] rounded-full bg-[#8EC63F] py-[12px] text-base font-bold"
         >
           Gestionar un microcrédito
         </button>
         <button
-          onClick={() => navigate("/contribute-microcredit")}
+          onClick={() => smoothNavigate("/contribute-microcredit")}
           className="w-[266px] rounded-full bg-[#FFC905] py-[12px] text-base font-bold"
         >
           Contribuir
         </button>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => smoothNavigate("/")}
           className="w-[266px] rounded-full bg-[#FFC905] py-[12px] text-base font-bold"
         >
           Donar

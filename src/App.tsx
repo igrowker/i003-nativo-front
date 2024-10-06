@@ -1,12 +1,5 @@
-import "./App.css";
-import HeroSection from "./pages/HeroSection";
-
-function App() {
-  return (
-    <>
-      <HeroSection />
-    </>
-  );
-}
+const App: React.FC = () => {
+  return <></>;
+};
 
 export default App;

@@ -1,9 +1,9 @@
-export const getHistoryMicrocreditsService = async (token: string) => {
+export const getMicrocreditsGralService = async (token: string) => {
   
   const API_URL = import.meta.env.VITE_NATIVO_API_URL;
 
   try {
-    const response = await fetch(`${API_URL}/api/microcreditos/usuario-logueado`, {
+    const response = await fetch(`${API_URL}/api/microcreditos`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
