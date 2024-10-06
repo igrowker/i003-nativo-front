@@ -45,6 +45,7 @@ const Dashboard: React.FC = () => {
     handleRefresh();
   };
 
+
   const buttons = [
     {
       icon: IconTransferir,
@@ -64,7 +65,7 @@ const Dashboard: React.FC = () => {
     {
       icon: IconSolicitarDonacion,
       label: "Contribuir a un Microcrédito",
-      onClick: () => console.log("click Contribuir a un Microcrédito"),
+      onClick: () => smoothNavigate("/contribute-microcredit")
     },
     {
       icon: IconQRPagar,

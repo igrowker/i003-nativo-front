@@ -55,3 +55,9 @@ input[type="date"] {
   font-weight: normal;
   padding-left: 1rem;
 }
+
+.truncate {
+  white-space: nowrap;         /* Evita que el texto haga saltos de línea */
+  overflow: hidden;            /* Oculta el texto que sobrepase el ancho */
+  text-overflow: ellipsis;     /* Agrega puntos suspensivos (...) al final */
+}
