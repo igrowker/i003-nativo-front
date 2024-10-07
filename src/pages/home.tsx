@@ -83,11 +83,17 @@ const Home: React.FC = () => {
         </h2>
         <p className="mb-6 text-lg font-bold text-black">¡Comenzá ya!</p>
 
-        <button onClick={() => smoothNavigate("/login")} className="block mb-4 w-full rounded-full bg-[#8EC63F] px-4 py-2 font-semibold text-black transition-all duration-300 hover:shadow-[0_0_10px_3px_rgba(142,198,63,0.5)]">
+        <button
+          onClick={() => smoothNavigate("/login")}
+          className="mb-4 block w-full rounded-full bg-[#8EC63F] px-4 py-2 font-semibold text-black transition-all duration-300 hover:shadow-[0_0_10px_3px_rgba(142,198,63,0.5)]"
+        >
           Iniciar sesión
         </button>
 
-        <button onClick={() => smoothNavigate("/register")} className="block w-full rounded-full bg-[#FFD200] px-4 py-2 font-semibold text-black transition-all duration-300 hover:shadow-[0_0_10px_3px_rgba(255,210,0,0.5)]">
+        <button
+          onClick={() => smoothNavigate("/register")}
+          className="block w-full rounded-full bg-[#FFD200] px-4 py-2 font-semibold text-black transition-all duration-300 hover:shadow-[0_0_10px_3px_rgba(255,210,0,0.5)]"
+        >
           Crear cuenta
         </button>
       </div>

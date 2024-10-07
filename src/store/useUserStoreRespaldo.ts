@@ -14,7 +14,6 @@
 //   accountId?: string;
 // }
 
-
 // interface Contribution {
 //   id: string;
 //   lenderAccountId: string;

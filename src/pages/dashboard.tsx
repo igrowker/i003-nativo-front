@@ -18,6 +18,7 @@ import IconSolicitarDonacion from "../assets/Images/dashboard/IconSolicitarAyuda
 import IconQRPagar from "../assets/Images/dashboard/IconQRPagar.png";
 import IconQRCobrar from "../assets/Images/dashboard/IconQRCobrar.png";
 import { DepositModal } from "../components/modal/DepositModal";
+import { DonateModal } from "../components/modal/DonateModal";
 
 const Dashboard: React.FC = () => {
   const smoothNavigate = useSmoothNavigate();
@@ -45,7 +46,6 @@ const Dashboard: React.FC = () => {
     handleRefresh();
   };
 
-
   const buttons = [
     {
       icon: IconTransferir,
@@ -55,7 +55,7 @@ const Dashboard: React.FC = () => {
     {
       icon: IconDonar,
       label: "Donar",
-      onClick: () => console.log("click donar"),
+      onClick: () => openModal(<DonateModal onClose={handleCloseModal} />),
     },
     {
       icon: IconSolicitarMicrocredito,
@@ -65,7 +65,7 @@ const Dashboard: React.FC = () => {
     {
       icon: IconSolicitarDonacion,
       label: "Contribuir a un Microcrédito",
-      onClick: () => smoothNavigate("/contribute-microcredit")
+      onClick: () => smoothNavigate("/contribute-microcredit"),
     },
     {
       icon: IconQRPagar,

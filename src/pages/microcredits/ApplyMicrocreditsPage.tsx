@@ -19,7 +19,8 @@ const ApplyMicrocreditsPage: React.FC = () => {
         </h2>
       </article>
       <div className="bg-[#8EC63F] px-8 py-6 text-center">
-        “El monto posible es hasta $500.000, a abonar en una cuota fija en 30 días.”
+        “El monto posible es hasta $500.000, a abonar en una cuota fija en 30
+        días.”
       </div>
       <section>
         <ApplyMicrocreditForm />
