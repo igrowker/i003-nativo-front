@@ -98,7 +98,9 @@ const History: React.FC = () => {
                     {transaction.creationDate}
                   </p>
                   <p className="text-sm">{transaction.transaction}</p>
-                  <p className="text-sm font-medium">{transaction.description}</p>
+                  <p className="text-sm font-medium">
+                    {transaction.description}
+                  </p>
                   {transaction.status == "ACCEPTED" && (
                     <p className="w-fit rounded-[20px] bg-secondary-green px-6 text-center text-xs">
                       ACEPTADO
