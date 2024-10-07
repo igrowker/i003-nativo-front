@@ -16,6 +16,7 @@ import AboutUs from "./pages/aboutUs";
 import Team from "./pages/team";
 import Home from "./pages/home";
 import "./index.css";
+import Profile from "./pages/profile"; 
 import Dashboard from "./pages/dashboard";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -44,6 +45,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Route>
         <Route path="/about" element={<AboutUs />} />
         <Route path="/team" element={<Team />} />
+        <Route path="/profile" element={<Profile />} /> 
       </Routes>
       <Footer />
     </Router>
