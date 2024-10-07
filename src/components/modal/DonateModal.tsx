@@ -9,7 +9,10 @@ import ErrorContent from "./ErrorContent";
 import { FaUser } from "react-icons/fa6";
 import donationService from "../../services/donationService";
 
-export const DonateModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+export const DonateModal: React.FC<{
+  onCloseOk: () => void;
+  onClose: () => void;
+}> = ({ onCloseOk, onClose }) => {
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
   const [amount, setAmount] = useState<number | string>("");
@@ -78,7 +81,7 @@ export const DonateModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             Ver historial
           </Link>
           <button
-            onClick={onClose}
+            onClick={onCloseOk}
             className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px]"
           >
             Cerrar
