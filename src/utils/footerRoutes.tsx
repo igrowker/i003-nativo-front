@@ -46,7 +46,7 @@ export const linksNotLogged: Link[] = [
 export const linksLogged: Link[] = [
   {
     name: "Inicio",
-    path: "/",
+    path: "/dashboard",
   },
   {
     name: "Sobre nosotros",
@@ -61,7 +61,7 @@ export const linksLogged: Link[] = [
     path: "/profile",
   },
   {
-    name: "Mi movimientos",
+    name: "Mis movimientos",
     path: "/history",
   },
   {
