@@ -19,8 +19,6 @@ export const FiltersModal: React.FC<{
     null,
   );
 
-
-
   const handleStatusChange = (status: string | null) => {
     setSelectedStatus(status);
     setActiveFilter("status");
