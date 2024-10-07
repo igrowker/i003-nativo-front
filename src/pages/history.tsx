@@ -98,13 +98,7 @@ const History: React.FC = () => {
                     {transaction.creationDate}
                   </p>
                   <p className="text-sm">{transaction.transaction}</p>
-                  <p className="mb-1 text-sm font-medium">
-                    {accountId == transaction.senderAccount
-                      ? "Microcrédito de " + transaction.receiverFullName
-                      : transaction.senderFullName?.includes("null")
-                        ? "Anónima"
-                        : transaction.senderFullName}
-                  </p>
+                  <p className="text-sm font-medium">{transaction.description}</p>
                   {transaction.status == "ACCEPTED" && (
                     <p className="w-fit rounded-[20px] bg-secondary-green px-6 text-center text-xs">
                       ACEPTADO
