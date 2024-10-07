@@ -13,6 +13,7 @@ export const getMicrocreditsGralService = async (token: string) => {
 
   if (response.ok) {
         const result = await response.json();
+        console.log(result)
         return result;   
       } else { 
         throw new Error("Error al traer los datos");

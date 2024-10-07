@@ -15,37 +15,11 @@ interface User {
 }
 
 
-interface Contribution {
-  id: string;
-  lenderAccountId: string;
-  lenderFullname: string;
-  borrowerFullname: string;
-  microcreditId: string;
-  amount: number;
-  createdDate: string;
-  expiredDateMicrocredit: string;
-  transactionStatus: string;
-}
-
-interface Microcredit {
-  id: string;
-  borrowerAccountId: string;
-  amount: number;
-  remainingAmount: number;
-  createdDate: string;
-  expirationDate: string;
-  title: string;
-  description: string;
-  transactionStatus: string;
-  contributions: Contribution[];
-}
-
 interface UserState {
   user: User | null;
   token: string | null;
   tokenExpiration: number | null;
   verificationCode: string | null;
-  microcredit: Microcredit | null;
   microcreditsList: any[];
   microcreditsListGral: any[];
 }
