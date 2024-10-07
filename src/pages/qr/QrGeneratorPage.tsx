@@ -1,181 +1,258 @@
-import QRGenerator from "../../components/qr/QRGenerator";
 import { useState, useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import QRGenerator from "../../components/qr/QRGenerator";
 import useUserStore from "../../store/useUserStore";
 
-//funcion para que el amount este separado por comas
-function numberWithCommas(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+// Types
+type QRPaymentResponse = {
+  amount: number;
+  description: string;
+  id: string;
+  qr: string;
+  receiverAccount: string;
+  receiverName: string;
+  receiverSurname: string;
+};
 
-const generateQrSchema = z.object({
-  amount: z
-    .string()
-    .refine((val) => !isNaN(Number(val)), {
-      message: "El monto debe ser un número",
-    })
-    .transform((val) => Number(val)),
-  receiverAccount: z.string(),
-  description: z.string().optional(),
-});
+type QRFormData = {
+  amount: number;
+  receiverAccount: string;
+  description?: string;
+};
 
-type GenerateQrInputs = z.infer<typeof generateQrSchema>;
+// Constants
+const API_URL =
+  "https://i003-nativo-back-production.up.railway.app/api/pagos/crear-qr";
+
+// Utility functions
+const formatNumber = (x: number): string =>
+  x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 const QrGeneratorPage = () => {
-  const [enterAmountView, setEnterAmountView] = useState<boolean>(true);
-  const [detailModal, setDetailModal] = useState<boolean>(false);
-  const [dataForm, setDataForm] = useState<GenerateQrInputs | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<GenerateQrInputs>({
-    resolver: zodResolver(generateQrSchema),
-    defaultValues: {
-      amount: 0,
-      receiverAccount: "",
-      description: "",
-    },
+  // State
+  const [formData, setFormData] = useState<QRFormData>({
+    amount: 0,
+    receiverAccount: "",
+    description: "",
   });
+  const [qrResponse, setQrResponse] = useState<QRPaymentResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const user = useUserStore((state) => state.user);
+  // Store
+  const { user, token } = useUserStore();
 
+  // Effects
   useEffect(() => {
     if (user?.accountId) {
-      setValue("receiverAccount", user.accountId);
+      setFormData((prev) => ({
+        ...prev,
+        receiverAccount: user.accountId || "",
+      }));
       setIsLoading(false);
     }
-  }, [user, setValue]);
+  }, [user]);
 
-  const onSubmit: SubmitHandler<GenerateQrInputs> = (data) => {
-    console.log(data);
-    setDataForm(data);
-    setDetailModal(false);
+  // Handlers
+  const handleGenerateQR = async () => {
+    if (formData.amount <= 0) {
+      setError("Por favor, ingrese un monto válido mayor a 0");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError("");
+
+    if (!token) {
+      setError("No autorizado. Por favor, inicie sesión.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          response.status === 401
+            ? "No autorizado. Por favor, verifique sus credenciales."
+            : response.status === 403
+              ? "Monto inválido o no permitido."
+              : "Error al generar el código QR.",
+        );
+      }
+
+      const data: QRPaymentResponse = await response.json();
+      setQrResponse(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Error al generar el código QR.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (isLoading) {
-    return <div>Cargando...</div>;
-  }
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    setFormData({
+      receiverAccount: formData.get("receiverAccount") as string,
+      amount: Number(formData.get("amount")),
+      description: formData.get("description") as string,
+    });
+
+    setIsDetailsOpen(false);
+  };
+
+  if (isLoading)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-green-500"></div>
+      </div>
+    );
 
   return (
-    <div className="mt-[2rem] flex min-h-screen flex-col items-center justify-start gap-4">
-      <h3 className="text-[20px] font-bold">Cobrá con QR</h3>
-      {!enterAmountView && (
+    <div className="mt-8 flex min-h-screen flex-col items-center justify-start gap-4">
+      <h3 className="text-xl font-bold">Cobrá con QR</h3>
+
+      {error && (
         <div
-          className="flex h-[70px] w-[312px] items-center justify-between rounded-[10px] bg-[#E1F0D7] p-4"
-          onClick={() => setEnterAmountView(true)}
+          className="relative w-[312px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700"
+          role="alert"
         >
-          <img src="./qr-logo.png" alt="qr-icon" />
-          <p className="text-[16px] font-semibold">Generar QR</p>
+          <span className="block sm:inline">{error}</span>
         </div>
       )}
-      {enterAmountView && (
+
+      {qrResponse ? (
+        <QRGenerator
+          dataQr={qrResponse}
+          numberWithCommas={formatNumber}
+          setGenerateQr={() => setQrResponse(null)}
+        />
+      ) : (
         <>
           <div className="relative flex h-[528px] w-[312px] flex-col items-center justify-center rounded-[20px] bg-[#E1F0D7]">
-            <p className="absolute top-6 text-[16px] font-semibold">
+            <p className="absolute top-6 text-base font-semibold">
               Ingresá el monto a cobrar
             </p>
-            <div className="mt-4 flex w-[80%] justify-center border-b-[1px] border-black">
-              <p className="text-[36px] font-semibold">
-                $ {numberWithCommas(dataForm?.amount || 0)}
+            <div className="mt-4 flex w-4/5 justify-center border-b border-black">
+              <p className="text-4xl font-semibold">
+                $ {formatNumber(formData.amount)}
               </p>
             </div>
             <button
-              className="mt-6 flex items-center justify-center text-[12px]"
-              onClick={() => setDetailModal(true)}
+              className="mt-6 flex items-center gap-2 rounded-md p-2 text-xs transition-colors hover:bg-[#d1e0c7]"
+              onClick={() => setIsDetailsOpen(true)}
             >
-              <img src="./pencil.png" alt="pen" /> Detalles
+              <img src="./pencil.png" alt="pen" className="h-4 w-4" /> Detalles
             </button>
           </div>
-          <button className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-[16px] font-semibold text-[#000000]">
-            Generar código QR
+
+          <button
+            className={`h-[42px] w-[312px] rounded-[20px] text-black ${formData.amount > 0 ? "bg-[#8EC63F] hover:bg-[#7db535]" : "bg-[#C7C7C7]"} text-[16px] font-semibold transition-colors disabled:cursor-not-allowed`}
+            disabled={formData.amount <= 0 || isSubmitting}
+            onClick={handleGenerateQR}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center">
+                <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-t-2 border-white"></div>
+                Cargando...
+              </span>
+            ) : (
+              "Generar código QR"
+            )}
           </button>
+
+          {isDetailsOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="w-[232px] rounded-[20px] bg-white p-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-[14px] font-bold">Detalles</h3>
+                  <button
+                    onClick={() => setIsDetailsOpen(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <form
+                  onSubmit={handleFormSubmit}
+                  className="flex flex-col gap-4"
+                >
+                  <div className="flex flex-col gap-1">
+                    <label
+                      htmlFor="receiverAccount"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Cuenta destino
+                    </label>
+                    <input
+                      type="text"
+                      name="receiverAccount"
+                      id="receiverAccount"
+                      defaultValue={formData.receiverAccount}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label
+                      htmlFor="amount"
+                      className="text-xs font-medium text-gray-700"
+                    >
+                      Monto a cobrar
+                    </label>
+                    <input
+                      type="number"
+                      name="amount"
+                      id="amount"
+                      defaultValue={formData.amount}
+                      placeholder="0.00"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label
+                      htmlFor="description"
+                      className="text-xs font-medium text-gray-700"
+                    >
+                      Motivo
+                    </label>
+                    <input
+                      type="text"
+                      name="description"
+                      id="description"
+                      defaultValue={formData.description}
+                      placeholder="Descripción del pago"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="mt-10 w-full rounded-md bg-[#8EC63F] p-2 text-black transition-colors hover:bg-[#7db535]"
+                  >
+                    Listo
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
         </>
       )}
-
-      {detailModal && (
-        <div className="fixed left-1/2 top-1/2 h-auto w-[232px] -translate-x-1/2 -translate-y-1/2 transform rounded-[20px] bg-white p-4">
-          <div className="flex justify-between text-center">
-            <h3 className="text-[14px] font-bold">Detalles</h3>
-            <button onClick={() => setDetailModal(false)}>X</button>
-          </div>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="amount"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Cuenta destino
-              </label>
-              <input
-                type="text"
-                {...register("receiverAccount")}
-                defaultValue={dataForm?.receiverAccount}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
-            {errors.receiverAccount && (
-              <span className="text-red-500">
-                {errors.receiverAccount.message}
-              </span>
-            )}
-
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="amount"
-                className="block text-[12px] font-medium text-gray-700"
-              >
-                Monto a cobrar
-              </label>
-              <input
-                type="number"
-                {...register("amount")}
-                defaultValue={dataForm?.amount}
-                placeholder="0.00"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
-
-            {errors.amount && (
-              <span className="text-red-500">{errors.amount.message}</span>
-            )}
-
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="description"
-                className="block text-[12px] font-medium text-gray-700"
-              >
-                Motivo
-              </label>
-              <input
-                type="text"
-                {...register("description")}
-                defaultValue={dataForm?.description}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                placeholder="Descripción del pago"
-              />
-            </div>
-            {errors.description && (
-              <span className="text-red-500">{errors.description.message}</span>
-            )}
-            <button
-              type="submit"
-              className="mt-10 h-auto w-full rounded-md bg-green-400"
-            >
-              listo
-            </button>
-          </form>
-        </div>
-      )}
-      {dataForm && <QRGenerator dataForm={dataForm} />}
     </div>
   );
 };

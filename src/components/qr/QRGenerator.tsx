@@ -1,153 +1,94 @@
-import React, { useState } from "react";
 import QRCode from "react-qr-code";
-import useUserStore from "../../store/useUserStore";
+import { useState } from "react";
 
-interface QRPaymentResponse {
-  id: string; // ID del pago
-  receiverAccount: string; // Cuenta del receptor
-  amount: number; // Monto a cobrar
-  description?: string; // Descripción del pago
-  qr?: string; // Código QR generado
-}
+// Types
+type PaymentData = {
+  amount: number;
+  description: string;
+  id: string;
+  qr: string;
+  receiverAccount: string;
+  receiverName: string;
+  receiverSurname: string;
+};
 
 interface QRGeneratorProps {
-  dataForm: {
-    receiverAccount: string;
-    amount: number;
-    description?: string;
-  };
+  dataQr: PaymentData;
+  numberWithCommas: (x: number) => string;
+  setGenerateQr: (value: boolean) => void;
 }
 
-const QRGenerator: React.FC<QRGeneratorProps> = ({ dataForm }) => {
-  const [amount, setAmount] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [qrCode, setQrCode] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [dataQr, setDataQr] = useState<QRPaymentResponse | null>(null);
+function QRGenerator({
+  dataQr,
+  numberWithCommas,
+  setGenerateQr,
+}: QRGeneratorProps) {
+  const [success] = useState(true);
 
-  const token = useUserStore((state) => state.token);
-
-  const handleGenerateQR = async () => {
-    // Validación del monto
-    const numericAmount = Number(amount);
-    if (numericAmount <= 0 || isNaN(numericAmount)) {
-      setError("Por favor, ingrese un monto válido mayor a 0");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    if (!token) {
-      setLoading(false);
-      setError("No autorizado. Por favor, inicie sesión.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "https://i003-nativo-back-production.up.railway.app/api/pagos/crear-qr",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            receiverAccount: dataForm.receiverAccount,
-            amount: Number(dataForm.amount),
-            description: dataForm.description || "",
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error(
-            "No autorizado. Por favor, verifique sus credenciales.",
-          );
-        } else if (response.status === 403) {
-          throw new Error("Monto inválido o no permitido.");
-        } else {
-          throw new Error("Error al generar el código QR.");
-        }
-      }
-
-      const data: QRPaymentResponse = await response.json();
-      setDataQr(data);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Error al generar el código QR.",
-      );
-    } finally {
-      setLoading(false);
-    }
+  const qrData = {
+    ...dataQr,
+    qr: "",
   };
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md">
-      <h2 className="mb-4 text-2xl font-bold">Generar QR para Pago</h2>
+    <div className="mt-8 flex min-h-screen flex-col items-center justify-start gap-4">
+      <div className="relative flex h-[528px] w-[312px] flex-col items-center justify-center rounded-[20px] bg-[#E1F0D7]">
+        <h2 className="absolute top-6 w-[154px] text-center text-base font-semibold">
+          {success
+            ? "¡Felicitaciones! EL cobro fue exitoso!"
+            : "Mostrá este codigo QR para cobrar"}
+        </h2>
+        {success ? (
+          <>
+            <img src="./verified.png" alt="success" />
+            <p className="text-center text-[14px] text-gray-700">
+              Te pagaron $ {numberWithCommas(dataQr.amount)} <br />
+              por {dataQr.description}
+            </p>
+          </>
+        ) : (
+          <div className="m-auto flex flex-col items-center justify-between gap-4">
+            <QRCode
+              value={JSON.stringify(qrData)}
+              size={256}
+              className="rounded-lg bg-white p-2"
+            />
 
-      <div className="mb-4">
-        <label
-          htmlFor="amount"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Monto a cobrar
-        </label>
-        <input
-          type="number"
-          id="amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          placeholder="0.00"
-          step="0.01"
-        />
+            <p className="text-sm text-gray-500">
+              Escanee este código QR para realizar el pago
+            </p>
+
+            <div className="flex flex-col items-center justify-center text-center">
+              {dataQr.description && (
+                <p className="text-base font-semibold text-black">
+                  {dataQr.description}
+                </p>
+              )}
+              <p className="text-base font-semibold text-black">
+                $ {numberWithCommas(dataQr.amount)}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="mb-4">
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700"
+      {success ? (
+        <button
+          className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-base font-semibold text-white transition-colors duration-200 hover:bg-[#7db535] focus:outline-none focus:ring-2 focus:ring-[#8EC63F] focus:ring-offset-2"
+          onClick={() => setGenerateQr(false)}
         >
-          Descripción (opcional)
-        </label>
-        <input
-          type="text"
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          placeholder="Descripción del pago"
-        />
-      </div>
-
-      {error && (
-        <div className="mb-4 rounded border border-red-400 bg-red-100 p-2 text-red-700">
-          {error}
-        </div>
-      )}
-
-      <button
-        onClick={handleGenerateQR}
-        disabled={loading}
-        className="w-full rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
-      >
-        {loading ? "Generando..." : "Generar QR"}
-      </button>
-
-      {dataQr && (
-        <div className="mt-6 flex flex-col items-center">
-          <QRCode value={`./${dataQr.id}`} size={256} />
-          <p className="mt-2 text-sm text-gray-500">
-            Escanee este código QR para realizar el pago
-          </p>
-        </div>
+          Volver
+        </button>
+      ) : (
+        <button
+          className="h-[42px] w-[312px] rounded-[20px] bg-red-500 text-base font-semibold text-white transition-colors duration-200 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+          onClick={() => setGenerateQr(false)}
+        >
+          Cancelar cobro
+        </button>
       )}
     </div>
   );
-};
+}
 
 export default QRGenerator;
