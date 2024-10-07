@@ -54,7 +54,7 @@ const History: React.FC = () => {
   if (!historyData) return;
 
   return (
-    <main className="relative flex flex-col items-center gap-4 bg-light-green px-4 py-6 font-lato">
+    <main className="relative flex min-h-[70vh] flex-col items-center gap-4 bg-light-green px-4 py-6 font-lato">
       <Link
         to="/dashboard"
         className="flex w-full items-center gap-2 text-sm font-semibold"
@@ -91,18 +91,14 @@ const History: React.FC = () => {
             {historyData.map((transaction: Transaction, index: number) => (
               <li
                 key={transaction.id}
-                className={`flex justify-between ${historyData.length != index + 1 && "border-b py-4"}`}
+                className={`flex justify-between ${historyData.length != index + 1 && "border-b py-3"}`}
               >
                 <div>
                   <p className="text-sm font-semibold">
                     {transaction.creationDate}
                   </p>
                   <p className="text-sm">{transaction.transaction}</p>
-                  <p className="pb-2 text-xs font-medium">
-                    {accountId === transaction.senderAccount
-                      ? "Microcrédito de " + transaction.receiverFullName
-                      : transaction.senderFullName}
-                  </p>
+                  <p className="text-sm font-medium">{transaction.description}</p>
                   {transaction.status == "ACCEPTED" && (
                     <p className="w-fit rounded-[20px] bg-secondary-green px-6 text-center text-xs">
                       ACEPTADO

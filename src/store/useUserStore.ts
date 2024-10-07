@@ -14,7 +14,6 @@ interface User {
   accountId?: string;
 }
 
-
 interface Contribution {
   id: string;
   lenderAccountId: string;
@@ -148,7 +147,7 @@ const useUserStore = create<UserStore>()(
       setMicrocreditsList: async () => {
         const state = get();
         const token = state.token;
-        if(!token) return;
+        if (!token) return;
         try {
           const result = await getHistoryMicrocreditsService(token);
           set({ microcreditsList: result });
@@ -159,7 +158,7 @@ const useUserStore = create<UserStore>()(
       setMicrocreditsListGral: async () => {
         const state = get();
         const token = state.token;
-        if(!token) return;
+        if (!token) return;
         try {
           const result = await getMicrocreditsGralService(token);
           set({ microcreditsListGral: result });

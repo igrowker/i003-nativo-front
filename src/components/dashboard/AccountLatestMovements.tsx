@@ -21,14 +21,10 @@ const AccountLatestMovements: React.FC<AccountLatestMovementsProps> = ({
               <div>
                 <p>{transaction.creationDate}</p>
                 <p>{transaction.transaction}</p>
-                <p className="text-sm font-medium">
-                  {accountId == transaction.senderAccount
-                    ? "Microcrédito de " + transaction.receiverFullName
-                    : transaction.senderFullName}
-                </p>
+                <p className="text-sm font-medium">{transaction.description}</p>
               </div>
               <p>
-                {accountId == transaction.senderAccount && "-"}$
+                {accountId === transaction.senderAccount ? "-" : "+"}$
                 {transaction.amount.toLocaleString()}
               </p>
             </li>

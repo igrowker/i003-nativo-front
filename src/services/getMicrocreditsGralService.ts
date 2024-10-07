@@ -1,5 +1,4 @@
 export const getMicrocreditsGralService = async (token: string) => {
-  
   const API_URL = import.meta.env.VITE_NATIVO_API_URL;
 
   try {
@@ -7,18 +6,18 @@ export const getMicrocreditsGralService = async (token: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,  
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-  if (response.ok) {
-        const result = await response.json();
-        return result;   
-      } else { 
-        throw new Error("Error al traer los datos");
-      }
-    } catch (error) {
-      console.error("Error en la solicitud del historial de créditos", error);
-      throw error;
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      throw new Error("Error al traer los datos");
     }
+  } catch (error) {
+    console.error("Error en la solicitud del historial de créditos", error);
+    throw error;
+  }
 };

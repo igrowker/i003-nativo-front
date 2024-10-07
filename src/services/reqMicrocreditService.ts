@@ -1,5 +1,9 @@
-export const requestMicrocreditService = async (token: string, amount: number, title:string, description: string) => {
-  
+export const requestMicrocreditService = async (
+  token: string,
+  amount: number,
+  title: string,
+  description: string,
+) => {
   const API_URL = import.meta.env.VITE_NATIVO_API_URL;
 
   try {
@@ -7,23 +11,23 @@ export const requestMicrocreditService = async (token: string, amount: number, t
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,  
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({  
+      body: JSON.stringify({
         title,
         description,
-        amount,    
+        amount,
       }),
     });
 
-  if (response.ok) {
-        const result = await response.json();
-        return result;   
-      } else { 
-        throw new Error("Error al solicitar el microcrédito");
-      }
-    } catch (error) {
-      console.error("Error en la solicitud de microcrédito:", error);
-      throw error;
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      throw new Error("Error al solicitar el microcrédito");
     }
+  } catch (error) {
+    console.error("Error en la solicitud de microcrédito:", error);
+    throw error;
+  }
 };

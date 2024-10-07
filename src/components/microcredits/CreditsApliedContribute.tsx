@@ -3,13 +3,16 @@ import useUserStore from "../../store/useUserStore";
 import { formatDate } from "../../helpers/formDate";
 
 const CreditsApliedContribute = () => {
+  const microcreditListGral = useUserStore(
+    (state) => state.microcreditsListGral,
+  );
+  const setMicrocreditListGral = useUserStore(
+    (state) => state.setMicrocreditsListGral,
+  );
 
-  const microcreditListGral = useUserStore((state) => state.microcreditsListGral);
-  const setMicrocreditListGral = useUserStore((state) => state.setMicrocreditsListGral);
-
-  useEffect(()=>{
+  useEffect(() => {
     setMicrocreditListGral();
-  },[])
+  }, []);
 
   return (
     <section className="mt-8 w-full px-4">
@@ -19,7 +22,7 @@ const CreditsApliedContribute = () => {
           <select
             name="credits"
             id="credits"
-             className="text-xs h-10 w-full appearance-none rounded-lg border-none bg-transparent px-4 py-2 pr-10 leading-tight text-[#C7C7C7] focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="h-10 w-full appearance-none rounded-lg border-none bg-transparent px-4 py-2 pr-10 text-xs leading-tight text-[#C7C7C7] focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="" disabled>
               Ordenar por
@@ -38,43 +41,43 @@ const CreditsApliedContribute = () => {
             </svg>
           </div>
         </div>
-        { microcreditListGral.map((credit, index) => {
+        {microcreditListGral.map((credit, index) => {
           return (
             <article key={credit.id} className="-mt-6">
               <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
                 <h3 className="mb-2 text-base font-semibold">
                   Usuario {index + 1}
                 </h3>
-                  <div className="flex flex-row items-end justify-between text-xs">
-                    <p className="w-auto">Motivo</p>
-                    <hr className="flex-1" />
-                    <p className="truncate max-w-40">{credit.title}</p>
-                  </div>
-                  <div className="flex flex-row items-end justify-between text-xs">
-                    <p className="w-auto">Monto</p>
-                    <hr className="flex-1" />
-                    <p>${credit.amount}</p>
-                  </div>
-                  <div className="flex flex-row items-end justify-between text-xs">
-                    <p className="w-auto">Cantidad restante</p>
-                    <hr className="flex-1" />
-                    <p>${credit.remainingAmount}</p>
-                  </div>
-                 <div className="flex flex-row items-end justify-between text-xs">
-                    <p className="w-auto">Tasa fija</p>
-                    <hr className="flex-1" />
-                    <p>20%</p>
-                  </div>
-                  <div className="flex flex-row items-end justify-between text-xs">
-                    <p className="w-auto">Fecha de solicitud</p>
-                    <hr className="flex-1" />
-                    <p>{formatDate(credit.createdDate)}</p>
-                  </div>
-                  <div className="flex flex-row items-end justify-between text-xs">
-                    <p className="w-auto">Fecha de vencimiento</p>
-                    <hr className="flex-1" />
-                    <p>{formatDate(credit.expirationDate)}</p>
-                  </div>
+                <div className="flex flex-row items-end justify-between text-xs">
+                  <p className="w-auto">Motivo</p>
+                  <hr className="flex-1" />
+                  <p className="max-w-40 truncate">{credit.title}</p>
+                </div>
+                <div className="flex flex-row items-end justify-between text-xs">
+                  <p className="w-auto">Monto</p>
+                  <hr className="flex-1" />
+                  <p>${credit.amount}</p>
+                </div>
+                <div className="flex flex-row items-end justify-between text-xs">
+                  <p className="w-auto">Cantidad restante</p>
+                  <hr className="flex-1" />
+                  <p>${credit.remainingAmount}</p>
+                </div>
+                <div className="flex flex-row items-end justify-between text-xs">
+                  <p className="w-auto">Tasa fija</p>
+                  <hr className="flex-1" />
+                  <p>20%</p>
+                </div>
+                <div className="flex flex-row items-end justify-between text-xs">
+                  <p className="w-auto">Fecha de solicitud</p>
+                  <hr className="flex-1" />
+                  <p>{formatDate(credit.createdDate)}</p>
+                </div>
+                <div className="flex flex-row items-end justify-between text-xs">
+                  <p className="w-auto">Fecha de vencimiento</p>
+                  <hr className="flex-1" />
+                  <p>{formatDate(credit.expirationDate)}</p>
+                </div>
                 <div className="mt-4 flex w-full justify-end">
                   <a href="./" className="text-blue-500 underline">
                     Ver más...

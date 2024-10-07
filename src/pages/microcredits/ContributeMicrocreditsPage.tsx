@@ -9,9 +9,7 @@ const ContributeMicrocreditsPage: React.FC = () => {
           src="./microcredits/contribute.png"
           alt="Imagen solicitando microcrédito"
         />
-        <h2 className="w-2/3 text-center text-base font-extrabold">
-          Colaborá
-        </h2>
+        <h2 className="w-2/3 text-center text-base font-extrabold">Colaborá</h2>
       </article>
       <CreditsApliedContribute />
     </div>
