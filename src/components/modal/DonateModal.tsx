@@ -121,7 +121,7 @@ export const DonateModal: React.FC<{
             <input
               type="text"
               onChange={(e) => setReceiver(e.target.value)}
-              className="w-full rounded-[20px] border-2 border-light-green px-2 py-1"
+              className="mt-2 h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 text-sm placeholder-[#C7C7C7] shadow-md"
             />
           </div>
         </div>

@@ -108,9 +108,13 @@ export async function getLatestHistoryByAccount() {
     if (response.ok && accountId != null) {
       const transactions = await response.json();
 
-      return transactions.map((transaction: Transaction) =>
-        normalizeTransaction(transaction, accountId),
-      );
+      const normalizedTransactions = transactions
+        .map((transaction: Transaction) =>
+          normalizeTransaction(transaction, accountId),
+        )
+        .slice(0, 5);
+      console.log(normalizedTransactions);
+      return normalizedTransactions;
     } else {
       return null;
     }
@@ -194,21 +198,66 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
     },
   );
 
-  const newTransactionType =
-    transaction.transaction === "Microcrédito" &&
-    transaction.senderAccount === accountId
-      ? "Colaboración enviada"
-      : "Colaboración recibida";
-
   const receiverFullName = `${transaction.receiverName} ${transaction.receiverSurname}`;
   const senderFullName = `${transaction.senderName} ${transaction.senderSurname}`;
+
+  let newTransactionType;
+  let description = "";
+
+  switch (transaction.transaction) {
+    case "Microcrédito":
+      newTransactionType =
+        transaction.senderAccount === accountId
+          ? "Colaboración enviada"
+          : "Colaboración recibida";
+      description =
+        transaction.senderAccount === accountId
+          ? `Microcrédito a ${receiverFullName}`
+          : `Colaboración recibida de ${senderFullName}`;
+      break;
+
+    case "Donación":
+      newTransactionType =
+        transaction.senderAccount === accountId
+          ? "Donación enviada"
+          : "Donación recibida";
+      description =
+        transaction.senderAccount === accountId
+          ? `A ${receiverFullName}`
+          : senderFullName.includes("null")
+            ? "De donante anónimo"
+            : `De ${senderFullName}`;
+      break;
+
+    case "Pago":
+      newTransactionType =
+        transaction.senderAccount === accountId
+          ? "Donación enviada"
+          : "Donación recibida";
+      description =
+        transaction.senderAccount === accountId
+          ? `A ${receiverFullName}`
+          : senderFullName.includes("null")
+            ? "De donante anónimo"
+            : `De ${senderFullName}`;
+      break;
+
+    default:
+      newTransactionType = transaction.transaction;
+      description =
+        transaction.senderAccount === accountId
+          ? `A ${receiverFullName}`
+          : senderFullName.includes("null")
+            ? "Desde anónimo"
+            : `Desde ${senderFullName}`;
+      break;
+  }
 
   return {
     ...transaction,
     transaction: newTransactionType,
     creationDate: formattedDate,
-    receiverFullName,
-    senderFullName,
+    description,
   };
 }
 
