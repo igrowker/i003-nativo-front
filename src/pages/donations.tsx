@@ -3,22 +3,21 @@ import { Link } from "react-router-dom";
 import useModal from "../hooks/useModal";
 import useUserStore from "../store/useUserStore";
 import { User } from "../interfaces/User";
-import { Transaction } from "../interfaces/Transaction";
-import accountService from "../services/accountService";
 import { FaArrowLeft } from "react-icons/fa6";
 import { ContainerWhite } from "../components/dashboard/ContainerWhite";
 import { FiltersModal } from "../components/history/FiltersModal";
 import { TbFilter, TbFilterCheck } from "react-icons/tb";
 import donationService from "../services/donationService";
+import { Donation } from "../interfaces/Donation";
 import {
   IoCheckmarkCircleOutline,
   IoCloseCircleOutline,
 } from "react-icons/io5";
 
-const History: React.FC = () => {
+const Donations: React.FC = () => {
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
-  const [historyData, setHistoryData] = useState<Transaction[]>([]);
+  const [donationsData, setDonationsData] = useState<Donation[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [selectedDateRange, setSelectedDateRange] = useState<{
     fromDate: string;
@@ -27,24 +26,25 @@ const History: React.FC = () => {
 
   const { isModalOpen, modalContent, openModal, closeModal } = useModal();
 
-  const fetchAccount = async () => {
+  const fetchDonations = async () => {
     if (!accountId) return;
 
     try {
-      let movementsData = [];
+      let donationsData = [];
 
       if (selectedStatus) {
-        movementsData =
-          await accountService.getAccountHistoryByStatus(selectedStatus);
+        donationsData =
+          await donationService.getAccountDonations(selectedStatus);
       } else if (selectedDateRange) {
-        movementsData = await accountService.getAccountHistoryByDates(
+        /*donationsData = await accountService.getAccountHistoryByDates(
           selectedDateRange.fromDate,
           selectedDateRange.toDate,
-        );
+        );*/
+        console.log("falta que llegue fecha en el endpoint");
       } else {
-        movementsData = await accountService.getAccountHistory();
+        donationsData = await donationService.getAccountDonations();
       }
-      setHistoryData(movementsData);
+      setDonationsData(donationsData);
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -52,26 +52,23 @@ const History: React.FC = () => {
 
   useEffect(() => {
     if (accountId) {
-      fetchAccount();
+      fetchDonations();
     }
   }, [accountId, selectedStatus, selectedDateRange]);
 
-  if (!historyData) return;
+  if (!donationsData) return;
 
-  const handleChangeStatus = async (
-    transaction: Transaction,
-    newStatus: string,
-  ) => {
+  const handleChangeStatus = async (donation: Donation, newStatus: string) => {
     try {
       const { success, error } = await donationService.modifyDonationStatus(
-        transaction.id,
-        transaction.senderAccount,
+        donation.id,
+        donation.accountIdDonor,
         newStatus,
-        transaction.amount,
+        donation.amount,
       );
 
       if (success) {
-        fetchAccount();
+        fetchDonations();
       } else {
         console.error("Error al cambiar el estado de la donación:", error);
       }
@@ -113,42 +110,41 @@ const History: React.FC = () => {
         </button>
       </div>
       <ContainerWhite className="z-10 w-full px-2 py-4">
-        {historyData.length > 0 ? (
-          <ul className="flex flex-col gap-2 py-2 pl-2 pr-6">
-            {historyData.map((transaction: Transaction, index: number) => (
+        {donationsData.length > 0 ? (
+          <ul className="flex flex-col gap-2 py-2 pl-2 pr-8">
+            {donationsData.map((donation: Donation, index: number) => (
               <li
-                key={transaction.id}
-                className={`flex justify-between ${historyData.length != index + 1 && "border-b py-3"}`}
+                key={donation.id}
+                className={`flex justify-between ${donationsData.length != index + 1 && "border-b py-3"}`}
               >
                 <div>
                   <p className="text-sm font-semibold">
-                    {transaction.creationDate}
+                    {donation.createdAt || "XX/XX/XX"}
                   </p>
-                  <p className="text-sm">{transaction.transaction}</p>
                   <p className="text-sm font-medium">
-                    {transaction.description}
+                    De {donation.accountIdBeneficiary}
                   </p>
-                  {transaction.status == "ACCEPTED" && (
+                  {donation.status == "ACCEPTED" && (
                     <p className="w-fit rounded-[20px] bg-secondary-green px-6 text-center text-xs">
                       ACEPTADO
                     </p>
                   )}
-                  {transaction.status == "COMPLETED" && (
+                  {donation.status == "COMPLETED" && (
                     <p className="w-fit rounded-[20px] bg-secondary-green px-6 text-center text-xs">
                       COMPLETO
                     </p>
                   )}
-                  {transaction.status == "PENDING" && (
+                  {donation.status == "PENDING" && (
                     <p className="w-fit rounded-[20px] bg-secondary-yellow/30 px-6 text-center text-xs">
                       PENDIENTE
                     </p>
                   )}
-                  {transaction.status == "EXPIRED" && (
+                  {donation.status == "EXPIRED" && (
                     <p className="w-fit rounded-[20px] bg-red-300 px-6 text-center text-xs">
                       EXPIRADO
                     </p>
                   )}
-                  {transaction.status == "DENIED" && (
+                  {donation.status == "DENIED" && (
                     <p className="w-fit rounded-[20px] bg-red-300 px-6 text-center text-xs">
                       RECHAZADO
                     </p>
@@ -156,32 +152,29 @@ const History: React.FC = () => {
                 </div>
                 <div className="flex flex-col items-center justify-evenly">
                   <p
-                    className={`font-bold ${(transaction.status == "DENIED" || transaction.status == "EXPIRED") && "line-through"}`}
+                    className={`font-bold ${(donation.status == "DENIED" || donation.status == "EXPIRED") && "line-through"}`}
                   >
-                    {transaction.status == "ACCEPTED" ||
-                    transaction.status == "PENDING"
-                      ? transaction.receiverAccount == accountId
-                        ? "+"
-                        : "-"
-                      : ""}
-                    ${transaction.amount.toLocaleString()}
+                    {(donation.status == "ACCEPTED" ||
+                      donation.status == "PENDING") &&
+                    donation.accountIdBeneficiary == accountId
+                      ? "+"
+                      : "-"}
+                    ${donation.amount.toLocaleString()}
                   </p>
-                  {transaction.status == "PENDING" &&
-                    transaction.receiverAccount == accountId && (
+                  {donation.status == "PENDING" &&
+                    donation.accountIdBeneficiary == accountId && (
                       <div className="flex gap-1">
                         <button
                           className="rounded-[20px] text-center text-primary-green/90"
                           onClick={() =>
-                            handleChangeStatus(transaction, "ACCEPTED")
+                            handleChangeStatus(donation, "ACCEPTED")
                           }
                         >
                           <IoCheckmarkCircleOutline className="text-3xl" />
                         </button>
                         <button
                           className="rounded-[20px] text-center text-red-600"
-                          onClick={() =>
-                            handleChangeStatus(transaction, "DENIED")
-                          }
+                          onClick={() => handleChangeStatus(donation, "DENIED")}
                         >
                           <IoCloseCircleOutline className="text-3xl" />
                         </button>
@@ -210,4 +203,4 @@ const History: React.FC = () => {
   );
 };
 
-export default History;
+export default Donations;

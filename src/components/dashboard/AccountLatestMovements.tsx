@@ -23,9 +23,16 @@ const AccountLatestMovements: React.FC<AccountLatestMovementsProps> = ({
                 <p>{transaction.transaction}</p>
                 <p className="text-sm font-medium">{transaction.description}</p>
               </div>
-              <p>
-                {accountId === transaction.senderAccount ? "-" : "+"}$
-                {transaction.amount.toLocaleString()}
+              <p
+                className={`font-semibold ${(transaction.status == "DENIED" || transaction.status == "EXPIRED") && "line-through"}`}
+              >
+                {transaction.status == "ACCEPTED" ||
+                transaction.status == "PENDING"
+                  ? transaction.receiverAccount == accountId
+                    ? "+"
+                    : "-"
+                  : ""}
+                ${transaction.amount.toLocaleString()}
               </p>
             </li>
           ))

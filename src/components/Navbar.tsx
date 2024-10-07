@@ -46,6 +46,11 @@ const linksLogged: Link[] = [
     name: "Mis colaboraciones",
     path: "/colaborations",
   },
+  {
+    icon: <MdFavoriteBorder size={22} />,
+    name: "Mis donaciones recibidas",
+    path: "/received-donations",
+  },
   { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
 ];
 
