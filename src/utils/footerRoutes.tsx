@@ -53,11 +53,19 @@ export const linksLogged: Link[] = [
     path: "/about",
   },
   {
+    name: "Nuestro equipo",
+    path: "/team",
+  },
+  {
     name: "Mi Perfil",
     path: "/profile",
   },
   {
-    name: "Mi historial",
-    path: "/historial",
+    name: "Mi movimientos",
+    path: "/history",
+  },
+  {
+    name: "Mis microcréditos",
+    path: "/history-microcredits",
   },
 ];

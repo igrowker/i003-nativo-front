@@ -1,10 +1,12 @@
 import { FaRegCopyright } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { links, linksLogged, linksNotLogged } from "../utils/footerRoutes";
-
-const userActive = false; //for testing purposes
+import useUserStore from "../store/useUserStore";
 
 export const Footer: React.FC = () => {
+  const token = useUserStore((state) => state.token);
+  const userActive = token !== null;
+
   return (
     <footer className="bg-primary-green py-2 font-lato">
       <div className="mx-auto w-[340px]">
@@ -19,7 +21,7 @@ export const Footer: React.FC = () => {
         </Link>
         {userActive && (
           <div className="flex justify-between">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <h5 className="text-[13px] font-bold">Mapa de sitio</h5>
               {linksLogged.map((link, index) => (
                 <Link
@@ -46,7 +48,7 @@ export const Footer: React.FC = () => {
         )}
         {!userActive && (
           <div className="flex justify-between">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <h5 className="text-[13px] font-bold">Mapa de sitio</h5>
               {linksNotLogged.map((link, index) => (
                 <Link
