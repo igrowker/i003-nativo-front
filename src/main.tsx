@@ -14,14 +14,18 @@ import HistoryMicrocreditsPage from "./pages/microcredits/HistoryMicrocreditsPag
 import ProtectedLayout from "./layout/ProtectedLayout";
 import AboutUs from "./pages/aboutUs";
 import Team from "./pages/team";
+import Home from "./pages/home";
 import QrGeneratorPage from "./pages/qr/QrGeneratorPage";
 import "./index.css";
+import Dashboard from "./pages/dashboard";
+import History from "./pages/history";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Router>
       <Navbar />
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/" element={<App />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
@@ -37,6 +41,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           element={<HistoryMicrocreditsPage />}
         />
         <Route element={<ProtectedLayout />}>
+          {/* Rutas protegidas */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/history" element={<History />} />
           <Route path="/dashboard" element={"hola todo bien"} />
           <Route path="/generate-qr" element={<QrGeneratorPage />} />
           <Route path="/qr/:id" element={<QrGeneratorPage />} />

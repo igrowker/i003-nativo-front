@@ -23,7 +23,7 @@ function QRGenerator({
   numberWithCommas,
   setGenerateQr,
 }: QRGeneratorProps) {
-  const [success] = useState(true);
+  const [success] = useState(false);
 
   const qrData = {
     ...dataQr,
