@@ -12,5 +12,5 @@ export interface Transaction {
   receiverAccount: string;
   creationDate: string;
   endDate?: string;
-  stauts: string;
+  status: string;
 }
