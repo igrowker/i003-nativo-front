@@ -51,7 +51,7 @@ export const DonateModal: React.FC<{
     setIsLoading(false);
   };
 
-  useEffect(() => {}, [errorMessage]);
+  useEffect(() => { }, [errorMessage]);
 
   if (!user) return null;
 
@@ -125,6 +125,7 @@ export const DonateModal: React.FC<{
             />
           </div>
         </div>
+        {receiver == accountId && <p className="bg-red-500 -my-4 text-white text-center rounded-full">No puede donar a su propia cuenta.</p>}
         <div className="mb-2 flex gap-2 rounded-[20px] border border-secondary-green bg-light-grey p-3 drop-shadow-box">
           <div className="flex size-12 items-center justify-center rounded-full bg-light-green">
             {user?.name.charAt(0) + user?.surname.charAt(0)}
@@ -158,7 +159,8 @@ export const DonateModal: React.FC<{
             disabled={
               amount === "" ||
               parseFloat(amount.toString()) < 100 ||
-              receiver == null
+              receiver == null ||
+              receiver == accountId
             }
           >
             Continuar
