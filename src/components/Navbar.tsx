@@ -15,6 +15,7 @@ import { GoHome } from "react-icons/go";
 import { MdOutlineSyncAlt } from "react-icons/md";
 import { Link } from "react-router-dom";
 import useUserStore from "../store/useUserStore";
+import { TbUsersGroup } from "react-icons/tb";
 
 interface Link {
   icon?: JSX.Element;
@@ -58,6 +59,11 @@ const linksNotLogged: Link[] = [
     icon: <IoIosInformationCircleOutline size={22} />,
     name: "Sobre nosotros",
     path: "/about",
+  },
+  {
+    icon: <TbUsersGroup size={22} />,
+    name: "Nuestro equipo",
+    path: "/team",
   },
   {
     icon: <MdFavoriteBorder size={22} />,
