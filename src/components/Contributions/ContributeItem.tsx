@@ -1,6 +1,9 @@
 import { formatDate } from "../../helpers/formDate";
 import { CollaborationModal } from "../modal/CollaborationModal";
 import { Microcredit } from '../../interfaces/Microcredit';
+import { BiChevronDown } from "react-icons/bi";
+import SeeMore from "../modal/SeeMore";
+import { useState } from "react";
 
 interface ContributeItemProps {
   handleCloseModal: () => void;
@@ -10,6 +13,13 @@ interface ContributeItemProps {
 
 
 const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microcredit, openModal  }) => {
+
+  const [isSeeMoreOpen, setIsSeeMoreOpen] = useState(false);
+
+  const closeSeeMoreModal = () => {
+    setIsSeeMoreOpen(false);
+  }
+
   return (
     <article>         
       <div className="flex flex-row items-end justify-between text-xs">
@@ -42,11 +52,11 @@ const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microc
         <hr className="flex-1" />
         <p>{formatDate(microcredit.expirationDate)}</p>
       </div>
-    <div className="mt-4 flex w-full justify-end">
-      <a href="./" className="text-blue-500 underline">
-        Ver más...
-      </a>
-    </div>
+      <div className="mt-3 w-full text-end font-medium text-blue-400">
+        <button onClick={()=>setIsSeeMoreOpen(true)} className="text-xs leading-3">
+          Ver más <BiChevronDown className="inline text-2xl" />
+        </button>
+      </div>
     <button
       type="button"
       onClick= { () => openModal(<CollaborationModal onClose={handleCloseModal} microcreditId = {microcredit.id} />)}
@@ -54,6 +64,15 @@ const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microc
     >
       Contribuir
     </button>
+    { isSeeMoreOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
+          <SeeMore
+            title="Detalle de microcrédito"
+            microcredit={microcredit}
+            closeSeeMoreModal={closeSeeMoreModal}
+          />
+        </div>
+      )}
   </article>
   )
 }
