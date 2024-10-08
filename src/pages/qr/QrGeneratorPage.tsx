@@ -42,7 +42,7 @@ const QrGeneratorPage = () => {
 
   // Store
   const { user, token } = useUserStore();
-
+  console.log(user?.accountId);
   // Effects
   useEffect(() => {
     if (user?.accountId) {

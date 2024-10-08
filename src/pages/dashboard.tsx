@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
   const { isModalOpen, modalContent, openModal, closeModal } = useModal();
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
-  console.log("accountId", accountId);
+  // console.log("accountId", accountId);
   const [accountData, setAccountData] = useState<{
     account: Account | null;
     latestMovements: Transaction[];
@@ -117,6 +117,38 @@ const Dashboard: React.FC = () => {
       fetchAccount();
     }
   }, [accountId]);
+
+  const token = useUserStore((store) => store.token);
+
+  // const fetchPrueba = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://i003-nativo-back-production.up.railway.app/api/pagos/id/2d9dc894-7962-490e-97d5-ea7ce652a840`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       },
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+
+  //     console.log("response", response);
+
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error("Error: ", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchPrueba();
+  // }, []);
 
   return (
     <main className="font-lato">

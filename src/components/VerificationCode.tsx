@@ -130,7 +130,7 @@ const VerificationCode = () => {
         className="flex h-[197px] w-[197px] items-center justify-center"
       />
       {message && (
-        <div className="rounded-md bg-red-500 p-2 text-white">{message}</div>
+        <div className="rounded-md bg-green-500 p-2 text-white">{message}</div>
       )}
       {userVerified && (
         <h1 className="text-[28px] font-bold text-[#000000]">

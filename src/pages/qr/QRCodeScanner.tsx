@@ -8,8 +8,10 @@ interface QRCodeScannerProps {
 const QRCodeScanner: React.FC<QRCodeScannerProps> = () => {
   const [scannedData, setScannedData] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [newData, setNewData] = useState<string>("");
   const { user, token } = useUserStore();
+
+  console.log("user", user?.accountId);
 
   const handleScan = () => {
     // In a real application, this would use the device's camera to scan the QR code
@@ -60,11 +62,12 @@ const QRCodeScanner: React.FC<QRCodeScannerProps> = () => {
   };
 
   console.log("user", user?.accountId);
+  // console.log("token", token);
 
   const handlePay = async () => {
     try {
       const response = await fetch(
-        `https://i003-nativo-back-production.up.railway.app/api/cliente/${user?.accountId}`,
+        `https://i003-nativo-back-production.up.railway.app/api/pagos/cliente/${user?.accountId}`,
         {
           method: "GET",
           headers: {
@@ -77,6 +80,8 @@ const QRCodeScanner: React.FC<QRCodeScannerProps> = () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
+      console.log("hola soy la response", response);
 
       const data = await response.json();
       console.log(data);
