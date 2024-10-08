@@ -1,6 +1,6 @@
 export interface Transaction {
   id: string;
-  transaction: string;
+  transaction?: string;
   amount: number;
   senderName: string;
   senderSurname: string;
@@ -8,7 +8,9 @@ export interface Transaction {
   receiverName: string;
   receiverSurname: string;
   receiverAccount: string;
-  creationDate: string;
+  creationDate: string | number | Date;
+  formattedDate?: string | undefined;
+  formattedTime?: string | undefined;
   endDate?: string;
   status: string;
   description?: string;
