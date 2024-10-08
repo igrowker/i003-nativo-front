@@ -7,10 +7,9 @@ import { useState } from "react";
 
 interface ContributeItemProps {
   handleCloseModal: () => void;
-  microcredit: Microcredit;  
+  microcredit: Microcredit;
   openModal: (content: JSX.Element) => void;
 }
-
 
 const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microcredit, openModal  }) => {
 
@@ -21,11 +20,11 @@ const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microc
   }
 
   return (
-    <article>         
+    <article>
       <div className="flex flex-row items-end justify-between text-xs">
         <p className="w-auto">Motivo</p>
         <hr className="flex-1" />
-        <p className="truncate max-w-40">{microcredit.title}</p>
+        <p className="max-w-40 truncate">{microcredit.title}</p>
       </div>
       <div className="flex flex-row items-end justify-between text-xs">
         <p className="w-auto">Monto</p>
@@ -77,4 +76,4 @@ const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microc
   )
 }
 
-export default ContributeItem
+export default ContributeItem;

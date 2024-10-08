@@ -1,14 +1,20 @@
-export const getMicrocreditsGralService = async (token: string, microcreditStatus: string) => {
+export const getMicrocreditsGralService = async (
+  token: string,
+  microcreditStatus: string,
+) => {
   const api = import.meta.env.VITE_API_URL;
 
   try {
-    const response = await fetch(`${api}/api/microcreditos/historial-estados/${microcreditStatus}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${api}/api/microcreditos/historial-estados/${microcreditStatus}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     if (response.ok) {
       const result = await response.json();

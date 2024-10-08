@@ -15,8 +15,8 @@ import {
 } from "react-icons/io5";
 
 const Donations: React.FC = () => {
-  const user: User | null = useUserStore((store) => store.user);
-  const accountId: string | null = user?.accountId ?? null;
+  const user_: User | null = useUserStore((store) => store.user);
+  const accountId: string | null = user_?.accountId ?? null;
   const [donationsData, setDonationsData] = useState<Donation[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [selectedDateRange, setSelectedDateRange] = useState<{
@@ -30,23 +30,23 @@ const Donations: React.FC = () => {
     if (!accountId) return;
 
     try {
-      let donationsData = [];
+      let donationsData: Donation[] = [];
 
       if (selectedStatus) {
         donationsData =
           await donationService.getAccountDonations(selectedStatus);
       } else if (selectedDateRange) {
-        /*donationsData = await accountService.getAccountHistoryByDates(
-          selectedDateRange.fromDate,
-          selectedDateRange.toDate,
-        );*/
-        console.log("falta que llegue fecha en el endpoint");
+        donationsData = await donationService.getDonationsByDateRange(
+          selectedDateRange.fromDate.toString(),
+          selectedDateRange.toDate.toString(),
+        );
       } else {
         donationsData = await donationService.getAccountDonations();
       }
+
       setDonationsData(donationsData);
     } catch (error) {
-      console.error("Error: ", error);
+      return null;
     }
   };
 
@@ -85,7 +85,7 @@ const Donations: React.FC = () => {
       >
         <FaArrowLeft className="pt-1 text-base" /> Volver al dashboard
       </Link>
-      <h1 className="text-xl font-bold leading-[22px]">Historial</h1>
+      <h1 className="text-xl font-bold leading-[22px]">Donaciones</h1>
       <div className="flex gap-2">
         <div className="w-80 rounded-[20px] bg-white px-2 py-1 text-sm text-gray-600">
           Buscá por número de operación o nombre
@@ -109,7 +109,7 @@ const Donations: React.FC = () => {
           )}
         </button>
       </div>
-      <ContainerWhite className="z-10 w-full px-2 py-4">
+      <ContainerWhite key="donations" className="z-10 w-full px-2 py-4">
         {donationsData.length > 0 ? (
           <ul className="flex flex-col gap-2 py-2 pl-2 pr-8">
             {donationsData.map((donation: Donation, index: number) => (
@@ -119,11 +119,10 @@ const Donations: React.FC = () => {
               >
                 <div>
                   <p className="text-sm font-semibold">
-                    {donation.createdAt || "XX/XX/XX"}
+                    {donation.formattedDate}
                   </p>
-                  <p className="text-sm font-medium">
-                    De {donation.accountIdBeneficiary}
-                  </p>
+                  <p className="text-sm">{donation.transaction}</p>
+                  <p className="text-sm font-medium">{donation.description}</p>
                   {donation.status == "ACCEPTED" && (
                     <p className="w-fit rounded-[20px] bg-secondary-green px-6 text-center text-xs">
                       ACEPTADO
@@ -151,16 +150,21 @@ const Donations: React.FC = () => {
                   )}
                 </div>
                 <div className="flex flex-col items-center justify-evenly">
-                  <p
-                    className={`font-bold ${(donation.status == "DENIED" || donation.status == "EXPIRED") && "line-through"}`}
-                  >
-                    {(donation.status == "ACCEPTED" ||
-                      donation.status == "PENDING") &&
-                    donation.accountIdBeneficiary == accountId
-                      ? "+"
-                      : "-"}
-                    ${donation.amount.toLocaleString()}
-                  </p>
+                  <div className="w-full text-end">
+                    <p
+                      className={`font-bold ${(donation.status == "DENIED" || donation.status == "EXPIRED") && "line-through"}`}
+                    >
+                      {(donation.status == "ACCEPTED" ||
+                        donation.status == "PENDING") &&
+                      donation.accountIdBeneficiary == accountId
+                        ? "+"
+                        : "-"}
+                      ${donation.amount.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {donation.formattedTime}
+                    </p>
+                  </div>
                   {donation.status == "PENDING" &&
                     donation.accountIdBeneficiary == accountId && (
                       <div className="flex gap-1">

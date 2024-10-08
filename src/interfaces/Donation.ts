@@ -7,6 +7,11 @@ export interface Donation {
   accountIdBeneficiary: string;
   beneficiaryName?: string;
   beneficiaryLastName?: string;
-  createdAt?: string;
+  createdAt: string | number | Date;
+  updateAt: string | number | Date;
+  formattedDate?: string | undefined;
+  formattedTime?: string | undefined;
   status: string;
+  transaction?: string;
+  description?: string;
 }
