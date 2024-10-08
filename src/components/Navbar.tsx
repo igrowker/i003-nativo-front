@@ -86,7 +86,7 @@ const MobileNav: React.FC<{ onToggle: () => void }> = ({ onToggle }) => {
     <nav className="relative z-20 flex h-[50px] w-full items-center justify-between bg-[#8EC63F] px-4">
       <GiHamburgerMenu size={28} onClick={onToggle} />
 
-      <Link to={"/"} className="flex flex-grow justify-center">
+      <Link to={`${userActive ? "/dashboard" : "/"}`} className="flex flex-grow justify-center">
         <img src="./logonav.png" alt="logo" className="h-auto w-auto" />
       </Link>
 
@@ -137,9 +137,8 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
-            open ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#F6FAFD]">
             <IoClose
@@ -185,9 +184,8 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {!userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
-            open ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#E1F0D7]">
             <IoClose
