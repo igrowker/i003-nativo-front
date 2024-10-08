@@ -1,21 +1,23 @@
 import React, { useState } from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { FaRegUser } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
-import useDevice from "../hooks/useDevice";
 import { FiLogIn } from "react-icons/fi";
-import { IoIosInformationCircleOutline } from "react-icons/io";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { GoHome } from "react-icons/go";
+import {
+  IoIosInformationCircleOutline,
+  IoMdHelpCircleOutline,
+} from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 import {
   MdFavoriteBorder,
   MdOutlineHistory,
   MdOutlinePayment,
+  MdOutlineSyncAlt,
 } from "react-icons/md";
-import { IoMdHelpCircleOutline } from "react-icons/io";
-import { GoHome } from "react-icons/go";
-import { MdOutlineSyncAlt } from "react-icons/md";
-import { Link } from "react-router-dom";
-import useUserStore from "../store/useUserStore";
 import { TbUsersGroup } from "react-icons/tb";
+import { Link } from "react-router-dom";
+import useDevice from "../hooks/useDevice";
+import useUserStore from "../store/useUserStore";
 
 interface Link {
   icon?: JSX.Element;
@@ -86,17 +88,12 @@ const MobileNav: React.FC<{ onToggle: () => void }> = ({ onToggle }) => {
     <nav className="relative z-20 flex h-[50px] w-full items-center justify-between bg-[#8EC63F] px-4">
       <GiHamburgerMenu size={28} onClick={onToggle} />
 
-      <Link to={`${userActive ? "/dashboard" : "/"}`} className="flex flex-grow justify-center">
+      <Link
+        to={`${userActive ? "/dashboard" : "/"}`}
+        className="flex flex-grow justify-center"
+      >
         <img src="./logonav.png" alt="logo" className="h-auto w-auto" />
       </Link>
-
-      {!userActive ? (
-        <Link to={"/login"}>
-          <FaRegUser size={28} />
-        </Link>
-      ) : (
-        <div className="w-[28px]" />
-      )}
     </nav>
   );
 };
@@ -137,8 +134,9 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
-            }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#F6FAFD]">
             <IoClose
@@ -184,8 +182,9 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {!userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
-            }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#E1F0D7]">
             <IoClose

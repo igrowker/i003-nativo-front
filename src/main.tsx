@@ -17,7 +17,7 @@ import Team from "./pages/team";
 import Home from "./pages/home";
 import QrGeneratorPage from "./pages/qr/QrGeneratorPage";
 import "./index.css";
-import Profile from "./pages/profile"; 
+import Profile from "./pages/profile";
 import Dashboard from "./pages/dashboard";
 import History from "./pages/history";
 import Donations from "./pages/donations";
@@ -53,7 +53,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Route>
         <Route path="/about" element={<AboutUs />} />
         <Route path="/team" element={<Team />} />
-        <Route path="/profile" element={<Profile />} /> 
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       <Footer />
     </Router>

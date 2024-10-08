@@ -17,7 +17,10 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-primary-green py-2 font-lato">
       <div className="mx-auto w-[340px]">
-        <button onClick={() => handleNavigate(userActive ? "/dashboard" : "/")} key="home">
+        <button
+          onClick={() => handleNavigate(userActive ? "/dashboard" : "/")}
+          key="home"
+        >
           <img
             src="./nativo-footer.png"
             alt="logo"
