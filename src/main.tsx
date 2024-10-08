@@ -20,6 +20,7 @@ import "./index.css";
 import Dashboard from "./pages/dashboard";
 import History from "./pages/history";
 import Donations from "./pages/donations";
+import QRCodeScanner from "./pages/qr/QRCodeScanner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -48,7 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/received-donations" element={<Donations />} />
           <Route path="/dashboard" element={"hola todo bien"} />
           <Route path="/generate-qr" element={<QrGeneratorPage />} />
-          <Route path="/qr/:id" element={<QrGeneratorPage />} />
+          <Route path="/pay-qr" element={<QRCodeScanner />} />
         </Route>
         <Route path="/about" element={<AboutUs />} />
         <Route path="/team" element={<Team />} />

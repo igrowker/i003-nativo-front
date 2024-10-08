@@ -21,7 +21,7 @@ type QRFormData = {
 
 // Constants
 const API_URL =
-  "https://i003-nativo-back-production.up.railway.app/api/pagos/crear-qr";
+  "https://i003-nativo-back-production.up.railway.app/api/pagos/crear-qr-id";
 
 // Utility functions
 const formatNumber = (x: number): string =>
@@ -70,6 +70,8 @@ const QrGeneratorPage = () => {
       return;
     }
 
+    console.log("formData", formData);
+
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -77,7 +79,10 @@ const QrGeneratorPage = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          senderAccount: "3b97d5df-9bd8-47d2-9144-fc5ac39b11e0",
+          ...formData,
+        }),
       });
 
       if (!response.ok) {
@@ -191,22 +196,6 @@ const QrGeneratorPage = () => {
                   onSubmit={handleFormSubmit}
                   className="flex flex-col gap-4"
                 >
-                  <div className="flex flex-col gap-1">
-                    <label
-                      htmlFor="receiverAccount"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Cuenta destino
-                    </label>
-                    <input
-                      type="text"
-                      name="receiverAccount"
-                      id="receiverAccount"
-                      defaultValue={formData.receiverAccount}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                    />
-                  </div>
-
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor="amount"

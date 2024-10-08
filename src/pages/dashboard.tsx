@@ -25,6 +25,7 @@ const Dashboard: React.FC = () => {
   const { isModalOpen, modalContent, openModal, closeModal } = useModal();
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
+  console.log("accountId", accountId);
   const [accountData, setAccountData] = useState<{
     account: Account | null;
     latestMovements: Transaction[];
@@ -86,12 +87,12 @@ const Dashboard: React.FC = () => {
     {
       icon: IconQRPagar,
       label: "QR - Pagar",
-      onClick: () => console.log("click QR - Pagar"),
+      onClick: () => smoothNavigate("/pay-qr"),
     },
     {
       icon: IconQRCobrar,
       label: "QR - Cobrar",
-      onClick: () => console.log("click QR - Cobrar"),
+      onClick: () => smoothNavigate("/generate-qr"),
     },
   ];
 
