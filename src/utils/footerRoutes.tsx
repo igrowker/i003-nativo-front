@@ -17,7 +17,7 @@ export const links: Link[] = [
     name: "Aviso legal",
     path: "/",
   },
-  { name: "Ayuda", path: "/help" },
+  { name: "Ayuda", path: "/" },
 ];
 
 export const linksNotLogged: Link[] = [
@@ -67,5 +67,9 @@ export const linksLogged: Link[] = [
   {
     name: "Mis microcréditos",
     path: "/history-microcredits",
+  },
+  {
+    name: "Ayuda microcréditos",
+    path: "/microcredits",
   },
 ];

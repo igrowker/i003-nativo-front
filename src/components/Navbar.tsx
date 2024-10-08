@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaRegUser } from "react-icons/fa6";
 import { FiLogIn } from "react-icons/fi";
-import { GiHamburgerMenu } from "react-icons/gi";
+import { GiHamburgerMenu, GiReceiveMoney } from "react-icons/gi";
 import { GoHome } from "react-icons/go";
 import {
   IoIosInformationCircleOutline,
@@ -10,7 +10,6 @@ import {
 import { IoClose } from "react-icons/io5";
 import {
   MdFavoriteBorder,
-  MdOutlineHistory,
   MdOutlinePayment,
   MdOutlineSyncAlt,
 } from "react-icons/md";
@@ -29,12 +28,12 @@ interface Link {
 const linksLogged: Link[] = [
   { icon: <GoHome size={22} />, name: "Inicio", path: "/dashboard" },
   {
-    icon: <MdOutlineSyncAlt size={22} />,
-    name: "Transacciones",
-    path: "/transactions",
+    icon: <FaRegUser size={22} />,
+    name: "Mi perfil",
+    path: "/profile",
   },
   {
-    icon: <MdOutlineHistory size={22} />,
+    icon: <MdOutlineSyncAlt size={22} />,
     name: "Mis movimientos",
     path: "/history",
   },
@@ -44,16 +43,20 @@ const linksLogged: Link[] = [
     path: "/history-microcredits",
   },
   {
-    icon: <MdFavoriteBorder size={22} />,
-    name: "Mis colaboraciones",
+    icon: <GiReceiveMoney size={22} />,
+    name: "Mis contribuciones",
     path: "/colaborations",
   },
   {
     icon: <MdFavoriteBorder size={22} />,
-    name: "Mis donaciones recibidas",
+    name: "Mis donaciones",
     path: "/received-donations",
   },
-  { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
+  {
+    icon: <IoMdHelpCircleOutline size={22} />,
+    name: "Ayuda microcréditos",
+    path: "/microcredits",
+  },
 ];
 
 const linksNotLogged: Link[] = [
@@ -71,11 +74,6 @@ const linksNotLogged: Link[] = [
     icon: <TbUsersGroup size={22} />,
     name: "Nuestro equipo",
     path: "/team",
-  },
-  {
-    icon: <MdFavoriteBorder size={22} />,
-    name: "Colaboraciones",
-    path: "/colaborate",
   },
   { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
 ];
