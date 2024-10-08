@@ -1,8 +1,7 @@
 import useSmoothNavigate from "../../hooks/useSmoothNavigate";
 
 const MicrocreditsPage: React.FC = () => {
-
-const smoothNavigate = useSmoothNavigate()
+  const smoothNavigate = useSmoothNavigate();
 
   return (
     <section className="flex flex-col items-center bg-[#F6FAFD] pb-8 font-lato">

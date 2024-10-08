@@ -3,6 +3,10 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { getHistoryMicrocreditsService } from "../services/getHistoryMicrocreditsService";
 import { getMicrocreditsGralService } from "../services/getMicrocreditsGralService";
 
+
+type Status = 'pending' | 'Completed' | 'Expired' | 'Failed'| 'Accepted' | 'Denied';
+
+
 interface User {
   id: string;
   email: string;
@@ -13,7 +17,6 @@ interface User {
   dni: string;
   accountId?: string;
 }
-
 
 interface UserState {
   user: User | null;
@@ -34,7 +37,7 @@ interface UserActions {
   verifyCode: (inputCode: string) => Promise<boolean>; // Nueva acción para verificar el código
   loginUser: (email: string, password: string) => Promise<boolean>;
   setMicrocreditsList: () => void;
-  setMicrocreditsListGral: () => void;
+  setMicrocreditsListGral: (microcreditStatus:Status) => void;
 }
 
 type UserStore = UserState & UserActions;
@@ -49,6 +52,7 @@ const useUserStore = create<UserStore>()(
       microcredit: null,
       microcreditsList: [],
       microcreditsListGral: [],
+      microcreditStatus: '',
       setUser: (userData) => set({ user: userData }),
       setToken: (token, expiresIn) => {
         const expirationTime = new Date().getTime() + expiresIn;
@@ -122,7 +126,7 @@ const useUserStore = create<UserStore>()(
       setMicrocreditsList: async () => {
         const state = get();
         const token = state.token;
-        if(!token) return;
+        if (!token) return;
         try {
           const result = await getHistoryMicrocreditsService(token);
           set({ microcreditsList: result });
@@ -130,12 +134,12 @@ const useUserStore = create<UserStore>()(
           console.error("Error al solicitar lista de créditos", error);
         }
       },
-      setMicrocreditsListGral: async () => {
+      setMicrocreditsListGral: async (microcreditStatus:Status) => {
         const state = get();
         const token = state.token;
-        if(!token) return;
+        if (!token) return;
         try {
-          const result = await getMicrocreditsGralService(token);
+          const result = await getMicrocreditsGralService(token, microcreditStatus);
           set({ microcreditsListGral: result });
         } catch (error) {
           console.error("Error al solicitar lista de créditos", error);

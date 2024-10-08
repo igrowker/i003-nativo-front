@@ -8,9 +8,9 @@ import { useState } from "react";
 import z from "zod";
 
 const microcreditSchema = z.object({
-  titleRequest: 
-      z.string()
-     .min(1, { message: "El motivo de la solicitud es obligatorio" }),
+  titleRequest: z
+    .string()
+    .min(1, { message: "El motivo de la solicitud es obligatorio" }),
   amountToRequest: z
     .number()
     .min(1, "La cantidad solicitada debe ser mayor a 0")
@@ -27,8 +27,9 @@ const microcreditSchema = z.object({
 type MicrocreditsInputs = z.infer<typeof microcreditSchema>;
 
 const ApplyMicrocreditForm: React.FC = () => {
-
-  const [isRequestSuccessful, setIsRequestSuccessful] = useState<boolean | null>(null);
+  const [isRequestSuccessful, setIsRequestSuccessful] = useState<
+    boolean | null
+  >(null);
 
   const token = useUserStore((state) => state.token);
 
@@ -44,9 +45,8 @@ const ApplyMicrocreditForm: React.FC = () => {
   });
 
   const closeModal = () => {
-    setIsRequestSuccessful(null)
-  }
-
+    setIsRequestSuccessful(null);
+  };
 
   const onSubmit: SubmitHandler<MicrocreditsInputs> = async (data) => {
     if (!token) {
@@ -57,7 +57,7 @@ const ApplyMicrocreditForm: React.FC = () => {
         token,
         data.amountToRequest,
         data.titleRequest,
-        data.description || ""
+        data.description || "",
       );
       console.log("Microcrédito solicitado con éxito:", result);
       setIsRequestSuccessful(true);
@@ -68,7 +68,7 @@ const ApplyMicrocreditForm: React.FC = () => {
   };
 
   return (
-    <div className="mt-9 flex w-full flex-col items-center justify-center gap-5 px-4 relative">
+    <div className="relative mt-9 flex w-full flex-col items-center justify-center gap-5 px-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex h-auto w-full flex-col gap-8 p-4"
@@ -82,7 +82,7 @@ const ApplyMicrocreditForm: React.FC = () => {
                 type="text"
                 maxLength={50}
                 placeholder="Escriba el motivo"
-                className="h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md mt-2"
+                className="mt-2 h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md"
                 {...register("titleRequest", { valueAsNumber: false })}
               />
               {errors.titleRequest && (
@@ -98,7 +98,7 @@ const ApplyMicrocreditForm: React.FC = () => {
                 min={1}
                 max={500000}
                 placeholder="Monto a solicitar"
-                className="h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md mt-2"
+                className="mt-2 h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 placeholder-[#C7C7C7] shadow-md"
                 {...register("amountToRequest", { valueAsNumber: true })}
               />
               {errors.amountToRequest && (
@@ -112,7 +112,7 @@ const ApplyMicrocreditForm: React.FC = () => {
               <textarea
                 maxLength={256}
                 placeholder="Describa los detalles de su solicitud"
-                className="h-[134px] w-full rounded-lg border border-[#C7C7C7] bg-transparent p-4 placeholder-[#C7C7C7] shadow-md placeholder:p-0 placeholder:pt-0 mt-2"
+                className="mt-2 h-[134px] w-full rounded-lg border border-[#C7C7C7] bg-transparent p-4 placeholder-[#C7C7C7] shadow-md placeholder:p-0 placeholder:pt-0"
                 {...register("description")}
               />
             </fieldset>
@@ -123,7 +123,7 @@ const ApplyMicrocreditForm: React.FC = () => {
             <input
               type="checkbox"
               {...register("privacyPolicy")}
-              className="h-5 w-5 appearance-none border-1 border-[#8C8C8C]  font-bold checked:border-transparent  checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none checked:bg-[#5f9f00]"
+              className="border-1 h-5 w-5 appearance-none border-[#8C8C8C] font-bold checked:border-transparent checked:bg-[#5f9f00] checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none"
             />
             <label htmlFor="privacy" className="ml-2 text-sm text-[#8C8C8C]">
               He leído y acepto la{" "}
@@ -142,7 +142,7 @@ const ApplyMicrocreditForm: React.FC = () => {
             <input
               type="checkbox"
               {...register("termsConditions")}
-              className="h-5 w-5 appearance-none border-1 border-[#8C8C8C] font-bold checked:border-transparent checked:bg-[#5f9f00] checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none"
+              className="border-1 h-5 w-5 appearance-none border-[#8C8C8C] font-bold checked:border-transparent checked:bg-[#5f9f00] checked:after:block checked:after:text-center checked:after:leading-[17px] checked:after:text-white checked:after:content-['✓'] focus:outline-none"
             />
             <label htmlFor="conditions" className="ml-2 text-sm text-[#8C8C8C]">
               Acepto{" "}
@@ -164,25 +164,23 @@ const ApplyMicrocreditForm: React.FC = () => {
           Solicitar
         </button>
       </form>
-      { isRequestSuccessful && (
+      {isRequestSuccessful && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
-        <SuccessMessage 
-          title="¡Felicitaciones! Tu solicitud de crédito ha sido aprobada!" 
-          message="Pronto podrás verlo reflejado en tu saldo." 
-          closeModal = { closeModal }
-        />
+          <SuccessMessage
+            title="¡Felicitaciones! Tu solicitud de crédito ha sido aprobada!"
+            message="Pronto podrás verlo reflejado en tu saldo."
+            closeModal={closeModal}
+          />
         </div>
       )}
-      { isRequestSuccessful === false && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
-
-        <ErrorMessage 
-          title="¡Lamentamos que tu solicitud no fue aprobada!" 
-          message="Contactá a un asesor financiero para resolver tus dudas." 
-          closeModal = { closeModal }
-        />
+      {isRequestSuccessful === false && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
+          <ErrorMessage
+            title="¡Lamentamos que tu solicitud no fue aprobada!"
+            message="Contactá a un asesor financiero para resolver tus dudas."
+            closeModal={closeModal}
+          />
         </div>
-
       )}
     </div>
   );

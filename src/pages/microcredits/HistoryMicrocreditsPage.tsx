@@ -3,17 +3,18 @@ import useUserStore from "../../store/useUserStore";
 import { formatDate } from "../../helpers/formDate";
 
 const HistoryMicrocreditsPage = () => {
-
-  const setMicrocreditsList = useUserStore((state) => state.setMicrocreditsList);
+  const setMicrocreditsList = useUserStore(
+    (state) => state.setMicrocreditsList,
+  );
   const microcreditsList = useUserStore((state) => state.microcreditsList);
 
   useEffect(() => {
-    setMicrocreditsList();  
+    setMicrocreditsList();
   }, []);
 
   return (
     <section className="mt-8 w-full px-4 pb-8">
-      <div className="mt-4 flex gap-2 items-center">
+      <div className="mt-4 flex items-center gap-2">
         <a href="/apply-microcredit" className="">
           <img src="./microcredits/arrow_back.svg"></img>
         </a>
@@ -46,20 +47,20 @@ const HistoryMicrocreditsPage = () => {
             </svg>
           </div>
         </div>
-        { microcreditsList.length === 0 ? (
+        {microcreditsList.length === 0 ? (
           <p>No encontramos microcréditos en tu historial.</p>
-        ) : 
-        microcreditsList.map((credit, index) => {
-          return (
-            <article key={credit.id} className="-mt-6">
-              <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
-                <h3 className="mb-2 text-base font-semibold">
-                  Crédito {index + 1}
-                </h3>
+        ) : (
+          microcreditsList.map((credit, index) => {
+            return (
+              <article key={credit.id} className="-mt-6">
+                <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
+                  <h3 className="mb-2 text-base font-semibold">
+                    Crédito {index + 1}
+                  </h3>
                   <div className="flex flex-row items-end justify-between text-xs">
                     <p className="w-auto">Motivo</p>
                     <hr className="flex-1" />
-                    <p className="truncate max-w-40">{credit.title}</p>
+                    <p className="max-w-40 truncate">{credit.title}</p>
                   </div>
                   <div className="flex flex-row items-end justify-between text-xs">
                     <p className="w-auto">Monto</p>
@@ -71,7 +72,7 @@ const HistoryMicrocreditsPage = () => {
                     <hr className="flex-1" />
                     <p>${credit.remainingAmount}</p>
                   </div>
-                 <div className="flex flex-row items-end justify-between text-xs">
+                  <div className="flex flex-row items-end justify-between text-xs">
                     <p className="w-auto">Tasa fija</p>
                     <hr className="flex-1" />
                     <p>20%</p>
@@ -86,10 +87,11 @@ const HistoryMicrocreditsPage = () => {
                     <hr className="flex-1" />
                     <p>{formatDate(credit.expirationDate)}</p>
                   </div>
-              </div>
-            </article>
-          );
-        })}
+                </div>
+              </article>
+            );
+          })
+        )}
       </div>
     </section>
   );

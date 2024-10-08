@@ -21,14 +21,10 @@ const AccountLatestMovements: React.FC<AccountLatestMovementsProps> = ({
               <div>
                 <p>{transaction.creationDate}</p>
                 <p>{transaction.transaction}</p>
-                <p className="text-sm font-medium">
-                  {accountId == transaction.senderAccount
-                    ? "Microcrédito de " + transaction.receiverFullName
-                    : transaction.senderFullName}
-                </p>
+                <p className="text-sm font-medium">{transaction.description}</p>
               </div>
               <p>
-                {accountId == transaction.senderAccount && "-"}$
+                {accountId === transaction.senderAccount ? "-" : "+"}$
                 {transaction.amount.toLocaleString()}
               </p>
             </li>
@@ -39,7 +35,7 @@ const AccountLatestMovements: React.FC<AccountLatestMovementsProps> = ({
       </ul>
       {/* CAMBIAR A RUTA DE HISTORIAL COMPLETO */}
       <div className="mt-3 w-full text-end font-medium text-blue-400">
-        <Link to={"/"} className="text-xs leading-3">
+        <Link to={"/history"} className="text-xs leading-3">
           Ver más <BiChevronDown className="inline text-2xl" />
         </Link>
       </div>

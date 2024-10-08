@@ -2,10 +2,10 @@ import useUserStore from "../store/useUserStore";
 
 export async function contributeMicrocreditService( microcreditId: string, amount: number ) {
   try {
-    const API_URL = import.meta.env.VITE_NATIVO_API_URL;
+    const api = import.meta.env.VITE_API_URL;
     const token = useUserStore.getState().token;
   
-    const response = await fetch(`${API_URL}/api/microcreditos/contribuir`, {
+    const response = await fetch(`${api}/api/microcreditos/contribuir`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -132,6 +132,5 @@ export const CollaborationModal: React.FC<{ onClose: () => void, microcreditId: 
       </>
     );
   }
-
   return <>{content}</>;
 };

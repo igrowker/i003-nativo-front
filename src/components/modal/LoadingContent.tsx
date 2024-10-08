@@ -3,7 +3,7 @@ import React from "react";
 const LoadingContent: React.FC<{
   title: string;
   sender: string;
-  receiver: string;
+  receiver?: string;
 }> = ({ title, sender, receiver }) => {
   return (
     <div className="flex flex-col items-center rounded-[20px] border border-secondary-green bg-light-grey p-6 drop-shadow-box">

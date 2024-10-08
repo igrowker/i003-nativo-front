@@ -17,6 +17,7 @@ import Team from "./pages/team";
 import Home from "./pages/home";
 import "./index.css";
 import Dashboard from "./pages/dashboard";
+import History from "./pages/history";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -34,12 +35,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           path="/contribute-microcredit"
           element={<ContributeMicrocreditsPage />}
         />
+        {/* Mover a protegida */}
         <Route
           path="/history-microcredits"
           element={<HistoryMicrocreditsPage />}
         />
+        {/* Mover a protegida */}
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/history" element={<History />} />
           {/* Otras rutas protegidas */}
         </Route>
         <Route path="/about" element={<AboutUs />} />
