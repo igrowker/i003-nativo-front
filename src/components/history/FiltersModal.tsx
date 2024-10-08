@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SelectDropdown from "./SelectDropdown";
 import DateRangeSelect from "./DateRangeSelect";
 import { statusOptions } from "../../utils/statusOptions";
-import { dateRangeOptions, getDateRange } from "../../utils/dateRange";
+import { dateRangeOptions, getDateRange } from "../../utils/dateUtils";
 
 export const FiltersModal: React.FC<{
   onClose: () => void;

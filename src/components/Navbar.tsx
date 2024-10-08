@@ -50,7 +50,7 @@ const linksLogged: Link[] = [
   {
     icon: <MdFavoriteBorder size={22} />,
     name: "Mis donaciones",
-    path: "/received-donations",
+    path: "/donations",
   },
   {
     icon: <IoMdHelpCircleOutline size={22} />,
