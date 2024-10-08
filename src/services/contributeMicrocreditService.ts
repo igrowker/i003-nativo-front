@@ -1,10 +1,13 @@
 import useUserStore from "../store/useUserStore";
 
-export async function contributeMicrocreditService( microcreditId: string, amount: number ) {
+export async function contributeMicrocreditService(
+  microcreditId: string,
+  amount: number,
+) {
   try {
     const api = import.meta.env.VITE_API_URL;
     const token = useUserStore.getState().token;
-  
+
     const response = await fetch(`${api}/api/microcreditos/contribuir`, {
       method: "POST",
       headers: {
@@ -18,7 +21,7 @@ export async function contributeMicrocreditService( microcreditId: string, amoun
     });
 
     if (response.ok) {
-      console.log('Respuesta exitosa:', response);
+      console.log("Respuesta exitosa:", response);
       return await response.json();
     } else {
       return null;

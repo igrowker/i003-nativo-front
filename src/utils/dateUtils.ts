@@ -38,18 +38,39 @@ export const getDateRange = (range: string) => {
   };
 };
 
-export const formatDate = (date : Date) =>{
+export const formatDate = (date: Date) => {
   return date.toLocaleDateString("es-ES", {
     day: "2-digit",
     month: "2-digit",
     year: "2-digit",
   });
-}
+};
 
-export const formatTime = (date : Date) =>{
+export const formatTime = (date: Date) => {
   return date.toLocaleTimeString("es-ES", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
+};
+
+export function stringToDate(dateString: string, isEndOfDay = false) {
+  const parts = dateString.split("-").map(Number);
+
+  const hours = isEndOfDay ? 23 : 0;
+  const minutes = isEndOfDay ? 59 : 0;
+  const seconds = isEndOfDay ? 59 : 0;
+  const milliseconds = isEndOfDay ? 999 : 0;
+
+  return new Date(
+    Date.UTC(
+      parts[0],
+      parts[1] - 1,
+      parts[2],
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+    ),
+  );
 }

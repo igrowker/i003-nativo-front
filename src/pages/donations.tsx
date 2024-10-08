@@ -43,7 +43,7 @@ const Donations: React.FC = () => {
       } else {
         donationsData = await donationService.getAccountDonations();
       }
-      console.log(donationsData);
+
       setDonationsData(donationsData);
     } catch (error) {
       return null;

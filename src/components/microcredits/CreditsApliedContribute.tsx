@@ -4,13 +4,16 @@ import useModal from "../../hooks/useModal";
 import ContributeItem from "../Contributions/ContributeItem";
 
 const CreditsApliedContribute: React.FC = () => {
-
-  const microcreditListGral = useUserStore((state) => state.microcreditsListGral);
-  const setMicrocreditListGral = useUserStore((state) => state.setMicrocreditsListGral);
+  const microcreditListGral = useUserStore(
+    (state) => state.microcreditsListGral,
+  );
+  const setMicrocreditListGral = useUserStore(
+    (state) => state.setMicrocreditsListGral,
+  );
   const { isModalOpen, modalContent, openModal, closeModal } = useModal();
 
-  useEffect(()=>{
-    setMicrocreditListGral('pending');
+  useEffect(() => {
+    setMicrocreditListGral("pending");
   }, []);
 
   const handleRefresh = () => {
@@ -52,20 +55,24 @@ const CreditsApliedContribute: React.FC = () => {
             </svg>
           </div>
         </div>
-        { microcreditListGral.map((microcredit, index) => {
+        {microcreditListGral.map((microcredit, index) => {
           return (
             <article key={microcredit.id} className="-mt-6">
               <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
                 <h3 className="mb-2 text-base font-semibold">
                   Usuario {index + 1}
                 </h3>
-                  <ContributeItem handleCloseModal = {handleCloseModal} microcredit = {microcredit} openModal={openModal} />
+                <ContributeItem
+                  handleCloseModal={handleCloseModal}
+                  microcredit={microcredit}
+                  openModal={openModal}
+                />
               </div>
             </article>
           );
         })}
       </div>
-     {isModalOpen && (
+      {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
           <div className="flex w-11/12 max-w-md flex-col gap-4 rounded-[40px] bg-primary-green p-6 shadow-lg">
             {modalContent}

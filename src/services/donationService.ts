@@ -1,15 +1,98 @@
 import { Donation } from "../interfaces/Donation";
 import useUserStore from "../store/useUserStore";
-import { formatDate, formatTime } from "../utils/dateUtils";
+import { formatDate, formatTime, stringToDate } from "../utils/dateUtils";
 
 const api = import.meta.env.VITE_API_URL;
 
+async function fetchDonations(endpoint: string): Promise<Donation[]> {
+  const token = useUserStore.getState().token;
+  const accountId = useUserStore.getState().user?.accountId;
+
+  if (!accountId) return [];
+
+  const response = await fetch(
+    `${api}/api/donaciones/${endpoint}/${accountId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Error fetching donations: ${response.statusText}`);
+  }
+
+  return response.json();
+}
 
 function handleError(error: unknown, silent = false) {
   if (!silent) {
     console.error("Error:", error);
   }
   return { success: false, error: "Ocurrió un error en la operación" };
+}
+
+async function getAllDonations() {
+  const [beneficiaryDonations, donorDonations] = await Promise.all([
+    fetchDonations("historial-donaciones/beneficiario"),
+    fetchDonations("historial-donaciones/donador"),
+  ]);
+
+  return [...beneficiaryDonations, ...donorDonations];
+}
+
+function getTransactionType(status: string, isDonor: boolean): string {
+  switch (status) {
+    case "PENDING":
+      return isDonor
+        ? "Solicitud de donación enviada"
+        : "Solicitud de donación recibida";
+    case "ACCEPTED":
+      return isDonor ? "Donación enviada" : "Donación recibida";
+    case "DENIED":
+      return "Solicitud de donación rechazada";
+    default:
+      return "Estado desconocido";
+  }
+}
+
+function normalizeDonation(donation: Donation, accountId: string) {
+  const creationDate = donation.updateAt
+    ? new Date(donation.updateAt)
+    : new Date(donation.createdAt);
+
+  const formattedDate = formatDate(creationDate);
+  const formattedTime = formatTime(creationDate);
+
+  const updatedAt = donation.updateAt
+    ? new Date(donation.updateAt)
+    : new Date(donation.createdAt);
+
+  const receiverFullName = `${donation.beneficiaryName} ${donation.beneficiaryLastName}`;
+  const senderFullName = `${donation.donorName} ${donation.donorLastName}`;
+
+  const isDonor = donation.accountIdDonor === accountId;
+  const isAnonymous = senderFullName.includes("Anónimo");
+
+  const newTransactionType = getTransactionType(donation.status, isDonor);
+  const description = isDonor
+    ? `A ${receiverFullName}`
+    : isAnonymous
+      ? "De donante anónimo"
+      : `De ${senderFullName}`;
+
+  return {
+    ...donation,
+    transaction: newTransactionType,
+    creationDate: creationDate,
+    formattedDate: formattedDate,
+    formattedTime: formattedTime,
+    description,
+    updatedAt,
+  };
 }
 
 export async function createDonation(
@@ -102,63 +185,29 @@ export async function getAccountDonations(
   statusFilter?: string,
 ): Promise<Donation[]> {
   try {
-    const token = useUserStore.getState().token;
     const accountId = useUserStore.getState().user?.accountId;
 
     if (!accountId) return [];
 
-    const [beneficiaryResponse, donorResponse] = await Promise.all([
-      fetch(
-        `${api}/api/donaciones/historial-donaciones/beneficiario/${accountId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      ),
-      fetch(`${api}/api/donaciones/historial-donaciones/donador/${accountId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-    ]);
+    const allDonations = await getAllDonations();
 
-    if (beneficiaryResponse.ok && donorResponse.ok) {
-      const [beneficiaryDonations, donorDonations] = await Promise.all([
-        beneficiaryResponse.json(),
-        donorResponse.json(),
-      ]);
+    const normalizedDonations = allDonations.map((donation) =>
+      normalizeDonation(donation, accountId),
+    );
 
-      const allDonations = [...beneficiaryDonations, ...donorDonations];
+    const sortedDonations = normalizedDonations.sort((a, b) => {
+      const dateA = a.updatedAt || a.createdAt;
+      const dateB = b.updatedAt || b.createdAt;
+      return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
 
-      const normalizedDonations = allDonations.map((donation) =>
-        normalizeDonation(donation, accountId),
+    if (statusFilter) {
+      return sortedDonations.filter(
+        (donation: Donation) => donation.status === statusFilter,
       );
-
-      const sortedDonations = normalizedDonations.sort((a, b) => {
-        const dateA = a.creationDate
-          ? new Date(a.creationDate)
-          : new Date(a.createdAt);
-        const dateB = b.creationDate
-          ? new Date(b.creationDate)
-          : new Date(b.createdAt);
-        return dateB.getTime() - dateA.getTime();
-      });
-
-      if (statusFilter) {
-        return sortedDonations.filter(
-          (donation: Donation) => donation.status === statusFilter,
-        );
-      }
-
-      return sortedDonations;
-    } else {
-      return [];
     }
+
+    return sortedDonations;
   } catch (error) {
     return handleError(error);
   }
@@ -169,138 +218,56 @@ export async function getDonationsByDateRange(
   toDate?: string,
 ): Promise<Donation[]> {
   try {
-    const token = useUserStore.getState().token;
     const accountId = useUserStore.getState().user?.accountId;
 
     if (!accountId) return [];
 
-    const [beneficiaryResponse, donorResponse] = await Promise.all([
-      fetch(
-        `${api}/api/donaciones/historial-donaciones/beneficiario/${accountId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      ),
-      fetch(`${api}/api/donaciones/historial-donaciones/donador/${accountId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-    ]);
+    const allDonations = await getAllDonations();
+    const normalizedDonations = allDonations.map((donation) =>
+      normalizeDonation(donation, accountId),
+    );
 
-    if (beneficiaryResponse.ok && donorResponse.ok) {
-      const [beneficiaryDonations, donorDonations] = await Promise.all([
-        beneficiaryResponse.json(),
-        donorResponse.json(),
-      ]);
+    const sortedDonations = normalizedDonations.sort((a, b) => {
+      const dateA = a.updatedAt || a.createdAt;
+      const dateB = b.updatedAt || b.createdAt;
+      return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
 
-      const allDonations = [...beneficiaryDonations, ...donorDonations];
-
-      const normalizedDonations = allDonations.map((donation) =>
-        normalizeDonation(donation, accountId),
-      );
-
-      const sortedDonations = normalizedDonations.sort((a, b) => {
-        const dateA = a.creationDate
-          ? new Date(a.creationDate)
-          : new Date(a.createdAt);
-        const dateB = b.creationDate
-          ? new Date(b.creationDate)
-          : new Date(b.createdAt);
-
-        return dateB.getTime() - dateA.getTime();
-      });
-
-      if (fromDate && toDate && fromDate === toDate) {
-        return sortedDonations.filter((donation: Donation) => {
-          const donationDate = donation.updateAt
-            ? donation.updateAt.toString()
-            : donation.createdAt.toString();
-          return donationDate.includes(fromDate);
-        });
-      }
-
-      if (fromDate && toDate) {
-        const from = new Date(fromDate);
-        const to = new Date(toDate);
-
-        from.setHours(0, 0, 0, 0);
-        to.setHours(23, 59, 59, 999);
-
-        return sortedDonations.filter((donation: Donation) => {
-          const donationDate = donation.updateAt
-            ? new Date(donation.updateAt)
-            : new Date(donation.createdAt);
-          donationDate.setHours(0, 0, 0, 0);
-          return donationDate >= from && donationDate <= to;
-        });
-      }
-      return sortedDonations;
-    } else {
-      return [];
-    }
+    return filterDonationsByDate(sortedDonations, fromDate, toDate);
   } catch (error) {
     return handleError(error);
   }
 }
 
-function normalizeDonation(donation: Donation, accountId: string) {
-  const creationDate = donation.updateAt
-    ? new Date(donation.updateAt)
-    : new Date(donation.createdAt);
-
-  const updatedAt = donation.updateAt
-    ? new Date(donation.updateAt)
-    : new Date(donation.createdAt);
-
-  const formattedDate = formatDate(creationDate);
-  const formattedTime = formatTime(creationDate);
-
-  const receiverFullName = `${donation.beneficiaryName} ${donation.beneficiaryLastName}`;
-  const senderFullName = `${donation.donorName} ${donation.donorLastName}`;
-
-  let newTransactionType: string;
-  let description: string = "";
-
-  const isDonor = donation.accountIdDonor === accountId;
-  const isAnonymous = senderFullName.includes("Anónimo");
-
-  switch (donation.status) {
-    case "PENDING":
-      newTransactionType = isDonor ? "Solicitud de donación enviada" : "Solicitud de donación recibida";
-      break;
-    case "ACCEPTED":
-      newTransactionType = isDonor ? "Donación enviada" : "Donación recibida";
-      break;
-    case "DENIED":
-      newTransactionType = "Solicitud de donación rechazada";
-      break;
-    default:
-      newTransactionType = "Estado desconocido";
-      break;
+function filterDonationsByDate(
+  donations: Donation[],
+  fromDate?: string,
+  toDate?: string,
+): Donation[] {
+  if (fromDate && toDate && fromDate === toDate) {
+    return donations.filter((donation: Donation) => {
+      const donationDate = donation.updateAt || donation.createdAt;
+      return donationDate.toString().includes(fromDate);
+    });
   }
 
-  description = isDonor
-    ? `A ${receiverFullName}`
-    : isAnonymous
-      ? "De donante anónimo"
-      : `De ${senderFullName}`;
+  if (fromDate && toDate) {
+    const from = stringToDate(fromDate);
+    const to = stringToDate(toDate, true);
 
-  return {
-    ...donation,
-    transaction: newTransactionType,
-    creationDate: creationDate,
-    formattedDate: formattedDate,
-    formattedTime: formattedTime,
-    description,
-    updatedAt,
-  };
+    console.log("From Date:", from);
+    console.log("To Date:", to);
+
+    return donations.filter((donation: Donation) => {
+      const donationDate = donation.updateAt
+        ? new Date(donation.updateAt)
+        : new Date(donation.createdAt);
+      donationDate.setHours(0, 0, 0, 0);
+      return donationDate >= from && donationDate <= to;
+    });
+  }
+
+  return donations;
 }
 
 export default {

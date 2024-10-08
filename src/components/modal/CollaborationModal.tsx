@@ -8,8 +8,10 @@ import SuccessContent from "./SuccessContent";
 import ErrorContent from "./ErrorContent";
 import { contributeMicrocreditService } from "../../services/contributeMicrocreditService";
 
-export const CollaborationModal: React.FC<{ onClose: () => void, microcreditId: string }> = ({ onClose, microcreditId }) => {
-  
+export const CollaborationModal: React.FC<{
+  onClose: () => void;
+  microcreditId: string;
+}> = ({ onClose, microcreditId }) => {
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
 
