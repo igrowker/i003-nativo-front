@@ -1,5 +1,6 @@
 import { Transaction } from "../interfaces/Transaction";
 import useUserStore from "../store/useUserStore";
+import { formatDate, formatTime } from "../utils/dateUtils";
 
 const api = import.meta.env.VITE_API_URL;
 
@@ -205,8 +206,8 @@ export async function getAccountHistoryByDates(
         )
         .sort(
           (a, b) =>
-            new Date(b.creationDate).getTime() -
-            new Date(a.creationDate).getTime(),
+            new Date(b.endDate).getTime() -
+            new Date(a.endDate).getTime(),
         );
 
       return normalizedTransactions;
@@ -222,17 +223,12 @@ export async function getAccountHistoryByDates(
 function normalizeTransaction(transaction: Transaction, accountId: string) {
   const creationDate = new Date(transaction.creationDate);
 
-  const formattedDate = creationDate.toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "2-digit",
-  });
+  const endDate = transaction.endDate
+  ? new Date(transaction.endDate)
+  : new Date(transaction.creationDate);
 
-  const formattedTime = creationDate.toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  const formattedDate = formatDate(endDate);
+  const formattedTime = formatTime(endDate);
 
   const receiverFullName = `${transaction.receiverName} ${transaction.receiverSurname}`;
   const senderFullName = `${transaction.senderName} ${transaction.senderSurname}`;
@@ -314,6 +310,7 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
     ...transaction,
     transaction: newTransactionType,
     creationDate: creationDate,
+    endDate,
     formattedDate: formattedDate,
     formattedTime: formattedTime,
     description,

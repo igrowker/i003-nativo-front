@@ -11,7 +11,7 @@ export interface Transaction {
   creationDate: string | number | Date;
   formattedDate?: string | undefined;
   formattedTime?: string | undefined;
-  endDate?: string;
+  endDate?: string | number | Date;
   status: string;
   description?: string;
 }
