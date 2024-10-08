@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { FaRegUser } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
-import useDevice from "../hooks/useDevice";
 import { FiLogIn } from "react-icons/fi";
-import { IoIosInformationCircleOutline } from "react-icons/io";
-import { MdFavoriteBorder } from "react-icons/md";
-import { IoMdHelpCircleOutline } from "react-icons/io";
+import { GiHamburgerMenu, GiReceiveMoney } from "react-icons/gi";
 import { GoHome } from "react-icons/go";
-import { MdOutlineSyncAlt } from "react-icons/md";
+import {
+  IoIosInformationCircleOutline,
+  IoMdHelpCircleOutline,
+} from "react-icons/io";
+import { IoClose } from "react-icons/io5";
+import {
+  MdFavoriteBorder,
+  MdOutlinePayment,
+  MdOutlineSyncAlt,
+} from "react-icons/md";
+import { TbUsersGroup } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import useDevice from "../hooks/useDevice";
 import useUserStore from "../store/useUserStore";
 
 interface Link {
@@ -20,18 +26,37 @@ interface Link {
 }
 
 const linksLogged: Link[] = [
-  { icon: <GoHome size={22} />, name: "Inicio", path: "/" },
+  { icon: <GoHome size={22} />, name: "Inicio", path: "/dashboard" },
+  {
+    icon: <FaRegUser size={22} />,
+    name: "Mi perfil",
+    path: "/profile",
+  },
   {
     icon: <MdOutlineSyncAlt size={22} />,
-    name: "Transacciones",
-    path: "/transactions",
+    name: "Mis movimientos",
+    path: "/history",
+  },
+  {
+    icon: <MdOutlinePayment size={22} />,
+    name: "Mis microcréditos",
+    path: "/history-microcredits",
+  },
+  {
+    icon: <GiReceiveMoney size={22} />,
+    name: "Mis contribuciones",
+    path: "/colaborations",
   },
   {
     icon: <MdFavoriteBorder size={22} />,
-    name: "Colaboraciones",
-    path: "/colaborate",
+    name: "Mis donaciones",
+    path: "/donations",
   },
-  { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
+  {
+    icon: <IoMdHelpCircleOutline size={22} />,
+    name: "Ayuda microcréditos",
+    path: "/microcredits",
+  },
 ];
 
 const linksNotLogged: Link[] = [
@@ -46,9 +71,9 @@ const linksNotLogged: Link[] = [
     path: "/about",
   },
   {
-    icon: <MdFavoriteBorder size={22} />,
-    name: "Colaboraciones",
-    path: "/colaborate",
+    icon: <TbUsersGroup size={22} />,
+    name: "Nuestro equipo",
+    path: "/team",
   },
   { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
 ];
@@ -61,17 +86,12 @@ const MobileNav: React.FC<{ onToggle: () => void }> = ({ onToggle }) => {
     <nav className="relative z-20 flex h-[50px] w-full items-center justify-between bg-[#8EC63F] px-4">
       <GiHamburgerMenu size={28} onClick={onToggle} />
 
-      <Link to={"/"} className="flex flex-grow justify-center">
+      <Link
+        to={`${userActive ? "/dashboard" : "/"}`}
+        className="flex flex-grow justify-center"
+      >
         <img src="./logonav.png" alt="logo" className="h-auto w-auto" />
       </Link>
-
-      {!userActive ? (
-        <Link to={"/login"}>
-          <FaRegUser size={28} />
-        </Link>
-      ) : (
-        <div className="w-[28px]" />
-      )}
     </nav>
   );
 };
@@ -135,6 +155,7 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
                 <Link
                   to={link.path!}
                   key={index}
+                  onClick={onClose}
                   className="aside__link--shadow flex h-[36px] w-[247px] items-center justify-start gap-2 rounded-[20px] bg-[#8ec63f] pl-4 text-center"
                 >
                   {link.icon}
@@ -182,6 +203,7 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
                 <Link
                   to={link.path!}
                   key={index}
+                  onClick={onClose}
                   className="aside__link--shadow flex h-[36px] w-[247px] items-center justify-start gap-2 rounded-[20px] bg-[#F6FAFD] pl-4 text-center"
                 >
                   {link.icon}

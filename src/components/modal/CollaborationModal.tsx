@@ -2,18 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { User } from "../../interfaces/User";
 import useUserStore from "../../store/useUserStore";
-import accountService from "../../services/accountService";
 import MoneyInput from "./MoneyInput";
 import LoadingContent from "./LoadingContent";
 import SuccessContent from "./SuccessContent";
 import ErrorContent from "./ErrorContent";
+import { contributeMicrocreditService } from "../../services/contributeMicrocreditService";
 
-export const DepositModal: React.FC<{
-  onCloseOk: () => void;
+export const CollaborationModal: React.FC<{
   onClose: () => void;
-}> = ({ onCloseOk, onClose }) => {
+  microcreditId: string;
+}> = ({ onClose, microcreditId }) => {
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
+
   const [amount, setAmount] = useState<number | string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -29,13 +30,14 @@ export const DepositModal: React.FC<{
     setErrorMessage(null);
 
     try {
-      const accountData = await accountService.addMoneyToAccount(
-        accountId,
+      const contributionData = await contributeMicrocreditService(
+        microcreditId,
         numericAmount,
       );
-      console.log("Dinero agregado a la cuenta:", accountData);
+      console.log("Dinero agregado a la cuenta:", contributionData);
       setIsSuccess(true);
     } catch (error) {
+      console.error("Error: ", error);
       setErrorMessage("Ocurrió un error al agregar dinero.");
       setTimeout(() => {
         setIsSuccess(false);
@@ -51,18 +53,18 @@ export const DepositModal: React.FC<{
   if (isLoading) {
     content = (
       <LoadingContent
-        title="Procesando el pago..."
-        sender="Mi cuenta externa"
-        receiver="Mi cuenta nativo"
+        title="Procesando la contribución..."
+        sender="Mi cuenta Nativo"
+        receiver="Cuenta beneficiario Nativo"
       />
     );
   } else if (isSuccess === true) {
     content = (
       <>
         <SuccessContent
-          title="¡Ingreso realizado!"
-          sender="Mi cuenta externa"
-          receiver="Mi cuenta nativo"
+          title="¡Colaboración realizada!"
+          sender="Mi cuenta Nativo"
+          receiver="Cuenta beneficiario Nativo"
           amount={amount.toString()}
         />
         <div className="mt-4 flex gap-4">
@@ -73,7 +75,7 @@ export const DepositModal: React.FC<{
             Ver historial
           </Link>
           <button
-            onClick={onCloseOk}
+            onClick={onClose}
             className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px]"
           >
             Cerrar
@@ -84,9 +86,9 @@ export const DepositModal: React.FC<{
   } else if (errorMessage) {
     content = (
       <ErrorContent
-        error="¡Ingreso realizado!"
-        sender="Mi cuenta externa"
-        receiver="Mi cuenta nativo"
+        error="¡Colaboración no realizada!"
+        sender="Mi cuenta Nativo"
+        receiver="Cuenta beneficiario Nativo"
         amount={amount.toString()}
       />
     );
@@ -94,7 +96,7 @@ export const DepositModal: React.FC<{
     content = (
       <>
         <h2 className="text-xl font-bold leading-6 text-light-grey">
-          Depositar Dinero
+          Colaborar
         </h2>
         <div className="flex gap-2 rounded-[20px] border border-secondary-green bg-light-grey p-3 drop-shadow-box">
           <div className="flex size-12 items-center justify-center rounded-full bg-light-green">
@@ -102,7 +104,7 @@ export const DepositModal: React.FC<{
           </div>
           <div>
             <p className="font-bold">Para</p>
-            <p>Mi cuenta Nativo</p>
+            <p>Cuenta beneficiario Nativo</p>
           </div>
         </div>
         <div className="mb-2 flex gap-2 rounded-[20px] border border-secondary-green bg-light-grey p-3 drop-shadow-box">
@@ -111,7 +113,7 @@ export const DepositModal: React.FC<{
           </div>
           <div>
             <p className="font-bold">Desde</p>
-            <p>Mi cuenta externa</p>
+            <p>Mi cuenta Nativo</p>
           </div>
         </div>
         <MoneyInput amount={amount} setAmount={setAmount} />
@@ -124,8 +126,7 @@ export const DepositModal: React.FC<{
           </button>
           <button
             onClick={handleContinue}
-            className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px] disabled:opacity-65"
-            disabled={amount === "" || parseFloat(amount.toString()) <= 0}
+            className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px]"
           >
             Continuar
           </button>
@@ -133,6 +134,5 @@ export const DepositModal: React.FC<{
       </>
     );
   }
-
   return <>{content}</>;
 };

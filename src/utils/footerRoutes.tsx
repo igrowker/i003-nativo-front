@@ -17,7 +17,7 @@ export const links: Link[] = [
     name: "Aviso legal",
     path: "/",
   },
-  { name: "Ayuda", path: "/help" },
+  { name: "Ayuda", path: "/" },
 ];
 
 export const linksNotLogged: Link[] = [
@@ -46,18 +46,30 @@ export const linksNotLogged: Link[] = [
 export const linksLogged: Link[] = [
   {
     name: "Inicio",
-    path: "/",
+    path: "/dashboard",
   },
   {
     name: "Sobre nosotros",
     path: "/about",
   },
   {
+    name: "Nuestro equipo",
+    path: "/team",
+  },
+  {
     name: "Mi Perfil",
     path: "/profile",
   },
   {
-    name: "Mi historial",
-    path: "/historial",
+    name: "Mis movimientos",
+    path: "/history",
+  },
+  {
+    name: "Mis microcréditos",
+    path: "/history-microcredits",
+  },
+  {
+    name: "Ayuda microcréditos",
+    path: "/microcredits",
   },
 ];

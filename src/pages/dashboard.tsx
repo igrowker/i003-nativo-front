@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import useSmoothNavigate from "../hooks/useSmoothNavigate";
 import useModal from "../hooks/useModal";
 import useUserStore from "../store/useUserStore";
+import accountService from "../services/accountService";
 import { User } from "../interfaces/User";
 import { Account } from "../interfaces/Account";
 import { AccountInfo } from "../components/dashboard/AccountInfo";
 import { Transaction } from "../interfaces/Transaction";
-import accountService from "../services/accountService";
 import { ContainerWhite } from "../components/dashboard/ContainerWhite";
 import AccountCardsInfo from "../components/dashboard/AccountCardsInfo";
 import AccountLatestMovements from "../components/dashboard/AccountLatestMovements";
@@ -18,6 +18,7 @@ import IconSolicitarDonacion from "../assets/Images/dashboard/IconSolicitarAyuda
 import IconQRPagar from "../assets/Images/dashboard/IconQRPagar.png";
 import IconQRCobrar from "../assets/Images/dashboard/IconQRCobrar.png";
 import { DepositModal } from "../components/modal/DepositModal";
+import { DonateModal } from "../components/modal/DonateModal";
 
 const Dashboard: React.FC = () => {
   const smoothNavigate = useSmoothNavigate();
@@ -40,21 +41,37 @@ const Dashboard: React.FC = () => {
     fetchAccount();
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModalOk = () => {
     closeModal();
     handleRefresh();
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
   };
 
   const buttons = [
     {
       icon: IconTransferir,
       label: "Ingresar dinero",
-      onClick: () => openModal(<DepositModal onClose={handleCloseModal} />),
+      onClick: () =>
+        openModal(
+          <DepositModal
+            onCloseOk={handleCloseModalOk}
+            onClose={handleCloseModal}
+          />,
+        ),
     },
     {
       icon: IconDonar,
       label: "Donar",
-      onClick: () => console.log("click donar"),
+      onClick: () =>
+        openModal(
+          <DonateModal
+            onCloseOk={handleCloseModalOk}
+            onClose={handleCloseModal}
+          />,
+        ),
     },
     {
       icon: IconSolicitarMicrocredito,
@@ -64,7 +81,7 @@ const Dashboard: React.FC = () => {
     {
       icon: IconSolicitarDonacion,
       label: "Contribuir a un Microcrédito",
-      onClick: () => console.log("click Contribuir a un Microcrédito"),
+      onClick: () => smoothNavigate("/contribute-microcredit"),
     },
     {
       icon: IconQRPagar,

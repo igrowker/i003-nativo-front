@@ -61,9 +61,8 @@ const Profile: React.FC = () => {
                 </Link>
 
             </div>
-
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Profile;
