@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import useUserStore from "../../store/useUserStore";
 import { formatDate } from "../../helpers/formDate";
+import { useNavigate } from "react-router-dom";
 
 const HistoryMicrocreditsPage = () => {
   const setMicrocreditsList = useUserStore(
@@ -12,14 +13,14 @@ const HistoryMicrocreditsPage = () => {
     setMicrocreditsList();
   }, []);
 
+  const navigate = useNavigate();  
+
   return (
     <section className="mt-8 w-full px-4 pb-8">
-      <div className="mt-4 flex items-center gap-2">
-        <a href="/apply-microcredit" className="">
-          <img src="./microcredits/arrow_back.svg"></img>
-        </a>
+      <button onClick={() => navigate(-1)} className="mt-4 flex items-center gap-2">
+        <img src="./microcredits/arrow_back.svg"></img>
         <span className="text-sm">Página Anterior</span>
-      </div>
+      </button>
       <div className="max-w-auto mt-5 flex h-auto w-full flex-col gap-7 rounded-3xl border-2 border-[#C9FFB4] bg-white p-4 shadow-md">
         <h2 className="text-center font-semibold">
           Historial de microcréditos
@@ -48,7 +49,7 @@ const HistoryMicrocreditsPage = () => {
           </div>
         </div>
         {microcreditsList.length === 0 ? (
-          <p>No encontramos microcréditos en tu historial.</p>
+          <p className="text-center">No encontramos microcréditos en tu historial.</p>
         ) : (
           microcreditsList.map((credit, index) => {
             return (

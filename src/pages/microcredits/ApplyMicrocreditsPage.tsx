@@ -1,8 +1,18 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ApplyMicrocreditForm from "../../components/microcredits/ApplyMicrocreditForm";
 
 const ApplyMicrocreditsPage: React.FC = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 100);  
+  }, []);
 
   return (
     <div className="bg-[#E1F0D7] pb-8">
