@@ -209,7 +209,7 @@ export async function getAccountDonations(
 
     return sortedDonations;
   } catch (error) {
-    return handleError(error);
+    return [];
   }
 }
 
@@ -235,7 +235,7 @@ export async function getDonationsByDateRange(
 
     return filterDonationsByDate(sortedDonations, fromDate, toDate);
   } catch (error) {
-    return handleError(error);
+    return [];
   }
 }
 
