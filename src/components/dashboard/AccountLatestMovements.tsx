@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Transaction } from "../../interfaces/Transaction";
 import { BiChevronDown } from "react-icons/bi";
 import useSmoothNavigate from "../../hooks/useSmoothNavigate";
