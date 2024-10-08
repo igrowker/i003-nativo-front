@@ -46,7 +46,7 @@ const History: React.FC = () => {
       }
       setHistoryData(movementsData);
     } catch (error) {
-      console.error("Error: ", error);
+      //console.error("Error: ", error);
     }
   };
 
@@ -76,7 +76,7 @@ const History: React.FC = () => {
         console.error("Error al cambiar el estado de la donación:", error);
       }
     } catch (error) {
-      console.error("Error:", error);
+      //console.error("Error:", error);
     }
   };
 
