@@ -3,6 +3,13 @@ import useUserStore from "../store/useUserStore";
 
 const api = import.meta.env.VITE_API_URL;
 
+function handleError(error: unknown, silent = false) {
+  if (!silent) {
+    console.error("Error:", error);
+  }
+  return { success: false, error: "Ocurrió un error en la operación" };
+}
+
 export async function createDonation(
   accountIdBeneficiary: string,
   anonymousDonation: boolean,
@@ -34,17 +41,14 @@ export async function createDonation(
       if (response.status === 400 || response.status === 404) {
         return { success: false, error: errorResponse.message || "Error" };
       } else {
-        return {
-          success: false,
-          error: `Error al crear donación: ${response.statusText}`,
-        };
+        return handleError(
+          `Error al crear donación: ${response.statusText}`,
+          true,
+        );
       }
     }
   } catch (error) {
-    return {
-      success: false,
-      error: "Ocurrió un error al intentar crear la donación.",
-    };
+    return handleError(error, true);
   }
 }
 
@@ -81,17 +85,14 @@ export async function modifyDonationStatus(
       if (response.status === 400 || response.status === 404) {
         return { success: false, error: errorResponse.message || "Error" };
       } else {
-        return {
-          success: false,
-          error: `Error al modificar estado de donación: ${response.statusText}`,
-        };
+        return handleError(
+          `Error al modificar estado de donación: ${response.statusText}`,
+          true,
+        );
       }
     }
   } catch (error) {
-    return {
-      success: false,
-      error: "Ocurrió un error al intentar cambiar el estado de la donación.",
-    };
+    return handleError(error, true);
   }
 }
 
@@ -125,8 +126,7 @@ export async function getAccountDonations(statusFilter?: string) {
       return null;
     }
   } catch (error) {
-    console.error("Error al buscar donaciones de la cuenta:", error);
-    return null;
+    return handleError(error);
   }
 }
 

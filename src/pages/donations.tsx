@@ -46,7 +46,7 @@ const Donations: React.FC = () => {
       }
       setDonationsData(donationsData);
     } catch (error) {
-      console.error("Error: ", error);
+      return null;
     }
   };
 

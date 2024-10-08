@@ -18,11 +18,11 @@ export async function getAccountInformation(id: string) {
     if (response.ok) {
       return await response.json();
     } else {
-      return null;
+      return [];
     }
   } catch (error) {
     console.error("Error al buscar información de la cuenta:", error);
-    return null;
+    return [];
   }
 }
 
@@ -45,15 +45,15 @@ export async function addMoneyToAccount(id: string, amount: number) {
     if (response.ok) {
       return await response.json();
     } else {
-      return null;
+      return [];
     }
   } catch (error) {
     console.error("Error al cargar dinero en la cuenta:", error);
-    return null;
+    return [];
   }
 }
 
-export async function getAccountHistory() {
+export async function getAccountHistory(): Promise<Transaction[]> {
   try {
     const token = useUserStore.getState().token;
     const accountId = useUserStore.getState().user?.accountId;
@@ -67,17 +67,25 @@ export async function getAccountHistory() {
     });
 
     if (response.ok && accountId != null) {
-      const transactions = await response.json();
+      const transactions: Transaction[] = await response.json();
 
-      return transactions.map((transaction: Transaction) =>
-        normalizeTransaction(transaction, accountId),
-      );
+      const normalizedTransactions = transactions
+        .map((transaction: Transaction) =>
+          normalizeTransaction(transaction, accountId),
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.creationDate).getTime() -
+            new Date(a.creationDate).getTime(),
+        );
+
+      return normalizedTransactions;
     } else {
-      return null;
+      return [];
     }
   } catch (error) {
     console.error("Error al buscar historial de la cuenta:", error);
-    return null;
+    return [];
   }
 }
 
@@ -106,25 +114,32 @@ export async function getLatestHistoryByAccount() {
     );
 
     if (response.ok && accountId != null) {
-      const transactions = await response.json();
+      const transactions: Transaction[] = await response.json();
 
       const normalizedTransactions = transactions
         .map((transaction: Transaction) =>
           normalizeTransaction(transaction, accountId),
         )
+        .sort(
+          (a, b) =>
+            new Date(b.creationDate).getTime() -
+            new Date(a.creationDate).getTime(),
+        )
         .slice(0, 5);
-      console.log(normalizedTransactions);
+
       return normalizedTransactions;
     } else {
-      return null;
+      return [];
     }
   } catch (error) {
     console.error("Error al buscar historial de la cuenta:", error);
-    return null;
+    return [];
   }
 }
 
-export async function getAccountHistoryByStatus(status: string) {
+export async function getAccountHistoryByStatus(
+  status: string,
+): Promise<Transaction[]> {
   try {
     const token = useUserStore.getState().token;
     const accountId = useUserStore.getState().user?.accountId;
@@ -140,24 +155,32 @@ export async function getAccountHistoryByStatus(status: string) {
       },
     );
     if (response.ok && accountId != null) {
-      const transactions = await response.json();
+      const transactions: Transaction[] = await response.json();
 
-      return transactions.map((transaction: Transaction) =>
-        normalizeTransaction(transaction, accountId),
-      );
+      const normalizedTransactions = transactions
+        .map((transaction: Transaction) =>
+          normalizeTransaction(transaction, accountId),
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.creationDate).getTime() -
+            new Date(a.creationDate).getTime(),
+        );
+
+      return normalizedTransactions;
     } else {
-      return null;
+      return [];
     }
   } catch (error) {
     console.error("Error al buscar historial de la cuenta:", error);
-    return null;
+    return [];
   }
 }
 
 export async function getAccountHistoryByDates(
   fromDate: string,
   toDate: string,
-) {
+): Promise<Transaction[]> {
   try {
     const token = useUserStore.getState().token;
     const accountId = useUserStore.getState().user?.accountId;
@@ -174,29 +197,42 @@ export async function getAccountHistoryByDates(
     );
 
     if (response.ok && accountId != null) {
-      const transactions = await response.json();
+      const transactions: Transaction[] = await response.json();
 
-      return transactions.map((transaction: Transaction) =>
-        normalizeTransaction(transaction, accountId),
-      );
+      const normalizedTransactions = transactions
+        .map((transaction: Transaction) =>
+          normalizeTransaction(transaction, accountId),
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.creationDate).getTime() -
+            new Date(a.creationDate).getTime(),
+        );
+
+      return normalizedTransactions;
     } else {
-      return null;
+      return [];
     }
   } catch (error) {
     console.error("Error al buscar historial de la cuenta:", error);
-    return null;
+    return [];
   }
 }
 
 function normalizeTransaction(transaction: Transaction, accountId: string) {
-  const formattedDate = new Date(transaction.creationDate).toLocaleDateString(
-    "es-ES",
-    {
-      day: "2-digit",
-      month: "2-digit",
-      year: "2-digit",
-    },
-  );
+  const creationDate = new Date(transaction.creationDate);
+
+  const formattedDate = creationDate.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
+
+  const formattedTime = creationDate.toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 
   const receiverFullName = `${transaction.receiverName} ${transaction.receiverSurname}`;
   const senderFullName = `${transaction.senderName} ${transaction.senderSurname}`;
@@ -277,7 +313,9 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
   return {
     ...transaction,
     transaction: newTransactionType,
-    creationDate: formattedDate,
+    creationDate: creationDate,
+    formattedDate: formattedDate,
+    formattedTime: formattedTime,
     description,
   };
 }
