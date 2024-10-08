@@ -217,16 +217,37 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
       break;
 
     case "Donación":
-      newTransactionType =
-        transaction.senderAccount === accountId
-          ? "Donación enviada"
-          : "Donación recibida";
-      description =
-        transaction.senderAccount === accountId
-          ? `A ${receiverFullName}`
-          : senderFullName.includes("null")
-            ? "De donante anónimo"
-            : `De ${senderFullName}`;
+      if (transaction.status === "PENDING") {
+        newTransactionType =
+          transaction.senderAccount === accountId
+            ? "Solicitud de donación enviada"
+            : "Solicitud de donación recibida";
+        description =
+          transaction.senderAccount === accountId
+            ? `A ${receiverFullName}`
+            : senderFullName.includes("null")
+              ? "De donante anónimo"
+              : `De ${senderFullName}`;
+      } else if (transaction.status === "ACCEPTED") {
+        newTransactionType =
+          transaction.senderAccount === accountId
+            ? "Donación enviada"
+            : "Donación recibida";
+        description =
+          transaction.senderAccount === accountId
+            ? `A ${receiverFullName}`
+            : senderFullName.includes("null")
+              ? "De donante anónimo"
+              : `De ${senderFullName}`;
+      } else if (transaction.status === "DENIED") {
+        newTransactionType = "Donación rechazada";
+        description =
+          transaction.senderAccount === accountId
+            ? `A ${receiverFullName}`
+            : senderFullName.includes("null")
+              ? "De donante anónimo"
+              : `De ${senderFullName}`;
+      }
       break;
 
     case "Pago":

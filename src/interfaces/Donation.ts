@@ -7,6 +7,6 @@ export interface Donation {
   accountIdBeneficiary: string;
   beneficiaryName?: string;
   beneficiaryLastName?: string;
-  createdAt: string;
+  createdAt?: string;
   status: string;
 }

@@ -46,6 +46,11 @@ const linksLogged: Link[] = [
     name: "Mis colaboraciones",
     path: "/colaborations",
   },
+  {
+    icon: <MdFavoriteBorder size={22} />,
+    name: "Mis donaciones recibidas",
+    path: "/received-donations",
+  },
   { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
 ];
 
@@ -155,6 +160,7 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
                 <Link
                   to={link.path!}
                   key={index}
+                  onClick={onClose}
                   className="aside__link--shadow flex h-[36px] w-[247px] items-center justify-start gap-2 rounded-[20px] bg-[#8ec63f] pl-4 text-center"
                 >
                   {link.icon}
@@ -202,6 +208,7 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
                 <Link
                   to={link.path!}
                   key={index}
+                  onClick={onClose}
                   className="aside__link--shadow flex h-[36px] w-[247px] items-center justify-start gap-2 rounded-[20px] bg-[#F6FAFD] pl-4 text-center"
                 >
                   {link.icon}

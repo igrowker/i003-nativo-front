@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
               <button
                 onClick={() => handleNavigate(link.path!)}
                 key={index}
-                className="text-[11px] font-medium text-start"
+                className="text-start text-[11px] font-medium"
               >
                 {link.name}
               </button>
@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
               <button
                 onClick={() => handleNavigate(link.path!)}
                 key={index}
-                className="text-[13px] font-bold text-start"
+                className="text-start text-[13px] font-bold"
               >
                 {link.name}
               </button>
