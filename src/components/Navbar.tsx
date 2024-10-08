@@ -25,7 +25,7 @@ interface Link {
 }
 
 const linksLogged: Link[] = [
-  { icon: <GoHome size={22} />, name: "Inicio", path: "/" },
+  { icon: <GoHome size={22} />, name: "Inicio", path: "/dashboard" },
   {
     icon: <MdOutlineSyncAlt size={22} />,
     name: "Transacciones",
