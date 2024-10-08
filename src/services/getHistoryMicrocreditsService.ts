@@ -1,9 +1,9 @@
 export const getHistoryMicrocreditsService = async (token: string) => {
-  const API_URL = import.meta.env.VITE_NATIVO_API_URL;
+  const api = import.meta.env.VITE_API_URL;
 
   try {
     const response = await fetch(
-      `${API_URL}/api/microcreditos/usuario-logueado`,
+      `${api}/api/microcreditos/usuario-logueado`,
       {
         method: "GET",
         headers: {

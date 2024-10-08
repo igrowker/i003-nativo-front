@@ -4,10 +4,10 @@ export const requestMicrocreditService = async (
   title: string,
   description: string,
 ) => {
-  const API_URL = import.meta.env.VITE_NATIVO_API_URL;
+  const api = import.meta.env.VITE_API_URL;
 
   try {
-    const response = await fetch(`${API_URL}/api/microcreditos/solicitar`, {
+    const response = await fetch(`${api}/api/microcreditos/solicitar`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

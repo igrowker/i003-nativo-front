@@ -1,18 +1,29 @@
 import { useEffect } from "react";
 import useUserStore from "../../store/useUserStore";
-import { formatDate } from "../../helpers/formDate";
+import useModal from "../../hooks/useModal";
+import ContributeItem from "../Contributions/ContributeItem";
 
-const CreditsApliedContribute = () => {
-  const microcreditListGral = useUserStore(
-    (state) => state.microcreditsListGral,
-  );
-  const setMicrocreditListGral = useUserStore(
-    (state) => state.setMicrocreditsListGral,
-  );
+const CreditsApliedContribute: React.FC = () => {
 
-  useEffect(() => {
-    setMicrocreditListGral();
+  const microcreditListGral = useUserStore((state) => state.microcreditsListGral);
+  const setMicrocreditListGral = useUserStore((state) => state.setMicrocreditsListGral);
+  const { isModalOpen, modalContent, openModal, closeModal } = useModal();
+
+  useEffect(()=>{
+    setMicrocreditListGral('pending');
   }, []);
+
+  const handleRefresh = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
+    handleRefresh();
+  };
 
   return (
     <section className="mt-8 w-full px-4">
@@ -41,59 +52,26 @@ const CreditsApliedContribute = () => {
             </svg>
           </div>
         </div>
-        {microcreditListGral.map((credit, index) => {
+        { microcreditListGral.map((microcredit, index) => {
           return (
-            <article key={credit.id} className="-mt-6">
+            <article key={microcredit.id} className="-mt-6">
               <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
                 <h3 className="mb-2 text-base font-semibold">
                   Usuario {index + 1}
                 </h3>
-                <div className="flex flex-row items-end justify-between text-xs">
-                  <p className="w-auto">Motivo</p>
-                  <hr className="flex-1" />
-                  <p className="max-w-40 truncate">{credit.title}</p>
-                </div>
-                <div className="flex flex-row items-end justify-between text-xs">
-                  <p className="w-auto">Monto</p>
-                  <hr className="flex-1" />
-                  <p>${credit.amount}</p>
-                </div>
-                <div className="flex flex-row items-end justify-between text-xs">
-                  <p className="w-auto">Cantidad restante</p>
-                  <hr className="flex-1" />
-                  <p>${credit.remainingAmount}</p>
-                </div>
-                <div className="flex flex-row items-end justify-between text-xs">
-                  <p className="w-auto">Tasa fija</p>
-                  <hr className="flex-1" />
-                  <p>20%</p>
-                </div>
-                <div className="flex flex-row items-end justify-between text-xs">
-                  <p className="w-auto">Fecha de solicitud</p>
-                  <hr className="flex-1" />
-                  <p>{formatDate(credit.createdDate)}</p>
-                </div>
-                <div className="flex flex-row items-end justify-between text-xs">
-                  <p className="w-auto">Fecha de vencimiento</p>
-                  <hr className="flex-1" />
-                  <p>{formatDate(credit.expirationDate)}</p>
-                </div>
-                <div className="mt-4 flex w-full justify-end">
-                  <a href="./" className="text-blue-500 underline">
-                    Ver más...
-                  </a>
-                </div>
-                <button
-                  type="submit"
-                  className="mt-6 h-[42px] w-full rounded-full bg-[#8EC63F] text-[20px] font-semibold text-black"
-                >
-                  Contribuir
-                </button>
+                  <ContributeItem handleCloseModal = {handleCloseModal} microcredit = {microcredit} openModal={openModal} />
               </div>
             </article>
           );
         })}
       </div>
+     {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
+          <div className="flex w-11/12 max-w-md flex-col gap-4 rounded-[40px] bg-primary-green p-6 shadow-lg">
+            {modalContent}
+          </div>
+        </div>
+      )}
     </section>
   );
 };
