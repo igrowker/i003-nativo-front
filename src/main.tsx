@@ -17,9 +17,11 @@ import Team from "./pages/team";
 import Home from "./pages/home";
 import QrGeneratorPage from "./pages/qr/QrGeneratorPage";
 import "./index.css";
+import Profile from "./pages/profile";
 import Dashboard from "./pages/dashboard";
 import History from "./pages/history";
 import Donations from "./pages/donations";
+import ProfileEdition from "./pages/profileEdition";
 import QRCodeScanner from "./pages/qr/QRCodeScanner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -46,10 +48,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           {/* Rutas protegidas */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/history" element={<History />} />
-          <Route path="/received-donations" element={<Donations />} />
+          <Route path="/donations" element={<Donations />} />
           <Route path="/dashboard" element={"hola todo bien"} />
           <Route path="/generate-qr" element={<QrGeneratorPage />} />
           <Route path="/pay-qr" element={<QRCodeScanner />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile-edition" element={<ProfileEdition />} />
         </Route>
         <Route path="/about" element={<AboutUs />} />
         <Route path="/team" element={<Team />} />

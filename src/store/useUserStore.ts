@@ -3,6 +3,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { getHistoryMicrocreditsService } from "../services/getHistoryMicrocreditsService";
 import { getMicrocreditsGralService } from "../services/getMicrocreditsGralService";
 
+type Status =
+  | "pending"
+  | "Completed"
+  | "Expired"
+  | "Failed"
+  | "Accepted"
+  | "Denied";
+
 interface User {
   id: string;
   email: string;
@@ -14,37 +22,11 @@ interface User {
   accountId?: string;
 }
 
-interface Contribution {
-  id: string;
-  lenderAccountId: string;
-  lenderFullname: string;
-  borrowerFullname: string;
-  microcreditId: string;
-  amount: number;
-  createdDate: string;
-  expiredDateMicrocredit: string;
-  transactionStatus: string;
-}
-
-interface Microcredit {
-  id: string;
-  borrowerAccountId: string;
-  amount: number;
-  remainingAmount: number;
-  createdDate: string;
-  expirationDate: string;
-  title: string;
-  description: string;
-  transactionStatus: string;
-  contributions: Contribution[];
-}
-
 interface UserState {
   user: User | null;
   token: string | null;
   tokenExpiration: number | null;
   verificationCode: string | null;
-  microcredit: Microcredit | null;
   microcreditsList: any[];
   microcreditsListGral: any[];
 }
@@ -59,7 +41,7 @@ interface UserActions {
   verifyCode: (inputCode: string) => Promise<boolean>; // Nueva acción para verificar el código
   loginUser: (email: string, password: string) => Promise<boolean>;
   setMicrocreditsList: () => void;
-  setMicrocreditsListGral: () => void;
+  setMicrocreditsListGral: (microcreditStatus: Status) => void;
 }
 
 type UserStore = UserState & UserActions;
@@ -74,6 +56,7 @@ const useUserStore = create<UserStore>()(
       microcredit: null,
       microcreditsList: [],
       microcreditsListGral: [],
+      microcreditStatus: "",
       setUser: (userData) => set({ user: userData }),
       setToken: (token, expiresIn) => {
         const expirationTime = new Date().getTime() + expiresIn;
@@ -155,12 +138,15 @@ const useUserStore = create<UserStore>()(
           console.error("Error al solicitar lista de créditos", error);
         }
       },
-      setMicrocreditsListGral: async () => {
+      setMicrocreditsListGral: async (microcreditStatus: Status) => {
         const state = get();
         const token = state.token;
         if (!token) return;
         try {
-          const result = await getMicrocreditsGralService(token);
+          const result = await getMicrocreditsGralService(
+            token,
+            microcreditStatus,
+          );
           set({ microcreditsListGral: result });
         } catch (error) {
           console.error("Error al solicitar lista de créditos", error);

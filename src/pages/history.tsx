@@ -46,7 +46,7 @@ const History: React.FC = () => {
       }
       setHistoryData(movementsData);
     } catch (error) {
-      console.error("Error: ", error);
+      //console.error("Error: ", error);
     }
   };
 
@@ -76,7 +76,7 @@ const History: React.FC = () => {
         console.error("Error al cambiar el estado de la donación:", error);
       }
     } catch (error) {
-      console.error("Error:", error);
+      //console.error("Error:", error);
     }
   };
 
@@ -122,7 +122,7 @@ const History: React.FC = () => {
               >
                 <div>
                   <p className="text-sm font-semibold">
-                    {transaction.creationDate}
+                    {transaction.formattedDate}
                   </p>
                   <p className="text-sm">{transaction.transaction}</p>
                   <p className="text-sm font-medium">
@@ -155,17 +155,22 @@ const History: React.FC = () => {
                   )}
                 </div>
                 <div className="flex flex-col items-center justify-evenly">
-                  <p
-                    className={`font-bold ${(transaction.status == "DENIED" || transaction.status == "EXPIRED") && "line-through"}`}
-                  >
-                    {transaction.status == "ACCEPTED" ||
-                    transaction.status == "PENDING"
-                      ? transaction.receiverAccount == accountId
-                        ? "+"
-                        : "-"
-                      : ""}
-                    ${transaction.amount.toLocaleString()}
-                  </p>
+                  <div className="w-full text-end">
+                    <p
+                      className={`font-bold ${(transaction.status == "DENIED" || transaction.status == "EXPIRED") && "line-through"}`}
+                    >
+                      {transaction.status == "ACCEPTED" ||
+                      transaction.status == "PENDING"
+                        ? transaction.receiverAccount == accountId
+                          ? "+"
+                          : "-"
+                        : ""}
+                      ${transaction.amount.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {transaction.formattedTime}
+                    </p>
+                  </div>
                   {transaction.status == "PENDING" &&
                     transaction.receiverAccount == accountId && (
                       <div className="flex gap-1">
