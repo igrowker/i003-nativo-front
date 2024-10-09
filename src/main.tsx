@@ -34,16 +34,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verification" element={<VerificationCode />} />
-        <Route path="/microcredits" element={<MicrocreditsPage />} />
-        <Route path="/apply-microcredit" element={<ApplyMicrocreditsPage />} />
-        <Route
-          path="/contribute-microcredit"
-          element={<ContributeMicrocreditsPage />}
-        />
-        <Route
-          path="/history-microcredits"
-          element={<HistoryMicrocreditsPage />}
-        />
         <Route element={<ProtectedLayout />}>
           {/* Rutas protegidas */}
           <Route path="/dashboard" element={<Dashboard />} />
@@ -54,6 +44,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/pay-qr" element={<QRCodeScanner />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-edition" element={<ProfileEdition />} />
+          <Route path="/microcredits" element={<MicrocreditsPage />} />
+          <Route path="/apply-microcredit" element={<ApplyMicrocreditsPage />} />
+          <Route
+            path="/contribute-microcredit"
+            element={<ContributeMicrocreditsPage />}
+          />
+          <Route
+            path="/history-microcredits"
+            element={<HistoryMicrocreditsPage />}
+          />
         </Route>
         <Route path="/about" element={<AboutUs />} />
         <Route path="/team" element={<Team />} />
