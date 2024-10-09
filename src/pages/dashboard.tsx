@@ -118,7 +118,7 @@ const Dashboard: React.FC = () => {
     }
   }, [accountId]);
 
-  const token = useUserStore((store) => store.token);
+  // const token = useUserStore((store) => store.token);
 
   // const fetchPrueba = async () => {
   //   try {
