@@ -7,6 +7,8 @@ import useUserStore from "../store/useUserStore";
 import { useNavigate } from "react-router-dom";
 import z from "zod";
 
+const api = import.meta.env.VITE_API_URL;
+
 // Función para validar si el usuario es mayor de 18 años
 const isAdult = (birthday: string): boolean => {
   const birthDate = new Date(birthday);
@@ -47,17 +49,8 @@ const registerSchema = z
       .string()
       .min(8, "La contraseña debe tener al menos 8 caracteres")
       .regex(
-        /[A-Z]/,
-        "La contraseña debe contener al menos una letra mayúscula",
-      )
-      .regex(
-        /[a-z]/,
-        "La contraseña debe contener al menos una letra minúscula",
-      )
-      .regex(/\d/, "La contraseña debe contener al menos un número")
-      .regex(
-        /[\W_]/,
-        "La contraseña debe contener al menos un carácter especial",
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+        "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial"
       ),
     repeatPassword: z
       .string()
@@ -84,6 +77,7 @@ const Register: React.FC = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<RegisterInputs>({
     resolver: zodResolver(registerSchema),
@@ -119,7 +113,7 @@ const Register: React.FC = () => {
       setIsLoading(true);
       setMessageButton("Cargando...");
       const response = await fetch(
-        "https://i003-nativo-back-production.up.railway.app/api/autenticacion/registro",
+        `${api}/api/autenticacion/registro`,
         {
           method: "POST",
           headers: {
@@ -136,9 +130,9 @@ const Register: React.FC = () => {
           }),
         },
       );
+      const result = await response.json();
 
       if (response.status === 201) {
-        const result = await response.json();
         setUser({
           id: result.id,
           email: result.email,
@@ -150,9 +144,18 @@ const Register: React.FC = () => {
         });
 
         setVerificationCode(result.verificationCode);
-
         navigate("/verification");
-      } else {
+
+      } else if (response.status === 409) {
+        // Return error if email or dni is already registered
+        if (result.message.includes("email")) {
+          setError("email", { message: "Este email ya está registrado" });
+        }
+        if (result.message.includes("DNI")) {
+          setError("dni", { message: "Este DNI ya está registrado" });
+        }
+      }
+      else {
         console.error("Error en la creación del usuario");
       }
     } catch (error) {
@@ -167,7 +170,7 @@ const Register: React.FC = () => {
     if (token) {
       navigate("/dashboard");
     }
-  }, [token, navigate]);
+  }, [token, navigate, errors]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-5 p-[1rem]">

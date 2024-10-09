@@ -4,6 +4,8 @@ import useUserStore from "../store/useUserStore";
 import { useNavigate } from "react-router-dom";
 import Toast from "./ui/Toast";
 
+const api = import.meta.env.VITE_API_URL;
+
 const VerificationCode = () => {
   const [values, setValues] = useState<string[]>(Array(6).fill(""));
   const [timer, setTimer] = useState<number>(5);
@@ -48,7 +50,7 @@ const VerificationCode = () => {
       setMessage("");
       setTimer(5);
       const response = await fetch(
-        `https://i003-nativo-back-production.up.railway.app/api/autenticacion/reenvio-codigo?email=${user?.email}`,
+        `${api}/api/autenticacion/reenvio-codigo?email=${user?.email}`,
         {
           method: "GET",
           headers: {
