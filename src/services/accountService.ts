@@ -206,8 +206,7 @@ export async function getAccountHistoryByDates(
         )
         .sort(
           (a, b) =>
-            new Date(b.endDate).getTime() -
-            new Date(a.endDate).getTime(),
+            new Date(b.endDate).getTime() - new Date(a.endDate).getTime(),
         );
 
       return normalizedTransactions;
@@ -224,8 +223,8 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
   const creationDate = new Date(transaction.creationDate);
 
   const endDate = transaction.endDate
-  ? new Date(transaction.endDate)
-  : new Date(transaction.creationDate);
+    ? new Date(transaction.endDate)
+    : new Date(transaction.creationDate);
 
   const formattedDate = formatDate(endDate);
   const formattedTime = formatTime(endDate);

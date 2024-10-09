@@ -13,11 +13,14 @@ const HistoryMicrocreditsPage = () => {
     setMicrocreditsList();
   }, []);
 
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   return (
     <section className="mt-8 w-full px-4 pb-8">
-      <button onClick={() => navigate(-1)} className="mt-4 flex items-center gap-2">
+      <button
+        onClick={() => navigate(-1)}
+        className="mt-4 flex items-center gap-2"
+      >
         <img src="./microcredits/arrow_back.svg"></img>
         <span className="text-sm">Página Anterior</span>
       </button>
@@ -49,7 +52,9 @@ const HistoryMicrocreditsPage = () => {
           </div>
         </div>
         {microcreditsList.length === 0 ? (
-          <p className="text-center">No encontramos microcréditos en tu historial.</p>
+          <p className="text-center">
+            No encontramos microcréditos en tu historial.
+          </p>
         ) : (
           microcreditsList.map((credit, index) => {
             return (

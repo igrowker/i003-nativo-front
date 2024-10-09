@@ -1,6 +1,6 @@
 import { formatDate } from "../../helpers/formDate";
 import { CollaborationModal } from "../modal/CollaborationModal";
-import { Microcredit } from '../../interfaces/Microcredit';
+import { Microcredit } from "../../interfaces/Microcredit";
 import { BiChevronDown } from "react-icons/bi";
 import SeeMore from "../modal/SeeMore";
 import { useState } from "react";
@@ -11,13 +11,16 @@ interface ContributeItemProps {
   openModal: (content: JSX.Element) => void;
 }
 
-const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microcredit, openModal  }) => {
-
+const ContributeItem: React.FC<ContributeItemProps> = ({
+  handleCloseModal,
+  microcredit,
+  openModal,
+}) => {
   const [isSeeMoreOpen, setIsSeeMoreOpen] = useState(false);
 
   const closeSeeMoreModal = () => {
     setIsSeeMoreOpen(false);
-  }
+  };
 
   return (
     <article>
@@ -52,18 +55,28 @@ const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microc
         <p>{formatDate(microcredit.expirationDate)}</p>
       </div>
       <div className="mt-3 w-full text-end font-medium text-blue-400">
-        <button onClick={()=>setIsSeeMoreOpen(true)} className="text-xs leading-3">
+        <button
+          onClick={() => setIsSeeMoreOpen(true)}
+          className="text-xs leading-3"
+        >
           Ver más <BiChevronDown className="inline text-2xl" />
         </button>
       </div>
-    <button
-      type="button"
-      onClick= { () => openModal(<CollaborationModal onClose={handleCloseModal} microcreditId = {microcredit.id} />)}
-      className="mt-6 h-[42px] w-full rounded-full bg-[#8EC63F] text-[20px] font-semibold text-black"
-    >
-      Contribuir
-    </button>
-    { isSeeMoreOpen && (
+      <button
+        type="button"
+        onClick={() =>
+          openModal(
+            <CollaborationModal
+              onClose={handleCloseModal}
+              microcreditId={microcredit.id}
+            />,
+          )
+        }
+        className="mt-6 h-[42px] w-full rounded-full bg-[#8EC63F] text-[20px] font-semibold text-black"
+      >
+        Contribuir
+      </button>
+      {isSeeMoreOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
           <SeeMore
             title="Detalle de microcrédito"
@@ -72,8 +85,8 @@ const ContributeItem: React.FC<ContributeItemProps> = ({handleCloseModal, microc
           />
         </div>
       )}
-  </article>
-  )
-}
+    </article>
+  );
+};
 
 export default ContributeItem;
