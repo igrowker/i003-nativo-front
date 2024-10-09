@@ -1,128 +1,112 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import useUserStore from "../../store/useUserStore";
+import PayWithQrModal from "../../components/modal/PayWithQrModal";
+import { useNavigate } from "react-router-dom";
 
 interface QRCodeScannerProps {
   onScan?: (amount: number) => void;
 }
 
+interface DataResponseDto {
+  amount: number;
+  description: string;
+  id: string;
+  receiverAccount: string;
+  receiverName: string;
+  receiverSurname: string;
+  senderAccount: string;
+  senderName: string | null;
+  senderSurname: string | null;
+  transactionDate: string;
+  transactionStatus: string;
+}
+
+const API_URL = `${import.meta.env.VITE_API_URL}/api/pagos/cliente`;
+
 const QRCodeScanner: React.FC<QRCodeScannerProps> = () => {
-  const [scannedData, setScannedData] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [newData, setNewData] = useState<string>("");
+  const [newData, setNewData] = useState<DataResponseDto | null>(null);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    isSubmitting: false,
+  });
+  const navigate = useNavigate();
+
   const { user, token } = useUserStore();
 
-  console.log("user", user?.accountId);
-
-  const handleScan = () => {
-    // In a real application, this would use the device's camera to scan the QR code
-    // For this example, we'll simulate scanning by parsing the input as JSON
-    try {
-      const parsedData = JSON.parse(scannedData);
-      if (parsedData.amount && typeof parsedData.amount === "number") {
-        // onScan(parsedData.amount);
-      } else {
-        alert("Invalid QR code data");
-      }
-    } catch (error) {
-      alert("Error parsing QR code data");
-    }
-  };
-
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          let video = videoRef.current;
-          if (video) {
-            video.srcObject = stream;
-            video.play();
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, []);
-
-  const captureImage = () => {
-    let canvas = canvasRef.current;
-    let video = videoRef.current;
-    if (canvas && video) {
-      let context = canvas.getContext("2d");
-      if (context) {
-        context.drawImage(video, 0, 0, 640, 480);
-        let data = canvas.toDataURL("image/png");
-        // props.onCapture(data);
-      }
-    }
-  };
-
-  console.log("user", user?.accountId);
-  // console.log("token", token);
-
   const handlePay = async () => {
+    if (!user?.accountId || !token) return;
+    setModalState({ isOpen: true, isSubmitting: true });
     try {
-      const response = await fetch(
-        `https://i003-nativo-back-production.up.railway.app/api/pagos/cliente/${user?.accountId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`${API_URL}/${user.accountId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Error en la respuesta de la red");
       }
 
-      console.log("hola soy la response", response);
-
-      const data = await response.json();
-      console.log(data);
+      // filtramos el ultimo objeto del array
+      const responseData = await response.json();
+      const lastTransaction = responseData.slice(-1)[0];
+      setNewData(lastTransaction);
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
+      console.error("Error durante la operación de fetch:", error);
+    } finally {
+      setModalState((prevState) => ({ ...prevState, isSubmitting: false }));
     }
+  };
+
+  const closeModal = () => {
+    setModalState({ isOpen: false, isSubmitting: false });
   };
 
   return (
-    <div className="mt-8 flex min-h-screen flex-col items-center justify-start gap-4">
-      <div className="relative flex h-[592px] w-[312px] flex-col items-center justify-center rounded-[20px] bg-[#E1F0D7]">
-        <p className="absolute top-6 w-[219px] text-center text-base font-semibold">
-          Escaneá el código QR para poder pagarle al negocio
-        </p>
-        <div className="flex flex-col items-center justify-center gap-4">
-          <div>
-            <video ref={videoRef} width="640" height="480" />
-            <canvas
-              ref={canvasRef}
-              width="640"
-              height="480"
-              style={{ display: "none" }}
-            />
+    <>
+      {newData && modalState.isOpen && (
+        <PayWithQrModal newData={newData} closeModal={closeModal} />
+      )}
+      <div className="mt-8 flex min-h-screen flex-col items-center justify-start gap-4">
+        <div className="relative flex h-[592px] w-[312px] flex-col items-center justify-center rounded-[20px] bg-[#E1F0D7]">
+          <p className="absolute top-6 w-[219px] text-center text-base font-semibold">
+            Escaneá el código QR para poder pagarle al negocio
+          </p>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="relative h-40 w-40">
+              <img
+                src="./scan.gif"
+                alt="scan"
+                className="h-full w-full rounded-lg object-cover shadow-lg"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <button
-        className={`h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-[16px] font-semibold text-black transition-colors hover:bg-[#7db535] disabled:cursor-not-allowed`}
-        onClick={handlePay}
-      >
-        {isSubmitting ? (
-          <span className="flex items-center justify-center">
-            <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-t-2 border-white"></div>
-            Cargando...
-          </span>
-        ) : (
-          "Continuar"
-        )}
-      </button>
-    </div>
+        <button
+          className={`h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-[16px] font-semibold text-black transition-colors hover:bg-[#7db535] disabled:cursor-not-allowed`}
+          onClick={handlePay}
+        >
+          {modalState.isSubmitting ? (
+            <span className="flex items-center justify-center">
+              <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-t-2 border-white"></div>
+              Leyendo...
+            </span>
+          ) : (
+            "Continuar"
+          )}
+        </button>
+
+        <button
+          className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-[16px] font-semibold text-black transition-colors hover:bg-[#7db535]"
+          onClick={() => navigate("/dashboard")}
+        >
+          Volver
+        </button>
+      </div>
+    </>
   );
 };
 

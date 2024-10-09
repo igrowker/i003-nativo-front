@@ -148,7 +148,7 @@ const Register: React.FC = () => {
           phone: result.phone,
           birthday: result.birthday,
         });
-        console.log(result);
+
         setVerificationCode(result.verificationCode);
 
         navigate("/verification");

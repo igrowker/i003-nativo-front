@@ -1,5 +1,4 @@
 import QRCode from "react-qr-code";
-import { useState } from "react";
 
 // Types
 type PaymentData = {
@@ -16,18 +15,52 @@ interface QRGeneratorProps {
   dataQr: PaymentData;
   numberWithCommas: (x: number) => string;
   setGenerateQr: (value: boolean) => void;
+  success?: boolean;
+  cleanInputs?: () => void;
 }
 
 function QRGenerator({
   dataQr,
   numberWithCommas,
   setGenerateQr,
+  success,
+  cleanInputs,
 }: QRGeneratorProps) {
-  const [success] = useState(false);
-
+  /**
+   * @info: Se crea un objeto con los datos del QR, pero sin el QR en sí debido a que la libreria QRCode me limita el uso de caracteres especiales
+   */
   const qrData = {
     ...dataQr,
     qr: "",
+  };
+
+  // Función para volver a la pantalla anterior y limpiar los inputs del modal
+  const handleReturn = () => {
+    setGenerateQr(false);
+    cleanInputs?.();
+  };
+
+  // Renderiza el botón según el estado "success"
+  const renderButton = () => {
+    const buttonProps = success
+      ? { label: "Volver", color: "bg-[#8EC63F]", onClick: handleReturn }
+      : {
+          label: "Cancelar cobro",
+          color: "bg-red-500",
+          onClick: handleReturn,
+        };
+
+    return (
+      <button
+        className={`h-[42px] w-[312px] rounded-[20px] ${buttonProps.color} text-base font-semibold text-white transition-colors duration-200 hover:${buttonProps.color.replace(
+          "500",
+          "600",
+        )} focus:outline-none focus:ring-2 focus:ring-offset-2`}
+        onClick={buttonProps.onClick}
+      >
+        {buttonProps.label}
+      </button>
+    );
   };
 
   return (
@@ -72,21 +105,7 @@ function QRGenerator({
         )}
       </div>
 
-      {success ? (
-        <button
-          className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] text-base font-semibold text-white transition-colors duration-200 hover:bg-[#7db535] focus:outline-none focus:ring-2 focus:ring-[#8EC63F] focus:ring-offset-2"
-          onClick={() => setGenerateQr(false)}
-        >
-          Volver
-        </button>
-      ) : (
-        <button
-          className="h-[42px] w-[312px] rounded-[20px] bg-red-500 text-base font-semibold text-white transition-colors duration-200 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-          onClick={() => setGenerateQr(false)}
-        >
-          Cancelar cobro
-        </button>
-      )}
+      {renderButton()}
     </div>
   );
 }

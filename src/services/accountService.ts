@@ -2,7 +2,6 @@ import { Transaction } from "../interfaces/Transaction";
 import useUserStore from "../store/useUserStore";
 
 const api = import.meta.env.VITE_API_URL;
-// const api = "https://i003-nativo-back-production.up.railway.app";
 
 export async function getAccountInformation(id: string) {
   try {

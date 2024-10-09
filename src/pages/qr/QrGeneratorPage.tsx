@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import QRGenerator from "../../components/qr/QRGenerator";
 import useUserStore from "../../store/useUserStore";
+import { statusOptions } from "../../utils/statusOptions";
+import { useNavigate } from "react-router-dom";
 
 // Types
 type QRPaymentResponse = {
@@ -20,8 +22,7 @@ type QRFormData = {
 };
 
 // Constants
-const API_URL =
-  "https://i003-nativo-back-production.up.railway.app/api/pagos/crear-qr-id";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/pagos/crear-qr-id`;
 
 // Utility functions
 const formatNumber = (x: number): string =>
@@ -35,42 +36,62 @@ const QrGeneratorPage = () => {
     description: "",
   });
   const [qrResponse, setQrResponse] = useState<QRPaymentResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState({
+    isLoading: true,
+    isSubmitting: false,
+  });
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUserReady, setIsUserReady] = useState(false);
+  const [isPaymentApproved, setIsPaymentApproved] = useState(false);
+
+  const navigate = useNavigate();
 
   // Store
   const { user, token } = useUserStore();
-  console.log(user?.accountId);
-  // Effects
+
+  const acceptedStatus = statusOptions.find(
+    (option) => option.value === "ACCEPTED",
+  );
+
+  // Efecto para obtener la cuenta del usuario
   useEffect(() => {
     if (user?.accountId) {
       setFormData((prev) => ({
         ...prev,
         receiverAccount: user.accountId || "",
       }));
-      setIsLoading(false);
+      setLoading((prev) => ({ ...prev, isLoading: false }));
+      setIsUserReady(true);
+    } else {
+      const interval = setInterval(() => {
+        if (user?.accountId) {
+          setFormData((prev) => ({
+            ...prev,
+            receiverAccount: user.accountId || "",
+          }));
+          setLoading((prev) => ({ ...prev, isLoading: false }));
+          setIsUserReady(true);
+          clearInterval(interval);
+        }
+      }, 100);
+      return () => clearInterval(interval);
     }
   }, [user]);
 
   // Handlers
   const handleGenerateQR = async () => {
-    if (formData.amount <= 0) {
-      setError("Por favor, ingrese un monto válido mayor a 0");
-      return;
-    }
-
-    setIsSubmitting(true);
+    // Restablecer el estado de aprobación de pago antes de generar un nuevo QR
+    setIsPaymentApproved(false);
     setError("");
 
-    if (!token) {
-      setError("No autorizado. Por favor, inicie sesión.");
-      setIsSubmitting(false);
-      return;
-    }
+    if (!isUserReady)
+      return setError("No se pudo obtener la información del usuario.");
+    if (formData.amount <= 0)
+      return setError("Por favor, ingrese un monto válido mayor a 0.");
+    if (!token) return setError("No autorizado. Por favor, inicie sesión.");
 
-    console.log("formData", formData);
+    setLoading((prev) => ({ ...prev, isSubmitting: true }));
 
     try {
       const response = await fetch(API_URL, {
@@ -80,7 +101,7 @@ const QrGeneratorPage = () => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          senderAccount: "3b97d5df-9bd8-47d2-9144-fc5ac39b11e0",
+          senderAccount: "3b97d5df-9bd8-47d2-9144-fc5ac39b11e0", //hardcodeamos el senderAccount
           ...formData,
         }),
       });
@@ -102,30 +123,67 @@ const QrGeneratorPage = () => {
         err instanceof Error ? err.message : "Error al generar el código QR.",
       );
     } finally {
-      setIsSubmitting(false);
+      setLoading((prev) => ({ ...prev, isSubmitting: false }));
     }
   };
 
+  // Handler para envío de formulario
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+    if (!isUserReady)
+      return setError("No se pudo obtener la información del usuario.");
 
+    const form = new FormData(e.currentTarget);
     setFormData({
-      receiverAccount: formData.get("receiverAccount") as string,
-      amount: Number(formData.get("amount")),
-      description: formData.get("description") as string,
+      receiverAccount: user?.accountId as string,
+      amount: Number(form.get("amount")),
+      description: form.get("description") as string,
     });
-
     setIsDetailsOpen(false);
   };
 
-  if (isLoading)
+  // Efecto para verificar si el QR ya fue pagado
+  useEffect(() => {
+    if (qrResponse && !isPaymentApproved) {
+      const intervalId = setInterval(async () => {
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/pagos/id/${qrResponse.id}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+          if (!response.ok)
+            throw new Error("Error en la respuesta del servidor");
+
+          const result = await response.json();
+          if (result.transactionStatus === acceptedStatus?.value) {
+            setIsPaymentApproved(true);
+            clearInterval(intervalId);
+          }
+        } catch (error) {
+          console.error("Error al verificar el pago del QR:", error);
+        }
+      }, 5000);
+      return () => clearInterval(intervalId);
+    }
+  }, [qrResponse, token, isPaymentApproved]);
+
+  // Función para limpiar inputs
+  const cleanInputs = () =>
+    setFormData({ amount: 0, receiverAccount: "", description: "" });
+
+  if (loading.isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-green-500"></div>
       </div>
     );
+  }
 
   return (
     <div className="mt-8 flex min-h-screen flex-col items-center justify-start gap-4">
@@ -145,6 +203,8 @@ const QrGeneratorPage = () => {
           dataQr={qrResponse}
           numberWithCommas={formatNumber}
           setGenerateQr={() => setQrResponse(null)}
+          success={isPaymentApproved}
+          cleanInputs={cleanInputs}
         />
       ) : (
         <>
@@ -167,10 +227,10 @@ const QrGeneratorPage = () => {
 
           <button
             className={`h-[42px] w-[312px] rounded-[20px] text-black ${formData.amount > 0 ? "bg-[#8EC63F] hover:bg-[#7db535]" : "bg-[#C7C7C7]"} text-[16px] font-semibold transition-colors disabled:cursor-not-allowed`}
-            disabled={formData.amount <= 0 || isSubmitting}
+            disabled={formData.amount <= 0 || loading.isSubmitting}
             onClick={handleGenerateQR}
           >
-            {isSubmitting ? (
+            {loading.isSubmitting ? (
               <span className="flex items-center justify-center">
                 <div className="mr-2 h-5 w-5 animate-spin rounded-full border-b-2 border-t-2 border-white"></div>
                 Cargando...
@@ -178,6 +238,13 @@ const QrGeneratorPage = () => {
             ) : (
               "Generar código QR"
             )}
+          </button>
+
+          <button
+            className="h-[42px] w-[312px] rounded-[20px] bg-[#8EC63F] p-2 text-black transition-colors hover:bg-[#7db535]"
+            onClick={() => navigate("/dashboard")}
+          >
+            Volver
           </button>
 
           {isDetailsOpen && (
@@ -218,7 +285,7 @@ const QrGeneratorPage = () => {
                       htmlFor="description"
                       className="text-xs font-medium text-gray-700"
                     >
-                      Motivo
+                      Motivo (opcional)
                     </label>
                     <input
                       type="text"
