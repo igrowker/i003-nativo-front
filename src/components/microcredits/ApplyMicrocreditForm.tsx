@@ -6,10 +6,12 @@ import SuccessMessage from "../modal/SuccessMessage";
 import ErrorMessage from "../modal/ErrorMessage";
 import { useState } from "react";
 import z from "zod";
+import useSmoothNavigate from "../../hooks/useSmoothNavigate";
 
 const microcreditSchema = z.object({
   titleRequest: z
     .string()
+    .trim()
     .min(1, { message: "El motivo de la solicitud es obligatorio" }),
   amountToRequest: z
     .number()
@@ -21,15 +23,17 @@ const microcreditSchema = z.object({
   termsConditions: z.boolean().refine((val) => val === true, {
     message: "Debe aceptar los términos y condiciones",
   }),
-  description: z.string().optional(),
+  description: z.string().trim().optional(),
 });
 
 type MicrocreditsInputs = z.infer<typeof microcreditSchema>;
 
 const ApplyMicrocreditForm: React.FC = () => {
+  const smoothNavigate = useSmoothNavigate();
   const [isRequestSuccessful, setIsRequestSuccessful] = useState<
     boolean | null
   >(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const token = useUserStore((state) => state.token);
 
@@ -63,15 +67,20 @@ const ApplyMicrocreditForm: React.FC = () => {
       setIsRequestSuccessful(true);
     } catch (error) {
       console.error("Error al solicitar el microcrédito:", error);
+      const errorMsg =
+        error instanceof Error
+          ? error.message.toString()
+          : "Error al solicitar el microcrédito";
+      setErrorMessage(errorMsg);
       setIsRequestSuccessful(false);
     }
   };
 
   return (
-    <div className="relative mt-9 flex w-full flex-col items-center justify-center gap-5 px-4">
+    <div className="relative mt-9 flex w-full flex-col items-center justify-center gap-4 px-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex h-auto w-full flex-col gap-8 p-4"
+        className="flex h-auto w-full flex-col gap-2 p-4"
       >
         <div className="max-w-auto flex h-auto w-full flex-col gap-8 rounded-3xl border-2 border-[#C9FFB4] bg-white p-4 shadow-md">
           <h2 className="text-left text-base font-semibold">Solicitar</h2>
@@ -133,7 +142,7 @@ const ApplyMicrocreditForm: React.FC = () => {
             </label>
           </div>
           {errors.privacyPolicy && (
-            <span className="mt-2 block text-red-700">
+            <span className="block text-red-700">
               {errors.privacyPolicy.message}
             </span>
           )}
@@ -169,14 +178,14 @@ const ApplyMicrocreditForm: React.FC = () => {
           <SuccessMessage
             title="¡Felicitaciones! Tu solicitud de crédito ha sido aprobada!"
             message="Pronto podrás verlo reflejado en tu saldo."
-            closeModal={closeModal}
+            closeModal={() => smoothNavigate("/history-microcredits")}
           />
         </div>
       )}
-      {isRequestSuccessful === false && (
+      {isRequestSuccessful === false && errorMessage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
           <ErrorMessage
-            title="¡Lamentamos que tu solicitud no fue aprobada!"
+            title={errorMessage}
             message="Contactá a un asesor financiero para resolver tus dudas."
             closeModal={closeModal}
           />

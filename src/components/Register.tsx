@@ -50,7 +50,7 @@ const registerSchema = z
       .min(8, "La contraseña debe tener al menos 8 caracteres")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
-        "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial"
+        "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial",
       ),
     repeatPassword: z
       .string()
@@ -112,24 +112,21 @@ const Register: React.FC = () => {
     try {
       setIsLoading(true);
       setMessageButton("Cargando...");
-      const response = await fetch(
-        `${api}/api/autenticacion/registro`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-            dni: parseInt(data.dni, 10),
-            name: data.name,
-            surname: data.surname,
-            phone: data.phone,
-            birthday: data.birthday,
-          }),
+      const response = await fetch(`${api}/api/autenticacion/registro`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          dni: parseInt(data.dni, 10),
+          name: data.name,
+          surname: data.surname,
+          phone: data.phone,
+          birthday: data.birthday,
+        }),
+      });
       const result = await response.json();
 
       if (response.status === 201) {
@@ -145,7 +142,6 @@ const Register: React.FC = () => {
 
         setVerificationCode(result.verificationCode);
         navigate("/verification");
-
       } else if (response.status === 409) {
         // Return error if email or dni is already registered
         if (result.message.includes("email")) {
@@ -154,8 +150,7 @@ const Register: React.FC = () => {
         if (result.message.includes("DNI")) {
           setError("dni", { message: "Este DNI ya está registrado" });
         }
-      }
-      else {
+      } else {
         console.error("Error en la creación del usuario");
       }
     } catch (error) {

@@ -45,7 +45,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-edition" element={<ProfileEdition />} />
           <Route path="/microcredits" element={<MicrocreditsPage />} />
-          <Route path="/apply-microcredit" element={<ApplyMicrocreditsPage />} />
+          <Route
+            path="/apply-microcredit"
+            element={<ApplyMicrocreditsPage />}
+          />
           <Route
             path="/contribute-microcredit"
             element={<ContributeMicrocreditsPage />}
