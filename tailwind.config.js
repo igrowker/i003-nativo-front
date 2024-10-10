@@ -21,6 +21,7 @@ export default {
       },
       dropShadow: {
         box: "2px 2px 2px rgba(0, 0, 0, 0.15)",
+        logo: "2px 2px 2px rgba(0, 0, 0, 0.25)",
       },
       fontFamily: {
         lato: ["Lato", "sans-serif"],
