@@ -21,7 +21,7 @@ const HistoryMicrocreditsPage = () => {
         onClick={() => navigate(-1)}
         className="mt-4 flex items-center gap-2"
       >
-        <img src="./microcredits/arrow_back.svg"></img>
+        <img src="./microcredits/arrow_back.svg" />
         <span className="text-sm">Página Anterior</span>
       </button>
       <div className="max-w-auto mt-5 flex h-auto w-full flex-col gap-7 rounded-3xl border-2 border-[#C9FFB4] bg-white p-4 shadow-md">
@@ -56,18 +56,18 @@ const HistoryMicrocreditsPage = () => {
             No encontramos microcréditos en tu historial.
           </p>
         ) : (
-          microcreditsList.map((credit, index) => {
+          microcreditsList.map((credit) => {
             return (
               <article key={credit.id} className="-mt-6">
                 <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
                   <h3 className="mb-2 text-base font-semibold">
-                    Crédito {index + 1}
+                    {credit.title}
                   </h3>
-                  <div className="flex flex-row items-end justify-between text-xs">
+                  {/* <div className="flex flex-row items-end justify-between text-xs">
                     <p className="w-auto">Motivo</p>
                     <hr className="flex-1" />
                     <p className="max-w-40 truncate">{credit.title}</p>
-                  </div>
+                  </div> */}
                   <div className="flex flex-row items-end justify-between text-xs">
                     <p className="w-auto">Monto</p>
                     <hr className="flex-1" />
@@ -81,7 +81,7 @@ const HistoryMicrocreditsPage = () => {
                   <div className="flex flex-row items-end justify-between text-xs">
                     <p className="w-auto">Tasa fija</p>
                     <hr className="flex-1" />
-                    <p>20%</p>
+                    <p>10%</p>
                   </div>
                   <div className="flex flex-row items-end justify-between text-xs">
                     <p className="w-auto">Fecha de solicitud</p>

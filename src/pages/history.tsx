@@ -5,7 +5,6 @@ import useUserStore from "../store/useUserStore";
 import { User } from "../interfaces/User";
 import { Transaction } from "../interfaces/Transaction";
 import accountService from "../services/accountService";
-import { FaArrowLeft } from "react-icons/fa6";
 import { ContainerWhite } from "../components/dashboard/ContainerWhite";
 import { FiltersModal } from "../components/history/FiltersModal";
 import { TbFilter, TbFilterCheck } from "react-icons/tb";
@@ -82,11 +81,12 @@ const History: React.FC = () => {
 
   return (
     <main className="relative flex min-h-[70vh] flex-col items-center gap-4 bg-light-green px-4 py-6 font-lato">
-      <Link
+        <Link
         to="/dashboard"
-        className="flex w-full items-center gap-2 text-sm font-semibold"
+        className="flex w-full items-center gap-2 text-sm"
       >
-        <FaArrowLeft className="pt-1 text-base" /> Volver al dashboard
+        <img src="./microcredits/arrow_back.svg" /> 
+        Volver al inicio
       </Link>
       <h1 className="text-xl font-bold leading-[22px]">Historial</h1>
       <div className="flex gap-2">
