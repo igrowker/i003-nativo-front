@@ -257,9 +257,6 @@ function filterDonationsByDate(
     const from = stringToDate(fromDate);
     const to = stringToDate(toDate, true);
 
-    console.log("From Date:", from);
-    console.log("To Date:", to);
-
     return donations.filter((donation: Donation) => {
       const donationDate = donation.updateAt
         ? new Date(donation.updateAt)

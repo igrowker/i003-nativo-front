@@ -34,10 +34,8 @@ export const CollaborationModal: React.FC<{
         microcreditId,
         numericAmount,
       );
-      console.log("Dinero agregado a la cuenta:", contributionData);
       setIsSuccess(true);
     } catch (error) {
-      console.error("Error: ", error);
       setErrorMessage("Ocurrió un error al agregar dinero.");
       setTimeout(() => {
         setIsSuccess(false);
