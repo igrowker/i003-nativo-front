@@ -5,7 +5,7 @@ const AboutUs: React.FC = () => {
     <main className="mx-auto flex w-[442px] flex-col items-center gap-4 font-lato">
       <section className="mb-4 flex w-full flex-col items-center bg-light-green py-6">
         <h1 className="text-center text-xl font-bold">Nosotros</h1>
-        <img src="public/logonativo.png" alt="Logo" />
+        <img src="./logonativo.png" alt="Logo" />
         <h2 className="w-3/5 text-center text-xl font-bold">
           Más que un banco, un aliado para la comunidad rural
         </h2>
@@ -30,7 +30,7 @@ const AboutUs: React.FC = () => {
           </ul>
         </ContainerGreen>
         <img
-          src="public/nativo-icon.png"
+          src="./nativo-icon.png"
           alt="Logo Nativo"
           className="mx-auto h-fit w-28 py-2"
         />
@@ -54,7 +54,7 @@ const AboutUs: React.FC = () => {
           </p>
         </ContainerGreen>
         <img
-          src="public/nativo-icon.png"
+          src="./nativo-icon.png"
           alt="Logo Nativo"
           className="mx-auto h-fit w-28 py-2"
         />
@@ -90,7 +90,7 @@ const AboutUs: React.FC = () => {
         </h4>
       </section>
       <img
-        src="public/nativo-icon.png"
+        src="./nativo-icon.png"
         alt="Logo Nativo"
         className="mx-auto mb-1 mt-[-10px] h-fit w-28"
       />
