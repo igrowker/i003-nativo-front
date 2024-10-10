@@ -46,11 +46,6 @@ const SeeMore: React.FC<{
           <hr className="flex-1" />
           <p>{formatDate(microcredit.expirationDate)}</p>
         </div>
-        <div className="flex flex-row items-end justify-between text-xs">
-          <p className="w-auto">Status</p>
-          <hr className="flex-1" />
-          <p>{microcredit.transactionStatus}</p>
-        </div>
         <button
           onClick={closeSeeMoreModal}
           className="mt-8 w-full rounded-[30px] bg-[#8EC63F] px-4 py-2 font-bold leading-[19px]"

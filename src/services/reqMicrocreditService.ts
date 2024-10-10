@@ -6,28 +6,23 @@ export const requestMicrocreditService = async (
 ) => {
   const api = import.meta.env.VITE_API_URL;
 
-  try {
-    const response = await fetch(`${api}/api/microcreditos/solicitar`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        amount,
-      }),
-    });
+  const response = await fetch(`${api}/api/microcreditos/solicitar`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      title,
+      description,
+      amount,
+    }),
+  });
 
-    if (response.ok) {
-      const result = await response.json();
-      return result;
-    } else {
-      throw new Error("Error al solicitar el microcrédito");
-    }
-  } catch (error) {
-    console.error("Error en la solicitud de microcrédito:", error);
-    throw error;
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || response.statusText);
   }
+
+  return response.json();
 };

@@ -226,6 +226,8 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
     ? new Date(transaction.endDate)
     : new Date(transaction.creationDate);
 
+  endDate.setHours(endDate.getHours() - 3);
+
   const formattedDate = formatDate(endDate);
   const formattedTime = formatTime(endDate);
 
@@ -243,7 +245,7 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
           : "Colaboración recibida";
       description =
         transaction.senderAccount === accountId
-          ? `Microcrédito a ${receiverFullName}`
+          ? `Microcrédito de ${receiverFullName}`
           : `Colaboración recibida de ${senderFullName}`;
       break;
 

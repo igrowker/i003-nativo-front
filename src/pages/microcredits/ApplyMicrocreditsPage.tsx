@@ -1,18 +1,8 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import ApplyMicrocreditForm from "../../components/microcredits/ApplyMicrocreditForm";
+import useSmoothNavigate from "../../hooks/useSmoothNavigate";
 
 const ApplyMicrocreditsPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }, 100);
-  }, []);
+  const smoothNavigate = useSmoothNavigate();
 
   return (
     <div className="bg-[#E1F0D7] pb-8">
@@ -34,16 +24,12 @@ const ApplyMicrocreditsPage: React.FC = () => {
       </div>
       <section>
         <ApplyMicrocreditForm />
-        <div className="mt-12 flex w-full flex-col items-center justify-center px-8">
-          <h2 className="w-2/3 text-center text-xl font-semibold">
-            Ver mi historial de microcréditos
-          </h2>
+        <div className="mt-2 flex flex-col items-center justify-center">
           <button
-            type="submit"
-            onClick={() => navigate("/history-microcredits")}
-            className="mt-4 h-[42px] w-[80%] rounded-full bg-[#b0b0b0] text-lg font-semibold text-black"
+            onClick={() => smoothNavigate("/history-microcredits")}
+            className="rounded-full bg-[#b0b0b0] px-12 py-2 text-lg font-semibold text-black"
           >
-            Ver historial
+            Ver mi historial de microcréditos
           </button>
         </div>
       </section>
