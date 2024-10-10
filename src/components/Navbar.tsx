@@ -45,7 +45,7 @@ const linksLogged: Link[] = [
   {
     icon: <GiReceiveMoney size={22} />,
     name: "Mis contribuciones",
-    path: "/colaborations",
+    path: "/contribute-microcredit",
   },
   {
     icon: <MdFavoriteBorder size={22} />,

@@ -3,6 +3,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { getHistoryMicrocreditsService } from "../services/getHistoryMicrocreditsService";
 import { getMicrocreditsGralService } from "../services/getMicrocreditsGralService";
 
+const api = import.meta.env.VITE_API_URL;
+
 type Status =
   | "pending"
   | "Completed"
@@ -76,7 +78,7 @@ const useUserStore = create<UserStore>()(
         console.log("soy el codigo", inputCode);
         try {
           const response = await fetch(
-            "https://i003-nativo-back-production.up.railway.app/api/autenticacion/verificacion-codigo",
+            `${api}/api/autenticacion/verificacion-codigo`,
             {
               method: "POST",
               headers: {
@@ -89,8 +91,6 @@ const useUserStore = create<UserStore>()(
             },
           );
 
-          const result = await response.json();
-          console.log(result);
           if (response.status === 200) {
             return true;
           } else {
@@ -104,7 +104,7 @@ const useUserStore = create<UserStore>()(
       loginUser: async (email, password) => {
         try {
           const response = await fetch(
-            "https://i003-nativo-back-production.up.railway.app/api/autenticacion/inicio-sesion",
+            `${api}/api/autenticacion/inicio-sesion`,
             {
               method: "POST",
               headers: {

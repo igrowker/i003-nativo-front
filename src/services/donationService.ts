@@ -71,6 +71,8 @@ function normalizeDonation(donation: Donation, accountId: string) {
     ? new Date(donation.updateAt)
     : new Date(donation.createdAt);
 
+  updatedAt.setHours(updatedAt.getHours() - 3);
+
   const receiverFullName = `${donation.beneficiaryName} ${donation.beneficiaryLastName}`;
   const senderFullName = `${donation.donorName} ${donation.donorLastName}`;
 

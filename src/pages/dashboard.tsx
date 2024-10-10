@@ -123,7 +123,7 @@ const Dashboard: React.FC = () => {
   // const fetchPrueba = async () => {
   //   try {
   //     const response = await fetch(
-  //       `https://i003-nativo-back-production.up.railway.app/api/pagos/id/2d9dc894-7962-490e-97d5-ea7ce652a840`,
+  //       `api/api/pagos/id/2d9dc894-7962-490e-97d5-ea7ce652a840`,
   //       {
   //         method: "GET",
   //         headers: {
