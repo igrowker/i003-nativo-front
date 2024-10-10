@@ -6,8 +6,8 @@ const SeeMore: React.FC<{
   microcredit:Microcredit,
   closeSeeMoreModal: () => void;
 }> = ({ title,  microcredit, closeSeeMoreModal }) => {
-  console.log(microcredit)
-  return (
+
+   return (
     <div className="absolute left-0 top-0 z-20 my-2 flex w-[70%] translate-x-[22%] translate-y-[70%] flex-col items-center gap-2 rounded-[20px] border border-secondary-green bg-light-grey p-6 drop-shadow-box">
       <article className='w-full'>  
         <h2 className='text-center font-semibold mb-8'>{title}</h2>       

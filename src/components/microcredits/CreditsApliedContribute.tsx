@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useUserStore from "../../store/useUserStore";
 import useModal from "../../hooks/useModal";
-import ContributeItem from "../Contributions/ContributeItem";
+import ContributeItem from "../contributions/ContributeItem";
 
 const CreditsApliedContribute: React.FC = () => {
   const microcreditListGral = useUserStore(
