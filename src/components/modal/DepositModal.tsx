@@ -29,14 +29,9 @@ export const DepositModal: React.FC<{
     setErrorMessage(null);
 
     try {
-      const accountData = await accountService.addMoneyToAccount(
-        accountId,
-        numericAmount,
-      );
-      console.log("Dinero agregado a la cuenta:", accountData);
+      await accountService.addMoneyToAccount(accountId, numericAmount);
       setIsSuccess(true);
     } catch (error) {
-      setErrorMessage("Ocurrió un error al agregar dinero.");
       setTimeout(() => {
         setIsSuccess(false);
       }, 3000);

@@ -21,7 +21,6 @@ export async function contributeMicrocreditService(
     });
 
     if (response.ok) {
-      console.log("Respuesta exitosa:", response);
       return await response.json();
     } else {
       return null;

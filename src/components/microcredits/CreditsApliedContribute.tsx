@@ -61,7 +61,10 @@ const CreditsApliedContribute: React.FC = () => {
           </div>
         </div>
         {microcreditListGral.map((microcredit: Microcredit) => {
-          if (microcredit.transactionStatus == "PENDING" && microcredit.borrowerAccountId != accountId) {
+          if (
+            microcredit.transactionStatus == "PENDING" &&
+            microcredit.borrowerAccountId != accountId
+          ) {
             return (
               <article key={microcredit.id} className="-mt-6">
                 <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
