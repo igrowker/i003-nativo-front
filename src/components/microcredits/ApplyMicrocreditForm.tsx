@@ -57,16 +57,14 @@ const ApplyMicrocreditForm: React.FC = () => {
       return;
     }
     try {
-      const result = await requestMicrocreditService(
+      await requestMicrocreditService(
         token,
         data.amountToRequest,
         data.titleRequest,
         data.description || "",
       );
-      console.log("Microcrédito solicitado con éxito:", result);
       setIsRequestSuccessful(true);
     } catch (error) {
-      console.error("Error al solicitar el microcrédito:", error);
       const errorMsg =
         error instanceof Error
           ? error.message.toString()

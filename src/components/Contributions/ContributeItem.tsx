@@ -24,11 +24,11 @@ const ContributeItem: React.FC<ContributeItemProps> = ({
 
   return (
     <article>
-      <div className="flex flex-row items-end justify-between text-xs">
+      {/*<div className="flex flex-row items-end justify-between text-xs">
         <p className="w-auto">Motivo</p>
         <hr className="flex-1" />
         <p className="max-w-40 truncate">{microcredit.title}</p>
-      </div>
+      </div>*/}
       <div className="flex flex-row items-end justify-between text-xs">
         <p className="w-auto">Monto</p>
         <hr className="flex-1" />
@@ -42,7 +42,7 @@ const ContributeItem: React.FC<ContributeItemProps> = ({
       <div className="flex flex-row items-end justify-between text-xs">
         <p className="w-auto">Tasa fija</p>
         <hr className="flex-1" />
-        <p>20%</p>
+        <p>10%</p>
       </div>
       <div className="flex flex-row items-end justify-between text-xs">
         <p className="w-auto">Fecha de solicitud</p>

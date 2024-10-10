@@ -2,11 +2,16 @@ import { useEffect } from "react";
 import useUserStore from "../../store/useUserStore";
 import useModal from "../../hooks/useModal";
 import ContributeItem from "../Contributions/ContributeItem";
+import { Microcredit } from "../../interfaces/Microcredit";
+import { User } from "../../interfaces/User";
 
 const CreditsApliedContribute: React.FC = () => {
+  const user: User | null = useUserStore((store) => store.user);
+  const accountId: string | null = user?.accountId ?? null;
   const microcreditListGral = useUserStore(
     (state) => state.microcreditsListGral,
   );
+
   const setMicrocreditListGral = useUserStore(
     (state) => state.setMicrocreditsListGral,
   );
@@ -29,8 +34,8 @@ const CreditsApliedContribute: React.FC = () => {
   };
 
   return (
-    <section className="mt-8 w-full px-4">
-      <div className="max-w-auto mt-5 flex h-auto w-full flex-col gap-7 rounded-3xl border-2 border-[#C9FFB4] bg-white p-4 shadow-md">
+    <section className="w-full px-4">
+      <div className="max-w-auto flex h-auto w-full flex-col gap-7 rounded-3xl border-2 border-[#C9FFB4] bg-white p-4 shadow-md">
         <h2 className="mb-0 mt-6 pl-4 text-left font-semibold">Solicitante</h2>
         <div className="relative -mt-6 ml-auto mr-0 w-2/3">
           <select
@@ -55,21 +60,23 @@ const CreditsApliedContribute: React.FC = () => {
             </svg>
           </div>
         </div>
-        {microcreditListGral.map((microcredit, index) => {
-          return (
-            <article key={microcredit.id} className="-mt-6">
-              <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
-                <h3 className="mb-2 text-base font-semibold">
-                  Usuario {index + 1}
-                </h3>
-                <ContributeItem
-                  handleCloseModal={handleCloseModal}
-                  microcredit={microcredit}
-                  openModal={openModal}
-                />
-              </div>
-            </article>
-          );
+        {microcreditListGral.map((microcredit: Microcredit, index) => {
+          if (microcredit.transactionStatus == "PENDING" && microcredit.borrowerAccountId != accountId) {
+            return (
+              <article key={microcredit.id} className="-mt-6">
+                <div className="mt-4 rounded-xl border border-[#C9FFB4] p-4">
+                  <h3 className="mb-2 text-base font-semibold">
+                    {microcredit.title}
+                  </h3>
+                  <ContributeItem
+                    handleCloseModal={handleCloseModal}
+                    microcredit={microcredit}
+                    openModal={openModal}
+                  />
+                </div>
+              </article>
+            );
+          }
         })}
       </div>
       {isModalOpen && (
