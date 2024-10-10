@@ -60,7 +60,7 @@ const CreditsApliedContribute: React.FC = () => {
             </svg>
           </div>
         </div>
-        {microcreditListGral.map((microcredit: Microcredit, index) => {
+        {microcreditListGral.map((microcredit: Microcredit) => {
           if (microcredit.transactionStatus == "PENDING" && microcredit.borrowerAccountId != accountId) {
             return (
               <article key={microcredit.id} className="-mt-6">
