@@ -3,7 +3,7 @@ import useUserStore from "../../store/useUserStore";
 import useModal from "../../hooks/useModal";
 import { Microcredit } from "../../interfaces/Microcredit";
 import { User } from "../../interfaces/User";
-import ContributeItem from "../contributions/ContributeItem";
+import ContributeItem from "../Contributions/ContributeItem";
 
 const CreditsApliedContribute: React.FC = () => {
   const user: User | null = useUserStore((store) => store.user);
