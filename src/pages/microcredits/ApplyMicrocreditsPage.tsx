@@ -11,7 +11,7 @@ const ApplyMicrocreditsPage: React.FC = () => {
         top: 0,
         behavior: "smooth",
       });
-    }, 100);  
+    }, 100);
   }, []);
 
   return (

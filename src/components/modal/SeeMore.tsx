@@ -1,20 +1,20 @@
-import { formatDate } from '../../helpers/formDate';
-import { Microcredit } from '../../interfaces/Microcredit';
+import { formatDate } from "../../helpers/formDate";
+import { Microcredit } from "../../interfaces/Microcredit";
 
 const SeeMore: React.FC<{
   title: string;
-  microcredit:Microcredit,
+  microcredit: Microcredit;
   closeSeeMoreModal: () => void;
 }> = ({ title,  microcredit, closeSeeMoreModal }) => {
 
    return (
     <div className="absolute left-0 top-0 z-20 my-2 flex w-[70%] translate-x-[22%] translate-y-[70%] flex-col items-center gap-2 rounded-[20px] border border-secondary-green bg-light-grey p-6 drop-shadow-box">
-      <article className='w-full'>  
-        <h2 className='text-center font-semibold mb-8'>{title}</h2>       
+      <article className="w-full">
+        <h2 className="mb-8 text-center font-semibold">{title}</h2>
         <div className="flex flex-row items-end justify-between text-xs">
           <p className="w-auto">Motivo</p>
           <hr className="flex-1" />
-          <p className="truncate max-w-40">{microcredit.title}</p>
+          <p className="max-w-40 truncate">{microcredit.title}</p>
         </div>
         <div className="flex flex-row items-end justify-between text-xs">
           <p className="w-auto">Monto</p>
@@ -60,6 +60,6 @@ const SeeMore: React.FC<{
       </article>
     </div>
   );
-}
+};
 
 export default SeeMore;

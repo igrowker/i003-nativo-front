@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useUserStore from "../store/useUserStore";
 
-const Profile: React.FC = () => {
+const ProfileEdition: React.FC = () => {
   const userData = useUserStore((state) => state.user);
 
   if (!userData) return;
@@ -92,4 +92,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default ProfileEdition;
