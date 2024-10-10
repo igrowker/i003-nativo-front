@@ -160,7 +160,7 @@ const History: React.FC = () => {
                       className={`font-bold ${(transaction.status == "DENIED" || transaction.status == "EXPIRED") && "line-through"}`}
                     >
                       {transaction.status == "ACCEPTED" ||
-                      transaction.status == "PENDING"
+                        transaction.status == "PENDING"
                         ? transaction.receiverAccount == accountId
                           ? "+"
                           : "-"
@@ -171,7 +171,7 @@ const History: React.FC = () => {
                       {transaction.formattedTime}
                     </p>
                   </div>
-                  {transaction.status == "PENDING" &&
+                  {transaction.transaction?.toLowerCase().includes("donación") && transaction.status == "PENDING" &&
                     transaction.receiverAccount == accountId && (
                       <div className="flex gap-1">
                         <button

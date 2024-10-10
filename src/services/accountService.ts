@@ -156,8 +156,8 @@ export async function getAccountHistoryByStatus(
       },
     );
     if (response.ok && accountId != null) {
+      console.log(response)
       const transactions: Transaction[] = await response.json();
-
       const normalizedTransactions = transactions
         .map((transaction: Transaction) =>
           normalizeTransaction(transaction, accountId),
@@ -286,14 +286,12 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
     case "Pago":
       newTransactionType =
         transaction.senderAccount === accountId
-          ? "Donación enviada"
-          : "Donación recibida";
+          ? "Pago enviado"
+          : "Pago recibido";
       description =
-        transaction.senderAccount === accountId
-          ? `A ${receiverFullName}`
-          : senderFullName.includes("null")
-            ? "De donante anónimo"
-            : `De ${senderFullName}`;
+      transaction.senderAccount === accountId
+      ? `A ${receiverFullName}`
+      : `De ${senderFullName}`;
       break;
 
     default:
