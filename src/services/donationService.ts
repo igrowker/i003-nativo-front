@@ -98,13 +98,12 @@ function normalizeDonation(donation: Donation, accountId: string) {
 }
 
 export async function createDonation(
-  accountIdBeneficiary: string,
-  anonymousDonation: boolean,
   amount: number,
+  numberAccountBeneficiary: number,
+  anonymousDonation: boolean,
 ) {
   try {
     const token = useUserStore.getState().token;
-    const accountId = useUserStore.getState().user?.accountId;
 
     const response = await fetch(`${api}/api/donaciones/crear-donacion`, {
       method: "POST",
@@ -114,8 +113,7 @@ export async function createDonation(
       },
       body: JSON.stringify({
         amount,
-        accountIdDonor: accountId,
-        accountIdBeneficiary,
+        numberAccountBeneficiary,
         anonymousDonation,
       }),
     });
