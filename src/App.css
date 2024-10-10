@@ -53,7 +53,6 @@ input[type="date"] {
 .form__input-placeholder::placeholder {
   font-size: 15px;
   font-weight: normal;
-  padding-left: 1rem;
 }
 
 .truncate {
