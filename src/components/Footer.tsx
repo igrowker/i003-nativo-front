@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
             alt="logo"
             width={285}
             height={65}
-            className="pb-5"
+            className="pb-5 drop-shadow-logo"
           />
         </button>
         <div className="flex justify-between">

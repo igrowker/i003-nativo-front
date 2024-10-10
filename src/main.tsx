@@ -23,6 +23,7 @@ import History from "./pages/history";
 import Donations from "./pages/donations";
 import ProfileEdition from "./pages/profileEdition";
 import QRCodeScanner from "./pages/qr/QRCodeScanner";
+import "./App.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

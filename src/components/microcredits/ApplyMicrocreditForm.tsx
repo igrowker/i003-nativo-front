@@ -14,12 +14,15 @@ const microcreditSchema = z.object({
     .trim()
     .min(1, { message: "El motivo de la solicitud es obligatorio" })
     .regex(/^[^0-9]*$/, { message: "El motivo no puede contener números" }),
-amountToRequest: z
-  .number({
-    invalid_type_error: "Debe ser un número",
-    required_error: "Este campo es obligatorio"})
-  .min(1, { message: "La cantidad solicitada debe ser mayor a 0" })
-  .max(500000, { message: "Excede la cantidad máxima a solicitar, son 500,000" }),
+  amountToRequest: z
+    .number({
+      invalid_type_error: "El monto debe ser númerico y es obligatorio",
+      required_error: "Este campo es obligatorio",
+    })
+    .min(1, { message: "La cantidad solicitada debe ser mayor a 0" })
+    .max(500000, {
+      message: "Excede la cantidad máxima a solicitar, son 500,000",
+    }),
   privacyPolicy: z.boolean().refine((val) => val === true, {
     message: "Debe aceptar la política de privacidad",
   }),
@@ -177,7 +180,7 @@ const ApplyMicrocreditForm: React.FC = () => {
       {isRequestSuccessful && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-light-green bg-opacity-50">
           <SuccessMessage
-            title="¡Felicitaciones! Tu solicitud de crédito ha sido aprobada!"
+            title="Tu solicitud de crédito ha sido aprobada."
             message="Pronto podrás verlo reflejado en tu saldo."
             closeModal={() => smoothNavigate("/history-microcredits")}
           />

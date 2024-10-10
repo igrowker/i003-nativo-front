@@ -36,9 +36,9 @@ export const DonateModal: React.FC<{
     setErrorMessage(null);
 
     const result = await donationService.createDonation(
-      receiver,
-      isAnonymousDonation,
       numericAmount,
+      parseInt(receiver),
+      isAnonymousDonation,
     );
 
     if (result.success) {
@@ -61,7 +61,7 @@ export const DonateModal: React.FC<{
       <LoadingContent
         title="Procesando la solicitud..."
         sender="Mi cuenta nativo"
-        receiver={receiver || ""}
+        receiver={receiver?.toString() || ""}
       />
     );
   } else if (isSuccess === true) {
@@ -70,7 +70,7 @@ export const DonateModal: React.FC<{
         <SuccessContent
           title="¡Solicitud de donación realizada!"
           sender="Mi cuenta nativo"
-          receiver={receiver || ""}
+          receiver={receiver?.toString() || ""}
           amount={amount.toString()}
         />
         <div className="mt-4 flex gap-4">
@@ -95,7 +95,7 @@ export const DonateModal: React.FC<{
         <ErrorContent
           error={errorMessage}
           sender="Mi cuenta nativo"
-          receiver={receiver || ""}
+          receiver={receiver?.toString() || ""}
           amount={amount.toString()}
         />
         <button
@@ -121,13 +121,19 @@ export const DonateModal: React.FC<{
             <input
               type="text"
               onChange={(e) => setReceiver(e.target.value)}
+              placeholder="Ingrese el número de cuenta destino"
               className="mt-2 h-10 w-full rounded-lg border border-[#C7C7C7] bg-transparent pl-4 text-sm placeholder-[#C7C7C7] shadow-md"
             />
           </div>
         </div>
-        {receiver == accountId && (
+        {receiver == user.dni && (
           <p className="-my-4 rounded-full bg-red-500 text-center text-white">
             No puede donar a su propia cuenta.
+          </p>
+        )}
+        {receiver && isNaN(parseInt(receiver)) && (
+          <p className="-my-4 rounded-full bg-red-500 text-center text-white">
+            El número de cuenta debe contener solo números
           </p>
         )}
         <div className="mb-2 flex gap-2 rounded-[20px] border border-secondary-green bg-light-grey p-3 drop-shadow-box">

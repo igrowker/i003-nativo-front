@@ -67,7 +67,11 @@ const QRCodeScanner: React.FC<QRCodeScannerProps> = () => {
   return (
     <>
       {newData && modalState.isOpen && (
-        <PayWithQrModal newData={newData} closeModal={closeModal} />
+        <PayWithQrModal
+          newData={newData}
+          closeModal={closeModal}
+          isLoading={modalState.isSubmitting}
+        />
       )}
       <div className="mt-8 flex min-h-screen flex-col items-center justify-start gap-4">
         <div className="relative flex h-[592px] w-[312px] flex-col items-center justify-center rounded-[20px] bg-[#E1F0D7]">

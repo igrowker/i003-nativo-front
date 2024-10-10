@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useUserStore from "../../store/useUserStore";
 import { statusOptions } from "../../utils/statusOptions";
+import { useNavigate } from "react-router-dom";
 
 interface DataResponseDto {
   amount: number;
@@ -18,6 +19,7 @@ interface DataResponseDto {
 
 interface PayWithQrModalProps {
   newData: DataResponseDto;
+  isLoading: boolean;
   closeModal: () => void;
 }
 
@@ -26,6 +28,7 @@ const API_URL = `${import.meta.env.VITE_API_URL}/api/pagos/pagar-qr`;
 const PayWithQrModal: React.FC<PayWithQrModalProps> = ({
   newData,
   closeModal,
+  isLoading,
 }) => {
   const [paymentStatus, setPaymentStatus] = useState({
     isProcessing: false,
@@ -39,6 +42,7 @@ const PayWithQrModal: React.FC<PayWithQrModalProps> = ({
 
   const token = useUserStore((store) => store.token);
   const user = useUserStore((store) => store.user);
+  const navigate = useNavigate();
 
   const handlePay = async () => {
     if (!token) {
@@ -104,17 +108,6 @@ const PayWithQrModal: React.FC<PayWithQrModalProps> = ({
     console.error(message);
   };
 
-  // UseEffect para limpiar el mensaje de error después de 3 segundos
-  React.useEffect(() => {
-    if (paymentStatus.error) {
-      const timer = setTimeout(() => {
-        setPaymentStatus((prevState) => ({ ...prevState, error: null }));
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [paymentStatus.error]);
-
   return (
     <>
       {newData && (
@@ -170,8 +163,13 @@ const PayWithQrModal: React.FC<PayWithQrModalProps> = ({
                   </div>
                 </div>
 
-                <div className="m-2 flex items-center justify-center gap-4">
-                  <button className="h-[38px] w-[130px] rounded-[30px] bg-white text-[16px] font-semibold">
+                <div
+                  className={`m-2 flex items-center justify-center gap-4 ${paymentStatus.isProcessing ? "hidden" : "block"}`}
+                >
+                  <button
+                    className="h-[38px] w-[130px] rounded-[30px] bg-white text-[16px] font-semibold"
+                    onClick={() => navigate("/history")}
+                  >
                     Historial
                   </button>
                   <button
@@ -184,45 +182,64 @@ const PayWithQrModal: React.FC<PayWithQrModalProps> = ({
               </>
             ) : (
               <>
-                <h2 className="mb-4 text-[20px] font-semibold text-white">
-                  Pagar con QR
-                </h2>
-                <div className="space-y-4">
-                  <div className="flex flex-col items-start justify-between rounded-[20px] bg-[#F6FAFD] p-4">
-                    <div className="text-lg font-semibold text-black">Para</div>
-                    <div>{newData.receiverName}</div>
-                  </div>
-                  <div className="flex flex-col items-start justify-between rounded-[20px] bg-[#F6FAFD] p-4">
-                    <div className="text-lg font-semibold text-black">
-                      Motivo
+                {!paymentStatus.error ? (
+                  <>
+                    <h2 className="mb-4 text-[20px] font-semibold text-white">
+                      Pagar con QR
+                    </h2>
+                    <div className="space-y-4">
+                      <div className="flex flex-col items-start justify-between rounded-[20px] bg-[#F6FAFD] p-4">
+                        <div className="text-lg font-semibold text-black">
+                          Para
+                        </div>
+                        <div>
+                          {isLoading ? "Cargando.." : newData.receiverName}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start justify-between rounded-[20px] bg-[#F6FAFD] p-4">
+                        <div className="text-lg font-semibold text-black">
+                          Motivo
+                        </div>
+                        <div>
+                          {isLoading ? "Cargando.." : newData.description}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-start justify-between rounded-[20px] bg-[#F6FAFD] p-4">
+                        <div className="text-lg font-semibold text-black">
+                          Desde
+                        </div>
+                        <div>
+                          {isLoading ? "Cargando.." : "Mi cuenta nativo"}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-center rounded-[20px] bg-[#F6FAFD] p-4 text-[36px] font-bold">
+                        {isLoading ? "Cargando.." : `$${newData.amount}`}
+                      </div>
                     </div>
-                    <div>{newData.description}</div>
-                  </div>
 
-                  <div className="flex flex-col items-start justify-between rounded-[20px] bg-[#F6FAFD] p-4">
-                    <div className="text-lg font-semibold text-black">
-                      Desde
-                    </div>
-                    <div>Mi cuenta nativo</div>
-                  </div>
-
-                  <div className="flex items-center justify-center rounded-[20px] bg-[#F6FAFD] p-4 text-[36px] font-bold">
-                    ${newData.amount}
-                  </div>
-                </div>
-
-                <button
-                  className="text[16px] mt-6 w-full rounded-lg bg-[#F6FAFD] py-3 font-bold text-black transition duration-300 hover:bg-[#4e6e21] hover:text-white"
-                  onClick={handlePay}
-                >
-                  Pagar
-                </button>
-                <button
-                  className="text[16px] mt-6 w-full rounded-lg bg-[#F6FAFD] py-3 font-bold text-black transition duration-300 hover:bg-[#4e6e21] hover:text-white"
-                  onClick={closeModal}
-                >
-                  Cancelar
-                </button>
+                    <button
+                      className="text[16px] mt-6 w-full rounded-lg bg-[#F6FAFD] py-3 font-bold text-black transition duration-300 hover:bg-[#4e6e21] hover:text-white"
+                      onClick={handlePay}
+                    >
+                      Pagar
+                    </button>
+                    <button
+                      className="text[16px] mt-6 w-full rounded-lg bg-[#F6FAFD] py-3 font-bold text-black transition duration-300 hover:bg-[#4e6e21] hover:text-white"
+                      onClick={closeModal}
+                    >
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="text[16px] mt-6 w-full rounded-lg bg-[#F6FAFD] py-3 font-bold text-black transition duration-300 hover:bg-[#4e6e21] hover:text-white"
+                    onClick={closeModal}
+                  >
+                    Cerrar
+                  </button>
+                )}
               </>
             )}
           </div>
