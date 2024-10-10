@@ -25,7 +25,7 @@ const MicrocreditsPage: React.FC = () => {
           Contribuir
         </button>
         <button
-          onClick={() => smoothNavigate("/")}
+          onClick={() => smoothNavigate("/donations")}
           className="w-[266px] rounded-full bg-[#FFC905] py-[12px] text-base font-bold"
         >
           Donar

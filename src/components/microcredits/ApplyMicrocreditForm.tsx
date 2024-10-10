@@ -12,11 +12,14 @@ const microcreditSchema = z.object({
   titleRequest: z
     .string()
     .trim()
-    .min(1, { message: "El motivo de la solicitud es obligatorio" }),
-  amountToRequest: z
-    .number()
-    .min(1, "La cantidad solicitada debe ser mayor a 0")
-    .max(500000, "Excede la cantidad máxima a solicitar, son 500,000"),
+    .min(1, { message: "El motivo de la solicitud es obligatorio" })
+    .regex(/^[^0-9]*$/, { message: "El motivo no puede contener números" }),
+amountToRequest: z
+  .number({
+    invalid_type_error: "Debe ser un número",
+    required_error: "Este campo es obligatorio"})
+  .min(1, { message: "La cantidad solicitada debe ser mayor a 0" })
+  .max(500000, { message: "Excede la cantidad máxima a solicitar, son 500,000" }),
   privacyPolicy: z.boolean().refine((val) => val === true, {
     message: "Debe aceptar la política de privacidad",
   }),
