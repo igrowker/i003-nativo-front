@@ -30,7 +30,7 @@ export const CollaborationModal: React.FC<{
     setErrorMessage(null);
 
     try {
-      const contributionData = await contributeMicrocreditService(
+      await contributeMicrocreditService(
         microcreditId,
         numericAmount,
       );
