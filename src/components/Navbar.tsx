@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaRegUser } from "react-icons/fa6";
 import { FiLogIn } from "react-icons/fi";
-import { GiHamburgerMenu, GiReceiveMoney } from "react-icons/gi";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { GoHome } from "react-icons/go";
 import {
   IoIosInformationCircleOutline,
@@ -26,34 +26,29 @@ interface Link {
 }
 
 const linksLogged: Link[] = [
-  { icon: <GoHome size={22} />, name: "Inicio", path: "/dashboard" },
+  { icon: <GoHome size={22} className="ml-2" />, name: "Inicio", path: "/dashboard" },
   {
-    icon: <FaRegUser size={22} />,
+    icon: <FaRegUser size={22} className="ml-2" />,
     name: "Mi perfil",
     path: "/profile",
   },
   {
-    icon: <MdOutlineSyncAlt size={22} />,
+    icon: <MdOutlineSyncAlt size={22} className="ml-2" />,
     name: "Mis movimientos",
     path: "/history",
   },
   {
-    icon: <MdOutlinePayment size={22} />,
+    icon: <MdOutlinePayment size={22} className="ml-2" />,
     name: "Mis microcréditos",
     path: "/history-microcredits",
   },
   {
-    icon: <GiReceiveMoney size={22} />,
-    name: "Mis contribuciones",
-    path: "/contribute-microcredit",
-  },
-  {
-    icon: <MdFavoriteBorder size={22} />,
+    icon: <MdFavoriteBorder size={22} className="ml-2" />,
     name: "Mis donaciones",
     path: "/donations",
   },
   {
-    icon: <IoMdHelpCircleOutline size={22} />,
+    icon: <IoMdHelpCircleOutline size={22} className="ml-2" />,
     name: "Ayuda microcréditos",
     path: "/microcredits",
   },
@@ -132,9 +127,8 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
-            open ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#F6FAFD]">
             <IoClose
@@ -180,9 +174,8 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {!userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
-            open ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#E1F0D7]">
             <IoClose
