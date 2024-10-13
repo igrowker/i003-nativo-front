@@ -81,11 +81,8 @@ const History: React.FC = () => {
 
   return (
     <main className="relative flex min-h-[70vh] flex-col items-center gap-4 bg-light-green px-4 py-6 font-lato">
-        <Link
-        to="/dashboard"
-        className="flex w-full items-center gap-2 text-sm"
-      >
-        <img src="./microcredits/arrow_back.svg" /> 
+      <Link to="/dashboard" className="flex w-full items-center gap-2 text-sm">
+        <img src="./microcredits/arrow_back.svg" />
         Volver al inicio
       </Link>
       <h1 className="text-xl font-bold leading-[22px]">Historial</h1>
@@ -160,7 +157,7 @@ const History: React.FC = () => {
                       className={`font-bold ${(transaction.status == "DENIED" || transaction.status == "EXPIRED") && "line-through"}`}
                     >
                       {transaction.status == "ACCEPTED" ||
-                        transaction.status == "PENDING"
+                      transaction.status == "PENDING"
                         ? transaction.receiverAccount == accountId
                           ? "+"
                           : "-"
@@ -171,7 +168,10 @@ const History: React.FC = () => {
                       {transaction.formattedTime}
                     </p>
                   </div>
-                  {transaction.transaction?.toLowerCase().includes("donación") && transaction.status == "PENDING" &&
+                  {transaction.transaction
+                    ?.toLowerCase()
+                    .includes("donación") &&
+                    transaction.status == "PENDING" &&
                     transaction.receiverAccount == accountId && (
                       <div className="flex gap-1">
                         <button

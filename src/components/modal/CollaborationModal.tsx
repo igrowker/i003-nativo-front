@@ -30,10 +30,7 @@ export const CollaborationModal: React.FC<{
     setErrorMessage(null);
 
     try {
-      await contributeMicrocreditService(
-        microcreditId,
-        numericAmount,
-      );
+      await contributeMicrocreditService(microcreditId, numericAmount);
       setIsSuccess(true);
     } catch (error) {
       setErrorMessage("Ocurrió un error al agregar dinero.");
