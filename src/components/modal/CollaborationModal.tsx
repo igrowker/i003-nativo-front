@@ -59,7 +59,7 @@ export const CollaborationModal: React.FC<{
     content = (
       <>
         <SuccessContent
-          title="¡Colaboración realizada!"
+          title="¡Contribución realizada!"
           sender="Mi cuenta Nativo"
           receiver="Cuenta beneficiario Nativo"
           amount={amount.toString()}
@@ -83,7 +83,7 @@ export const CollaborationModal: React.FC<{
   } else if (errorMessage) {
     content = (
       <ErrorContent
-        error="¡Colaboración no realizada!"
+        error="¡Contribución no realizada!"
         sender="Mi cuenta Nativo"
         receiver="Cuenta beneficiario Nativo"
         amount={amount.toString()}

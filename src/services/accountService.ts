@@ -76,8 +76,8 @@ export async function getAccountHistory(): Promise<Transaction[]> {
         )
         .sort(
           (a, b) =>
-            new Date(b.creationDate).getTime() -
-            new Date(a.creationDate).getTime(),
+            new Date(b.endDate).getTime() -
+            new Date(a.endDate).getTime(),
         );
 
       return normalizedTransactions;
@@ -245,7 +245,7 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
       description =
         transaction.senderAccount === accountId
           ? `Microcrédito de ${receiverFullName}`
-          : `Colaboración recibida de ${senderFullName}`;
+          : `Contribución recibida de ${senderFullName}`;
       break;
 
     case "Donación":
