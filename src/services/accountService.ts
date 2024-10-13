@@ -240,8 +240,8 @@ function normalizeTransaction(transaction: Transaction, accountId: string) {
     case "Microcrédito":
       newTransactionType =
         transaction.senderAccount === accountId
-          ? "Colaboración enviada"
-          : "Colaboración recibida";
+          ? "Contribución enviada"
+          : "Contribución recibida";
       description =
         transaction.senderAccount === accountId
           ? `Microcrédito de ${receiverFullName}`

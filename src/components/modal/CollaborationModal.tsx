@@ -7,11 +7,13 @@ import LoadingContent from "./LoadingContent";
 import SuccessContent from "./SuccessContent";
 import ErrorContent from "./ErrorContent";
 import { contributeMicrocreditService } from "../../services/contributeMicrocreditService";
+import useSmoothNavigate from "../../hooks/useSmoothNavigate";
 
 export const CollaborationModal: React.FC<{
   onClose: () => void;
   microcreditId: string;
 }> = ({ onClose, microcreditId }) => {
+  const navigate = useSmoothNavigate();
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
 
@@ -63,12 +65,12 @@ export const CollaborationModal: React.FC<{
           amount={amount.toString()}
         />
         <div className="mt-4 flex gap-4">
-          <Link
-            to="/history"
+          <button
+            onClick={()=>navigate("/history")}
             className="w-full rounded-[30px] bg-white px-4 py-2 text-center font-bold leading-[19px]"
           >
             Ver historial
-          </Link>
+          </button>
           <button
             onClick={onClose}
             className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px]"
