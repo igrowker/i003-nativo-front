@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { User } from "../../interfaces/User";
 import useUserStore from "../../store/useUserStore";
 import MoneyInput from "./MoneyInput";
