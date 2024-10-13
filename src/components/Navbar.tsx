@@ -26,7 +26,11 @@ interface Link {
 }
 
 const linksLogged: Link[] = [
-  { icon: <GoHome size={22} className="ml-2" />, name: "Inicio", path: "/dashboard" },
+  {
+    icon: <GoHome size={22} className="ml-2" />,
+    name: "Inicio",
+    path: "/dashboard",
+  },
   {
     icon: <FaRegUser size={22} className="ml-2" />,
     name: "Mi perfil",
@@ -56,21 +60,25 @@ const linksLogged: Link[] = [
 
 const linksNotLogged: Link[] = [
   {
-    icon: <FiLogIn size={22} />,
+    icon: <FiLogIn size={22} className="ml-2" />,
     name: "Iniciar sesión",
     path: "/login",
   },
   {
-    icon: <IoIosInformationCircleOutline size={22} />,
+    icon: <IoIosInformationCircleOutline size={22} className="ml-2" />,
     name: "Sobre nosotros",
     path: "/about",
   },
   {
-    icon: <TbUsersGroup size={22} />,
+    icon: <TbUsersGroup size={22} className="ml-2" />,
     name: "Nuestro equipo",
     path: "/team",
   },
-  { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
+  {
+    icon: <IoMdHelpCircleOutline size={22} className="ml-2" />,
+    name: "Ayuda",
+    path: "/help",
+  },
 ];
 
 const MobileNav: React.FC<{ onToggle: () => void }> = ({ onToggle }) => {
@@ -127,8 +135,9 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
-            }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#F6FAFD]">
             <IoClose
@@ -162,7 +171,7 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
                 onClick={handleLogout}
                 className="aside__link--shadow flex h-[36px] w-[247px] items-center justify-start gap-2 rounded-[20px] bg-[#F6FAFD] pl-4 text-center"
               >
-                <FaRegUser size={22} />
+                <FaRegUser size={22} className="ml-2" />
                 <p className="size-[14px] h-auto w-auto text-center font-[700px] leading-[16.8px] text-black">
                   Cerrar sesión
                 </p>
@@ -174,8 +183,9 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
 
       {!userActive && (
         <aside
-          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
-            }`}
+          className={`fixed left-0 top-[50px] z-20 h-[calc(100%-50px)] w-[259px] transform rounded-br-3xl rounded-tr-3xl transition-transform duration-500 ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <div className="relative flex h-[100vh] w-[100%] flex-col items-center justify-start rounded-br-3xl rounded-tr-3xl bg-[#E1F0D7]">
             <IoClose

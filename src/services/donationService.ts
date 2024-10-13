@@ -64,14 +64,14 @@ function normalizeDonation(donation: Donation, accountId: string) {
     ? new Date(donation.updateAt)
     : new Date(donation.createdAt);
 
-  const formattedDate = formatDate(creationDate);
-  const formattedTime = formatTime(creationDate);
-
   const updatedAt = donation.updateAt
     ? new Date(donation.updateAt)
     : new Date(donation.createdAt);
 
   updatedAt.setHours(updatedAt.getHours() - 3);
+
+  const formattedDate = formatDate(updatedAt);
+  const formattedTime = formatTime(updatedAt);
 
   const receiverFullName = `${donation.beneficiaryName} ${donation.beneficiaryLastName}`;
   const senderFullName = `${donation.donorName} ${donation.donorLastName}`;

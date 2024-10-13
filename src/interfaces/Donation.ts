@@ -9,6 +9,7 @@ export interface Donation {
   beneficiaryLastName?: string;
   createdAt: string | number | Date;
   updateAt: string | number | Date;
+  endDate: string | number | Date;
   formattedDate?: string | undefined;
   formattedTime?: string | undefined;
   status: string;
