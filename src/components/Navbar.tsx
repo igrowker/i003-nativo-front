@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaRegUser } from "react-icons/fa6";
 import { FiLogIn } from "react-icons/fi";
-import { GiHamburgerMenu, GiReceiveMoney } from "react-icons/gi";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { GoHome } from "react-icons/go";
 import {
   IoIosInformationCircleOutline,
@@ -26,34 +26,33 @@ interface Link {
 }
 
 const linksLogged: Link[] = [
-  { icon: <GoHome size={22} />, name: "Inicio", path: "/dashboard" },
   {
-    icon: <FaRegUser size={22} />,
+    icon: <GoHome size={22} className="ml-2" />,
+    name: "Inicio",
+    path: "/dashboard",
+  },
+  {
+    icon: <FaRegUser size={22} className="ml-2" />,
     name: "Mi perfil",
     path: "/profile",
   },
   {
-    icon: <MdOutlineSyncAlt size={22} />,
+    icon: <MdOutlineSyncAlt size={22} className="ml-2" />,
     name: "Mis movimientos",
     path: "/history",
   },
   {
-    icon: <MdOutlinePayment size={22} />,
+    icon: <MdOutlinePayment size={22} className="ml-2" />,
     name: "Mis microcréditos",
     path: "/history-microcredits",
   },
   {
-    icon: <GiReceiveMoney size={22} />,
-    name: "Mis contribuciones",
-    path: "/contribute-microcredit",
-  },
-  {
-    icon: <MdFavoriteBorder size={22} />,
+    icon: <MdFavoriteBorder size={22} className="ml-2" />,
     name: "Mis donaciones",
     path: "/donations",
   },
   {
-    icon: <IoMdHelpCircleOutline size={22} />,
+    icon: <IoMdHelpCircleOutline size={22} className="ml-2" />,
     name: "Ayuda microcréditos",
     path: "/microcredits",
   },
@@ -61,21 +60,25 @@ const linksLogged: Link[] = [
 
 const linksNotLogged: Link[] = [
   {
-    icon: <FiLogIn size={22} />,
+    icon: <FiLogIn size={22} className="ml-2" />,
     name: "Iniciar sesión",
     path: "/login",
   },
   {
-    icon: <IoIosInformationCircleOutline size={22} />,
+    icon: <IoIosInformationCircleOutline size={22} className="ml-2" />,
     name: "Sobre nosotros",
     path: "/about",
   },
   {
-    icon: <TbUsersGroup size={22} />,
+    icon: <TbUsersGroup size={22} className="ml-2" />,
     name: "Nuestro equipo",
     path: "/team",
   },
-  { icon: <IoMdHelpCircleOutline size={22} />, name: "Ayuda", path: "/help" },
+  {
+    icon: <IoMdHelpCircleOutline size={22} className="ml-2" />,
+    name: "Ayuda",
+    path: "/help",
+  },
 ];
 
 const MobileNav: React.FC<{ onToggle: () => void }> = ({ onToggle }) => {
@@ -168,7 +171,7 @@ const Sidebar: React.FC<{ open: boolean; onClose: () => void }> = ({
                 onClick={handleLogout}
                 className="aside__link--shadow flex h-[36px] w-[247px] items-center justify-start gap-2 rounded-[20px] bg-[#F6FAFD] pl-4 text-center"
               >
-                <FaRegUser size={22} />
+                <FaRegUser size={22} className="ml-2" />
                 <p className="size-[14px] h-auto w-auto text-center font-[700px] leading-[16.8px] text-black">
                   Cerrar sesión
                 </p>

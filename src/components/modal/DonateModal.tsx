@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react"; // Asegúrate de importar useEffect
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { User } from "../../interfaces/User";
 import useUserStore from "../../store/useUserStore";
 import MoneyInput from "./MoneyInput";
@@ -8,11 +7,13 @@ import SuccessContent from "./SuccessContent";
 import ErrorContent from "./ErrorContent";
 import { FaUser } from "react-icons/fa6";
 import donationService from "../../services/donationService";
+import useSmoothNavigate from "../../hooks/useSmoothNavigate";
 
 export const DonateModal: React.FC<{
   onCloseOk: () => void;
   onClose: () => void;
 }> = ({ onCloseOk, onClose }) => {
+  const navigate = useSmoothNavigate();
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
   const [amount, setAmount] = useState<number | string>("");
@@ -74,12 +75,12 @@ export const DonateModal: React.FC<{
           amount={amount.toString()}
         />
         <div className="mt-4 flex gap-4">
-          <Link
-            to="/history"
+          <button
+            onClick={() => navigate("/history")}
             className="w-full rounded-[30px] bg-white px-4 py-2 text-center font-bold leading-[19px]"
           >
             Ver historial
-          </Link>
+          </button>
           <button
             onClick={onCloseOk}
             className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px]"

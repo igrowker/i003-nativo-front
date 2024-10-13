@@ -28,7 +28,7 @@ const SeeMore: React.FC<{
         <div className="flex flex-row items-end justify-between text-xs">
           <p className="w-auto">Tasa fija</p>
           <hr className="flex-1" />
-          <p>20%</p>
+          <p>10%</p>
         </div>
         <div className="flex flex-row items-end justify-between text-xs">
           <p className="w-auto">No. contribuciones</p>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { User } from "../../interfaces/User";
 import useUserStore from "../../store/useUserStore";
 import MoneyInput from "./MoneyInput";
@@ -7,11 +6,13 @@ import LoadingContent from "./LoadingContent";
 import SuccessContent from "./SuccessContent";
 import ErrorContent from "./ErrorContent";
 import { contributeMicrocreditService } from "../../services/contributeMicrocreditService";
+import useSmoothNavigate from "../../hooks/useSmoothNavigate";
 
 export const CollaborationModal: React.FC<{
   onClose: () => void;
   microcreditId: string;
 }> = ({ onClose, microcreditId }) => {
+  const navigate = useSmoothNavigate();
   const user: User | null = useUserStore((store) => store.user);
   const accountId: string | null = user?.accountId ?? null;
 
@@ -30,10 +31,7 @@ export const CollaborationModal: React.FC<{
     setErrorMessage(null);
 
     try {
-      await contributeMicrocreditService(
-        microcreditId,
-        numericAmount,
-      );
+      await contributeMicrocreditService(microcreditId, numericAmount);
       setIsSuccess(true);
     } catch (error) {
       setErrorMessage("Ocurrió un error al agregar dinero.");
@@ -60,18 +58,18 @@ export const CollaborationModal: React.FC<{
     content = (
       <>
         <SuccessContent
-          title="¡Colaboración realizada!"
+          title="¡Contribución realizada!"
           sender="Mi cuenta Nativo"
           receiver="Cuenta beneficiario Nativo"
           amount={amount.toString()}
         />
         <div className="mt-4 flex gap-4">
-          <Link
-            to="/history"
+          <button
+            onClick={()=>navigate("/history")}
             className="w-full rounded-[30px] bg-white px-4 py-2 text-center font-bold leading-[19px]"
           >
             Ver historial
-          </Link>
+          </button>
           <button
             onClick={onClose}
             className="w-full rounded-[30px] bg-white px-4 py-2 font-bold leading-[19px]"
@@ -84,7 +82,7 @@ export const CollaborationModal: React.FC<{
   } else if (errorMessage) {
     content = (
       <ErrorContent
-        error="¡Colaboración no realizada!"
+        error="¡Contribución no realizada!"
         sender="Mi cuenta Nativo"
         receiver="Cuenta beneficiario Nativo"
         amount={amount.toString()}

@@ -15,8 +15,8 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-primary-green py-2 font-lato">
-      <div className="mx-auto w-[340px]">
+    <footer className="bg-primary-green pb-6 pt-2 font-lato">
+      <div className="mx-auto w-full px-4 sm:w-[340px] sm:px-0">
         <button
           onClick={() => handleNavigate(userActive ? "/dashboard" : "/")}
           key="home"

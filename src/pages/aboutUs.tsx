@@ -2,7 +2,7 @@ import { ContainerGreen } from "../components/about/ContainerGreen";
 
 const AboutUs: React.FC = () => {
   return (
-    <main className="mx-auto flex w-[442px] flex-col items-center gap-4 font-lato">
+    <main className="mx-auto flex w-full flex-col items-center gap-4 font-lato md:w-[442px]">
       <section className="mb-4 flex w-full flex-col items-center bg-light-green py-6">
         <h1 className="text-center text-xl font-bold">Nosotros</h1>
         <img src="./logonativo.png" alt="Logo" />
@@ -10,12 +10,12 @@ const AboutUs: React.FC = () => {
           Más que un banco, un aliado para la comunidad rural
         </h2>
       </section>
-      <section className="mx-10 mb-4 rounded-[20px] bg-light-green px-4 py-5 drop-shadow-box">
+      <section className="mx-4 mb-4 rounded-[20px] bg-light-green px-4 py-5 drop-shadow-box sm:mx-10">
         <h3 className="pb-6 text-xl font-bold [text-shadow:_2px_2px_2px_rgb(0_0_0_/_15%)]">
           Nuestros valores
         </h3>
         <ContainerGreen>
-          <p className="pr-5 font-medium leading-[19px]">
+          <p className="font-medium leading-[19px] md:pr-5">
             En Nativo Banco Rural, queremos reflejar nuestra misión de
             transformar la banca en áreas rurales y su compromiso con la
             comunidad, lo que implica:
@@ -36,18 +36,18 @@ const AboutUs: React.FC = () => {
         />
         <h3 className="pb-6 text-xl font-bold">Nuestros objetivos</h3>
         <ContainerGreen>
-          <p className="pb-5 pr-5 font-medium leading-[19px]">
+          <p className="pb-5 font-medium leading-[19px] md:pr-5">
             <span className="font-bold">Impulsar</span> la confianza de la
             sociedad en las economías rurales y, en general, en el crédito
             cooperativo y divulgar la filosofía y los principios que configuran
             una cultura colaborativa específica e inclusiva.
           </p>
-          <p className="pb-5 pr-5 font-medium leading-[19px]">
+          <p className="pb-5 font-medium leading-[19px] md:pr-5">
             <span className="font-bold">Promocionar</span> las actividades de
             las comunidades rurales asociadas y coordinar su representación ante
             otras entidades económicas y ante otras instituciones.
           </p>
-          <p className="pr-5 font-medium leading-[19px]">
+          <p className="font-medium leading-[19px] md:pr-5">
             <span className="font-bold">Fomentar</span> el desarrollo de los
             principios de solidaridad y apoyo recíproco entre las comunidades
             rurales asociadas.
@@ -60,17 +60,17 @@ const AboutUs: React.FC = () => {
         />
         <h3 className="pb-6 text-xl font-bold">Nuestro trabajo</h3>
         <ContainerGreen>
-          <p className="pb-5 pr-5 font-medium leading-[19px]">
+          <p className="pb-5 font-medium leading-[19px] md:pr-5">
             <span className="font-bold">Integración Local e Incentivos:</span>{" "}
             Colaboración con comercios locales para promover un sistema de pago
             digital, incentivando su uso.
           </p>
-          <p className="pb-5 pr-5 font-medium leading-[19px]">
+          <p className="pb-5 font-medium leading-[19px] md:pr-5">
             <span className="font-bold">Fomento de la Colaboración: </span>{" "}
             Facilita iniciativas de ayuda mutua y microcréditos entre los
             usuarios.
           </p>
-          <p className="pr-5 font-medium leading-[19px]">
+          <p className="font-medium leading-[19px] md:pr-5">
             <span className="font-bold">
               Reducción de la Dependencia del Billete:
             </span>{" "}

@@ -18,7 +18,7 @@ export default function TeamMemberCard({
       <img
         src={photo}
         alt={name}
-        className="mr-6 size-11 rounded-full object-cover"
+        className="mr-2 size-11 rounded-full object-cover sm:mr-6"
       />
       <div className="w-1/2 text-[15px] font-bold leading-4">
         <p>{name}</p>

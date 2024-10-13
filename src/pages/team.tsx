@@ -5,7 +5,7 @@ import TeamMemberCard from "../components/about/TeamMemberCard";
 
 const Team: React.FC = () => {
   return (
-    <main className="mx-auto flex w-[442px] flex-col items-center gap-4 font-lato">
+    <main className="mx-auto flex w-full flex-col items-center gap-4 font-lato md:w-[442px]">
       <section className="flex w-full flex-col items-center pb-2 pt-6">
         <h1 className="text-center text-xl font-bold">El equipo de Nativo</h1>
         <img src={TeamPng} alt="Logo" className="pt-2" />
@@ -55,9 +55,9 @@ const Team: React.FC = () => {
           </li>
         </ul>
         <img src={IconPng} alt="Logo Nativo" className="mx-auto mb-4" />
-        <div className="rounded-[30px] bg-primary-green px-6 py-6 drop-shadow-box">
-          <h3 className="mb-4 text-center text-lg font-medium">Conócenos</h3>
-          <div className="rounded-[20px] bg-light-green px-5 py-7 drop-shadow-box">
+        <div className="rounded-[30px] bg-primary-green px-4 py-6 drop-shadow-box sm:px-6">
+          <h3 className="mb-4 text-center font-medium sm:text-lg">Conócenos</h3>
+          <div className="rounded-[20px] bg-light-green px-2 py-7 drop-shadow-box sm:px-5">
             {teamData.map((member) => (
               <TeamMemberCard
                 key={member.name}
